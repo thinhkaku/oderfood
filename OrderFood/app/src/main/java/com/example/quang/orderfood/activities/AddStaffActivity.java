@@ -326,7 +326,7 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
                 Uri imageURI = data.getData();
                 InputStream is = getContentResolver().openInputStream(imageURI);
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-                bitmap = resize(bitmap,100,100);
+                //bitmap = resize(bitmap,100,100);
                 bytes = getByteArrayFromBitmap(bitmap);
                 imAvatar.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {

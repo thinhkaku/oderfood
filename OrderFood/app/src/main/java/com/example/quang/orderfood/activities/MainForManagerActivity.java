@@ -9,7 +9,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +45,7 @@ import objects.Table;
 import objects.User;
 import singleton.Singleton;
 
-public class MainForManagerActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MainForManagerActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, SearchView.OnQueryTextListener {
 
     private final String CLIENT_SEND_REQUEST_LIST_STAFF = "CLIENT_SEND_REQUEST_LIST_STAFF";
     private final String SERVER_SEND_LIST_STAFF = "SERVER_SEND_LIST_STAFF";
@@ -67,6 +70,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private SearchView searchView;
 
     private ListView lvStaff;
     private ArrayList<Staff> arrStaff;
@@ -106,7 +110,15 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         clickEvents();
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_view, menu);
+        MenuItem itemSearch = menu.findItem(R.id.search_view);
+        searchView = (SearchView) itemSearch.getActionView();
+        //set OnQueryTextListener cho search view để thực hiện search theo text
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
 
     private void initSockets() {
         Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_LIST_STAFF,"123");
@@ -549,5 +561,22 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 finishAffinity();
             }
         });
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)){
+            //adap.
+            lvStaff.clearTextFilter();
+        }else {
+            //
+            // adap.getFilter().filter(newText.toString());
+        }
+        return true;
     }
 }
