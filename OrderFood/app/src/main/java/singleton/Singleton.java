@@ -13,7 +13,8 @@ public class Singleton {
     Emitter.Listener onResult;
     Emitter.Listener listTable;
 
-    private Singleton() {}
+    private Singleton() {
+    }
 
     public static Singleton Instance()
     {

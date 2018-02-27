@@ -48,9 +48,9 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private final String SERVER_SEND_LIST_STAFF = "SERVER_SEND_LIST_STAFF";
     private final String CLIENT_SEND_REQUEST_DELETE_STAFF = "CLIENT_SEND_REQUEST_DELETE_STAFF";
     private final String CLIENT_SEND_REQUEST_EDIT_STAFF = "CLIENT_SEND_REQUEST_EDIT_STAFF";
-
+    private  boolean changArray = false;
+    private  int changArray1 = 1;
     private static String LOG_OUT = "LOG_OUT";
-
     Emitter.Listener onListStaff;
     {
         onListStaff = new Emitter.Listener() {
@@ -70,6 +70,8 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
 
     private ListView lvStaff;
     private ArrayList<Staff> arrStaff;
+    private ArrayList<Staff> arrStaff1;
+    private ArrayList<Staff> arrStaff2;
     private ListviewStaffAdapter adap;
 
     private View line1;
@@ -84,10 +86,12 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private Button btnMenuManager;
     private Button btnLogOut;
     private ImageView imAddStaff;
+    private TextView txtSoNguoiOnline, txtSoNguoiOffline, txtTongSoNhanVien;
 
     private CircleImageView avatar;
     private TextView tvName;
     private Dialog editStaff;
+    private Dialog dilogQuitApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,11 +114,17 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     }
 
     private void getListStaff(final Object arg) {
-        arrStaff = new ArrayList<>();
+        arrStaff =new ArrayList<>();
+        arrStaff1 =new ArrayList<>();
+        arrStaff2 =new ArrayList<>();
+        //arrStaff = new ArrayList<>();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 JSONArray data = (JSONArray) arg;
+                arrStaff.clear();
+                arrStaff1.clear();
+                arrStaff2.clear();
                 for (int i=0; i<data.length(); i++)
                 {
                     try {
@@ -143,13 +153,46 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                             arrStaff.add(staff);
                         }
 
+                        if (changArray ==false){
+                            adap = new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaff);
+
+                        }else {
+                            arrStaff1.clear();
+                            arrStaff2.clear();
+                            for (Staff t: arrStaff)
+                            {
+                                if (t.getCheckOnline() == 0)
+                                {
+                                    arrStaff1.add(t);
+                                }else {
+                                    arrStaff2.add(t);
+                                }
+                            }
+                            if (changArray1==2){
+                                adap =new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaff2);
+                            }else {
+                                adap =new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaff1);
+                            }
+
+
+                        }
+                        lvStaff.setAdapter(adap);
+                        adap.notifyDataSetChanged();
+                        int dem=0;
+                        for (int j=0;j<arrStaff.size()-1;j++){
+                            if (arrStaff.get(j).getCheckOnline()==1){
+                                dem++;
+                            }
+                        }
+                        txtSoNguoiOnline.setText(dem+"");
+                        txtSoNguoiOffline.setText(arrStaff.size()-dem+"");
+                        txtTongSoNhanVien.setText(arrStaff.size()+"");
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                adap = new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaff);
-                lvStaff.setAdapter(adap);
-                adap.notifyDataSetChanged();
+                //adap.notifyDataSetChanged();
                 //Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_TABLE,"123");
             }
         });
@@ -163,6 +206,9 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         btnShowAllStaff = findViewById(R.id.btnShowAllStaff);
         btnShowStaffOffline = findViewById(R.id.btnShowListStaffOffline);
         btnShowStaffOnline = findViewById(R.id.btnShowListStaffOnline);
+        txtSoNguoiOnline =findViewById(R.id.txtSoNguoiOnline);
+        txtSoNguoiOffline =findViewById(R.id.txtSoNguoiOffline);
+        txtTongSoNhanVien =findViewById(R.id.txtTongSoNhanVien);
 
         line1 = findViewById(R.id.line1Manager);
         line2 = findViewById(R.id.line2Manager);
@@ -182,6 +228,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         tvName.setText(MainForManagerActivity.user.getName());
         Glide.with(this).load(Constants.PORT+MainForManagerActivity.user.getImage())
                 .into(avatar);
+
     }
 
     private void initViews() {
@@ -206,7 +253,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         btnShowStaffOnline.setOnClickListener(this);
         imAddStaff.setOnClickListener(this);
 
-        lvStaff.setOnItemClickListener(this);
+       lvStaff.setOnItemClickListener(this);
         lvStaff.setOnItemLongClickListener(this);
 
         btnLogOut.setOnClickListener(this);
@@ -243,35 +290,40 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         switch (view.getId())
         {
             case R.id.btnShowAllStaff:
+                changArray=false;
                 adap = new ListviewStaffAdapter(this,R.layout.item_listview_staff,arrStaff);
                 lvStaff.setAdapter(adap);
                 adap.notifyDataSetChanged();
                 setLine(line3,btnShowAllStaff);
                 break;
             case R.id.btnShowListStaffOffline:
-                ArrayList<Staff> staff = new ArrayList<>();
+                changArray=true;
+                changArray1=1;
+                arrStaff2.clear();
                 for (Staff t: arrStaff)
                 {
                     if (t.getCheckOnline() == 0)
                     {
-                        staff.add(t);
+                        arrStaff2.add(t);
                     }
                 }
-                adap = new ListviewStaffAdapter(this,R.layout.item_listview_staff,staff);
+                adap = new ListviewStaffAdapter(this,R.layout.item_listview_staff,arrStaff2);
                 lvStaff.setAdapter(adap);
                 adap.notifyDataSetChanged();
                 setLine(line2,btnShowStaffOffline);
                 break;
             case R.id.btnShowListStaffOnline:
-                ArrayList<Staff> staff1 = new ArrayList<>();
+                changArray=true;
+                changArray1=2;
+                arrStaff1.clear();
                 for (Staff t: arrStaff)
                 {
                     if (t.getCheckOnline() == 1)
                     {
-                        staff1.add(t);
+                        arrStaff1.add(t);
                     }
                 }
-                adap = new ListviewStaffAdapter(this,R.layout.item_listview_staff,staff1);
+                adap = new ListviewStaffAdapter(this,R.layout.item_listview_staff,arrStaff1);
                 lvStaff.setAdapter(adap);
                 adap.notifyDataSetChanged();
                 setLine(line1,btnShowStaffOnline);
@@ -294,13 +346,29 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 break;
         }
     }
-
+    //su kien trong listView
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(MainForManagerActivity.this,ProfileActivity.class);
-        intent.putExtra("key","m");
-        intent.putExtra("staff",arrStaff.get(i));
-        startActivity(intent);
+        if (changArray==false){
+            Intent intent = new Intent(MainForManagerActivity.this,ProfileActivity.class);
+            intent.putExtra("key","m");
+            intent.putExtra("staff",arrStaff.get(i));
+            startActivity(intent);
+        }else {
+            if (changArray1==2){
+                Intent intent = new Intent(MainForManagerActivity.this,ProfileActivity.class);
+                intent.putExtra("key","m");
+                intent.putExtra("staff",arrStaff1.get(i));
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(MainForManagerActivity.this,ProfileActivity.class);
+                intent.putExtra("key","m");
+                intent.putExtra("staff",arrStaff2.get(i));
+                startActivity(intent);
+            }
+
+        }
+
     }
 
     @Override
@@ -437,4 +505,49 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         });
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Singleton.Instance().getmSocket().emit(LOG_OUT,user.getId());
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        initDialogQuitApp();
+        dilogQuitApp.show();
+    }
+
+    private void initDialogQuitApp() {
+        dilogQuitApp = new Dialog(this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+        dilogQuitApp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dilogQuitApp.setContentView(R.layout.quit_app_dilog);
+        dilogQuitApp.setCancelable(false);
+        Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
+        Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dilogQuitApp.dismiss();
+            }
+        });
+        btnThoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dilogQuitApp.dismiss();
+//                Intent intent = new Intent(Intent.ACTION_MAIN);
+//                intent.addCategory(Intent.CATEGORY_HOME);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                finishAffinity();
+            }
+        });
+    }
 }

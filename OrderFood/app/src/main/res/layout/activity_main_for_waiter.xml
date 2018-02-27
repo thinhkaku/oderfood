@@ -33,10 +33,21 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="45sp">
-                    <TextView
+                    <FrameLayout
                         android:layout_width="25sp"
-                        android:background="@drawable/background_table"
-                        android:layout_height="25sp" />
+                        android:layout_height="25sp">
+                        <TextView
+                            android:layout_width="25sp"
+                            android:background="@drawable/background_table"
+                            android:layout_height="25sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:id="@+id/txtBanTrong"
+                            android:textStyle="bold"/>
+                    </FrameLayout>
+
                     <TextView
                         android:layout_marginRight="20dp"
                         android:drawablePadding="5dp"
@@ -46,10 +57,21 @@
                         android:text="Bàn trống"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-                    <TextView
+                    <FrameLayout
                         android:layout_width="25sp"
-                        android:background="@drawable/background_table_off"
-                        android:layout_height="25sp" />
+                        android:layout_height="25sp">
+                        <TextView
+                            android:layout_width="25sp"
+                            android:background="@drawable/background_table_off"
+                            android:layout_height="25sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:id="@+id/txtBanDaDat"
+                            android:textStyle="bold"/>
+                    </FrameLayout>
+
                     <TextView
                         android:layout_marginRight="20dp"
                         android:drawablePadding="5dp"

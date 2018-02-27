@@ -38,6 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private String MY_PREFS_NAME="oderfood";
     private Socket mSocket;
+    private boolean ktSocket=false;
     private TextView txtScreen;
     private Emitter.Listener onResult;
     private java.lang.String CLIENT_SEND_REQUEST_LOGIN="CLIENT_SEND_REQUEST_LOGIN";
@@ -80,7 +81,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         onResult = new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                handleResultFromServer(args[0]);
+                if (ktSocket==false){
+                    handleResultFromServerSplashScreenActivity(args[0]);
+                }
+
             }
         };
     }
@@ -89,9 +93,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        //checkInternet();
         initSockets();
-
         Singleton.Instance().setmSocket(mSocket);
         Singleton.Instance().setOnResult(onResult);
         txtCreenAnimation = AnimationUtils.loadAnimation(this,R.anim.txt_creen_apha);
@@ -114,10 +116,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void handleResultFromServer(final Object arg) {
+    private void handleResultFromServerSplashScreenActivity(final Object arg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                ktSocket=true;
                 JSONArray data = (JSONArray) arg;
                 if (data.length() == 0)
                 {
@@ -125,7 +128,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(intent);
                     // trong anim ta tạo hai file rồi gọi ở đây để tạo animation khi chuyển activity
                     overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                    finish();
                 }
                 else {
                     try {
@@ -151,24 +153,19 @@ public class SplashScreenActivity extends AppCompatActivity {
                             intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                            //mSocket.disconnect();
-                            //Singleton.Instance().getmSocket().emit("CLIENT_SEND_REQUEST_LIST_STAFF","123");
-
                             finish();
                         }else if (user.getPosition().equalsIgnoreCase("BB")){
                             Intent intent = new Intent(SplashScreenActivity.this,MainForWaiterActivity.class);
                             intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                            //mSocket.disconnect();
-                            //Singleton.Instance().getmSocket().emit("CLIENT_SEND_REQUEST_LIST_STAFF","123");
-
                             finish();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                finish();
             }
         });
     }

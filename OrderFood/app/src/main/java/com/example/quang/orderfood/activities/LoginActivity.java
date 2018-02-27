@@ -38,18 +38,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final String SERVER_SEND_RESULT = "SERVER_SEND_RESULT";
     private CheckBox checkBox;
     private SharedPreferences.Editor editor;
-    Socket mSocket;
-    private AlertDialog.Builder builder;
-    private AlertDialog alertDialog;
+    //Socket mSocket;
     Emitter.Listener onResult;
     private String MY_PREFS_NAME="oderfood";
+    private static  String KET_NOI_LAI="KET_NOI_LAI";
 
     {
-        try {
-            mSocket = IO.socket(Constants.PORT);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
         onResult = new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -74,26 +68,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         initViews();
 
-        Singleton.Instance().setmSocket(mSocket);
-        Singleton.Instance().setOnResult(onResult);
-        loadDangNhapDilog();
-    }
-
-    private void loadDangNhapDilog(){
-        builder =new AlertDialog.Builder(this);
-        View view =getLayoutInflater().inflate(R.layout.load_dang_nhap_dilog,null);
-        builder.setView(view);
-        alertDialog=builder.create();
-        //alertDialog.show();
+//        Singleton.Instance().setmSocket(mSocket);
+//        Singleton.Instance().setOnResult(onResult);
     }
 
     private void handleResultFromServer(final Object arg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                alertDialog.dismiss();
                 JSONArray data = (JSONArray) arg;
-                if (data.length() == 0)
+                if (arg.toString().equals("[]"))
                 {
                     Snackbar snackbar = Snackbar
                             .make(edtPass, "Tài khoản hoặc mật khẩu chưa chính xác!", Snackbar.LENGTH_SHORT);
@@ -125,19 +109,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Intent intent = new Intent(LoginActivity.this,MainForManagerActivity.class);
                             intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
-                            //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                            //mSocket.disconnect();
-                            //Singleton.Instance().getmSocket().emit("CLIENT_SEND_REQUEST_LIST_STAFF","123");
-
+                            overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();
                         }else if (user.getPosition().equalsIgnoreCase("BB")){
                             Intent intent = new Intent(LoginActivity.this,MainForWaiterActivity.class);
                             intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
-                            //overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                            //mSocket.disconnect();
-                            //Singleton.Instance().getmSocket().emit("CLIENT_SEND_REQUEST_LIST_STAFF","123");
-
+                            overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();
                         }
 
@@ -150,8 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initSockets() {
-        mSocket.connect();
-        mSocket.on(SERVER_SEND_RESULT,onResult);
+        Singleton.Instance().getmSocket().on(SERVER_SEND_RESULT,onResult);
     }
 
     private void initViews() {
@@ -220,7 +197,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        //alertDialog.show();
         btnLogin.startAnimation(buttonAnimationApha);
         String user = edtUser.getText().toString();
         String pass = edtPass.getText().toString();
@@ -245,7 +221,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 editor.putString("Matkhau","");
                 editor.apply();
             }
-            mSocket.emit(CLIENT_SEND_REQUEST_LOGIN,user+"-"+pass);
+            editor = getSharedPreferences(KET_NOI_LAI, MODE_PRIVATE).edit();
+            editor.putString("userName",user);
+            editor.putString("userPass",pass);
+            editor.apply();
+            Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_LOGIN,user+"-"+pass);
         }
     }
 
@@ -253,7 +233,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         save1(checkBox.isChecked());
-
     }
 
     @Override

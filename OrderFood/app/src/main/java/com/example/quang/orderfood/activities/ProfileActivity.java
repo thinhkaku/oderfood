@@ -71,7 +71,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         String[] b = arr1[0].split("-");
         tvDateStart.setText((Integer.parseInt(b[2])+1) + "-" + b[1] +"-"+ b[0]);
         DecimalFormat decimalFormat =new DecimalFormat("###,###,###");
-        tvSalary.setText(decimalFormat.format(Integer.parseInt(MainForWaiterActivity.user.getSalaryPerDay()))+" vnđ");
+        //tvSalary.setText(decimalFormat.format(Integer.parseInt(MainForWaiterActivity.user.getSalaryPerDay()))+" vnđ");
+        tvSalary.setText(MainForWaiterActivity.user.getSalaryPerDay());
     }
 
     private void setDataManager()

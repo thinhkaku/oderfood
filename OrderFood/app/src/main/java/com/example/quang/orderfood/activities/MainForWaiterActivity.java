@@ -1,7 +1,9 @@
 package com.example.quang.orderfood.activities;
 
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,20 +48,17 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
 
     private static String SERVER_SEND_LIST_TABLE = "SERVER_SEND_LIST_TABLE";
     private static String CLIENT_SEND_REQUEST_TABLE = "CLIENT_SEND_REQUEST_TABLE";
+    private final String CLIENT_SEND_REQUEST_LOGIN = "CLIENT_SEND_REQUEST_LOGIN";
     private static String LOG_OUT = "LOG_OUT";
     private static String REQUEST_BOOK = "REQUEST_BOOK";
-    private int changeArray=1;
+    private boolean changeArray=false;
     public static boolean CHECK_TABLE = false;
-    public static String ID_USER = "";
-
-    //Socket mSocket;
+    public static String ID_USER = "ID_USER";
+    private  boolean kiemTraTrangThaiApp=true;
     Emitter.Listener onListTable;
+    private static  String KET_NOI_LAI="KET_NOI_LAI";
+
     {
-//        try {
-//            mSocket = IO.socket(Constants.PORT);
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
         onListTable = new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -88,14 +88,15 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private View line3;
 
     private CircleImageView avatar;
-    private TextView tvName;
+    private TextView tvName, txtBanDaDat, txtBanTrong;
     private Button btnProfile;
     private Button btnListBill;
     private Button btnLogOut;
 
-    private Dialog dialogPeople;
+    private Dialog dialogPeople, dilogQuitApp;
     private int number;
     private String people;
+    private int banDangChon;// kiểm tra tránh tình trạng 2 người cùng nhập số bàn cùng 1 lúc
 
 
     @Override
@@ -103,12 +104,43 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_for_waiter);
 
+        Toast.makeText(this,"ok",Toast.LENGTH_SHORT).show();
         initSockets();
         getUser();
         findId();
         initViews();
         getData();
         initDialogPeople();
+    }
+
+    private void ketNoiLai(){
+        SharedPreferences sharedPreferences =getSharedPreferences(KET_NOI_LAI,MODE_PRIVATE);
+        String userName=sharedPreferences.getString("userName",null);
+        String userPass=sharedPreferences.getString("userPass",null);
+        Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_LOGIN,userName+"-"+userPass);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (kiemTraTrangThaiApp==true){
+            return;
+        }else {
+            kiemTraTrangThaiApp=true;
+            ketNoiLai();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Singleton.Instance().getmSocket().emit(LOG_OUT,user.getId());
+        Log.e("destroy","ok");
     }
 
     private void initDialogPeople() {
@@ -148,8 +180,34 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         });
     }
 
+    private void initDialogQuitApp() {
+        dilogQuitApp = new Dialog(this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+        dilogQuitApp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dilogQuitApp.setContentView(R.layout.quit_app_dilog);
+        dilogQuitApp.setCancelable(false);
+        Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
+        Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dilogQuitApp.dismiss();
+            }
+        });
+        btnThoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dilogQuitApp.dismiss();
+//                Intent intent = new Intent(Intent.ACTION_MAIN);
+//                intent.addCategory(Intent.CATEGORY_HOME);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                finishAffinity();
+            }
+        });
+    }
+
     private void initSockets() {
-        //mSocket.connect();
         Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
         Singleton.Instance().getmSocket().on(SERVER_SEND_LIST_TABLE,onListTable);
         Singleton.Instance().getmSocket().emit("CLIENT_SEND_REQUEST_LIST_STAFF","123");
@@ -159,12 +217,12 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private void getData() {
         arrTable = new ArrayList<>();
         arrTable1 = new ArrayList<>();
-        //arrTable1=arrTable;
-        if (changeArray==1){
+        if (changeArray==false){
             gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable);
         }else {
             gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable1);
         }
+
 
         gridView.setAdapter(gridviewTableAdapter);
         gridviewTableAdapter.notifyDataSetChanged();
@@ -208,8 +266,26 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                         e.printStackTrace();
                     }
                 }
+                int dem=0;
+                for (Table t: arrTable)
+                {
+                    if (t.getCheck() == 0)
+                    {
+                        dem=dem+1;
+                    }
+                }
+                for (int i=0;i<arrTable.size()-1;i++)
+                {
+                    if (arrTable.get(i).getCheck() == 1)
+                    {
+                        if (banDangChon==i){
+                            dialogPeople.dismiss();
+                        }
+                    }
+                }
+                txtBanTrong.setText(dem+""); //dem so ban trong
+                txtBanDaDat.setText(arrTable.size()-dem+""); // dem so ban da dat
                 gridviewTableAdapter.notifyDataSetChanged();
-                //Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_TABLE,"123");
             }
         });
     }
@@ -242,6 +318,8 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
 
         avatar = findViewById(R.id.profile_image);
         tvName = findViewById(R.id.tvNameStaff);
+        txtBanDaDat =findViewById(R.id.txtBanDaDat);
+        txtBanTrong =findViewById(R.id.txtBanTrong);
         btnProfile = findViewById(R.id.btnProfile);
         btnListBill = findViewById(R.id.btnListHistoryBill);
         btnLogOut = findViewById(R.id.btnLogOut);
@@ -275,7 +353,8 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         switch (adapterView.getId())
         {
             case R.id.gridview:
-                if (changeArray==1){
+                if (changeArray==false){
+                    banDangChon=i;
                     Table table = arrTable.get(i);
                     int check = table.getCheck();
                     number = table.getNumber();
@@ -292,7 +371,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                         startActivity(intent);
                     }
                 }
-                else if (changeArray==0){
+                else if (changeArray==true){
                     Table table1 = arrTable1.get(i);
                     int check1 = table1.getCheck();
                     number = table1.getNumber();
@@ -390,15 +469,14 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         switch (view.getId())
         {
             case R.id.btnShowListTable:
-                changeArray =1;
+                changeArray =false;
                 gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable);
                 gridView.setAdapter(gridviewTableAdapter);
                 gridviewTableAdapter.notifyDataSetChanged();
                 setLine(line3,btnShowAll);
                 break;
             case R.id.btnShowListTableFree:
-                changeArray=0;
-                //ArrayList<Table> tables = new ArrayList<>();
+                changeArray=true;
                 arrTable1.clear();
                 for (Table t: arrTable)
                 {
@@ -413,8 +491,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 setLine(line1,btnShowListFree);
                 break;
             case R.id.btnShowListTableBooked:
-                changeArray=0;
-                //ArrayList<Table> tables1 = new ArrayList<>();
+                changeArray=true;
                 arrTable1.clear();
                 for (Table t: arrTable)
                 {
@@ -445,5 +522,14 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 startActivity(in);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //finish();
+        //Singleton.Instance().getmSocket().disconnect();
+        initDialogQuitApp();
+        dilogQuitApp.show();
+        //super.onBackPressed();
     }
 }
