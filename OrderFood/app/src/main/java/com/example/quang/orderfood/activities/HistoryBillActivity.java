@@ -134,7 +134,7 @@ public class HistoryBillActivity extends AppCompatActivity implements AdapterVie
                         JSONObject object = data.getJSONObject(i);
                         String name = object.getString("tenMonAn");
                         String count = object.getString("soLuong");
-                        ItemMenu itemMenu = new ItemMenu("",name,"","","","");
+                        ItemMenu itemMenu = new ItemMenu("",name,"","","","",0);
                         itemMenu.setCount(Integer.parseInt(count));
                         arrItem.add(itemMenu);
                     } catch (JSONException e) {

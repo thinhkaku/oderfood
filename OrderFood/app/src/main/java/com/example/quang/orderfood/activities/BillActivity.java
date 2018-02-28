@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -65,6 +67,8 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     private ImageView imgAddItem;
     private ImageView imgPushBill;
     private ImageView imgPrintBill;
+
+    private Animation animationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +138,8 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                         String unit = object.getString("tenDVTinh");
                         String check = object.getString("tinhTrang");
                         String image = object.getString("anhMonAn");
-                        ItemMenu itemMenu = new ItemMenu(group,nameOfFood,price,unit,check,image);
+                        int tinhTrangOder = object.getInt("tinhTrangOder");
+                        ItemMenu itemMenu = new ItemMenu(group,nameOfFood,price,unit,check,image,tinhTrangOder);
                         itemMenu.setCount(count);
                         arrItem.add(itemMenu);
                     } catch (JSONException e) {
@@ -166,6 +171,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         imgAddItem = findViewById(R.id.btnAddItem);
         imgPushBill = findViewById(R.id.btnPushBill);
         imgPrintBill = findViewById(R.id.btnPrintBill);
+        animationButton = AnimationUtils.loadAnimation(BillActivity.this,R.anim.button_apha);
     }
 
     private void showDialogConfigPrint()
@@ -199,7 +205,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         builder.setTitle("XÁC NHẬN");
         builder.setMessage("Đẩy hóa đơn?");
         builder.setCancelable(false);
-        builder.setPositiveButton("Thoát", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -224,7 +230,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                 for (ItemMenu i: arrItem)
                 {
                     String temp = "INSERT INTO `hoadonchothanhtoan` VALUES (null,"
-                            +Integer.parseInt(table)+",'"+i.getName()+"',"+i.getCount()+",'"+time+"',"+people+")";
+                            +Integer.parseInt(table)+",'"+i.getName()+"',"+i.getCount()+",'"+time+"',"+people+","+i.getTinhTrangOder()+")";
                     if (query.equalsIgnoreCase(""))
                     {
                         query = query + temp;
@@ -246,6 +252,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         imgAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imgAddItem.startAnimation(animationButton);
                 CHECK_START_MENU = true;
                 Intent intent = new Intent(BillActivity.this,MenuActivity.class);
                 startActivityForResult(intent,111);
@@ -255,6 +262,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         imgPrintBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imgPrintBill.startAnimation(animationButton);
                 showDialogConfigPrint();
             }
         });
@@ -262,6 +270,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         imgPushBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imgPushBill.startAnimation(animationButton);
                 showDialogConfigPush();
             }
         });

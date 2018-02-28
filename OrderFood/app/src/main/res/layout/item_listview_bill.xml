@@ -63,6 +63,11 @@
                 android:src="@drawable/down_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            <ImageButton
+                android:layout_width="40sp"
+                android:id="@+id/btnTinhTrangOder"
+                android:layout_marginLeft="10sp"
+                android:layout_height="30sp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

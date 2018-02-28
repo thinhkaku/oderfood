@@ -13,9 +13,10 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +25,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.quang.orderfood.R;
@@ -36,12 +36,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import adapter.GridviewTableAdapter;
 import adapter.ListviewStaffAdapter;
 import consts.Constants;
 import de.hdodenhof.circleimageview.CircleImageView;
 import objects.Staff;
-import objects.Table;
 import objects.User;
 import singleton.Singleton;
 
@@ -52,7 +50,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private final String CLIENT_SEND_REQUEST_DELETE_STAFF = "CLIENT_SEND_REQUEST_DELETE_STAFF";
     private final String CLIENT_SEND_REQUEST_EDIT_STAFF = "CLIENT_SEND_REQUEST_EDIT_STAFF";
     private  boolean changArray = false;
-    private  int changArray1 = 1;
+    private  boolean changArray1 = false;
     private static String LOG_OUT = "LOG_OUT";
     Emitter.Listener onListStaff;
     {
@@ -76,6 +74,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private ArrayList<Staff> arrStaff;
     private ArrayList<Staff> arrStaff1;
     private ArrayList<Staff> arrStaff2;
+    private ArrayList<String>arrTenNhanVien;
     private ListviewStaffAdapter adap;
 
     private View line1;
@@ -89,6 +88,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private Button btnStaffManager;
     private Button btnMenuManager;
     private Button btnLogOut;
+    private Button btnDangThongBao;
     private ImageView imAddStaff;
     private TextView txtSoNguoiOnline, txtSoNguoiOffline, txtTongSoNhanVien;
 
@@ -96,6 +96,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private TextView tvName;
     private Dialog editStaff;
     private Dialog dilogQuitApp;
+    private Animation animationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +181,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                                     arrStaff2.add(t);
                                 }
                             }
-                            if (changArray1==2){
+                            if (changArray1==true){
                                 adap =new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaff2);
                             }else {
                                 adap =new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaff1);
@@ -211,6 +212,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     }
 
     private void findId() {
+        arrTenNhanVien=new ArrayList<>();
         toolbar = findViewById(R.id.toolbarManager);
         drawerLayout = findViewById(R.id.drawerLayoutManager);
         lvStaff = findViewById(R.id.lvStaff);
@@ -221,6 +223,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         txtSoNguoiOnline =findViewById(R.id.txtSoNguoiOnline);
         txtSoNguoiOffline =findViewById(R.id.txtSoNguoiOffline);
         txtTongSoNhanVien =findViewById(R.id.txtTongSoNhanVien);
+        animationButton= AnimationUtils.loadAnimation(MainForManagerActivity.this,R.anim.button_apha);
 
         line1 = findViewById(R.id.line1Manager);
         line2 = findViewById(R.id.line2Manager);
@@ -229,6 +232,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         btnStaffManager = findViewById(R.id.btnStaffManager);
         btnMenuManager = findViewById(R.id.btnMenuManager);
         btnLogOut = findViewById(R.id.btnLogOutManager);
+        btnDangThongBao = findViewById(R.id.btnDangThongBao);
     }
 
     private void getUser() {
@@ -271,6 +275,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         btnLogOut.setOnClickListener(this);
         btnMenuManager.setOnClickListener(this);
         btnStaffManager.setOnClickListener(this);
+        btnDangThongBao.setOnClickListener(this);
     }
 
 
@@ -302,6 +307,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         switch (view.getId())
         {
             case R.id.btnShowAllStaff:
+                btnShowAllStaff.startAnimation(animationButton);
                 changArray=false;
                 adap = new ListviewStaffAdapter(this,R.layout.item_listview_staff,arrStaff);
                 lvStaff.setAdapter(adap);
@@ -309,8 +315,9 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 setLine(line3,btnShowAllStaff);
                 break;
             case R.id.btnShowListStaffOffline:
+                btnShowStaffOffline.startAnimation(animationButton);
                 changArray=true;
-                changArray1=1;
+                changArray1=false;
                 arrStaff2.clear();
                 for (Staff t: arrStaff)
                 {
@@ -325,8 +332,9 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 setLine(line2,btnShowStaffOffline);
                 break;
             case R.id.btnShowListStaffOnline:
+                btnShowStaffOnline.startAnimation(animationButton);
                 changArray=true;
-                changArray1=2;
+                changArray1=true;
                 arrStaff1.clear();
                 for (Staff t: arrStaff)
                 {
@@ -341,20 +349,28 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 setLine(line1,btnShowStaffOnline);
                 break;
             case R.id.btnStaffManager:
+                btnStaffManager.startAnimation(animationButton);
                 drawerLayout.closeDrawers();
                 break;
             case R.id.btnMenuManager:
-
+                btnMenuManager.startAnimation(animationButton);
+                drawerLayout.closeDrawers();
                 break;
             case R.id.btnLogOutManager:
+                btnLogOut.startAnimation(animationButton);
+                drawerLayout.closeDrawers();
                 Singleton.Instance().getmSocket().emit(LOG_OUT,user.getId());
                 Intent intent1 = new Intent(MainForManagerActivity.this,LoginActivity.class);
                 startActivity(intent1);
                 finish();
                 break;
             case R.id.addStaff:
+                imAddStaff.startAnimation(animationButton);
                 Intent intent = new Intent(MainForManagerActivity.this,AddStaffActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.btnDangThongBao:
+                drawerLayout.closeDrawers();
                 break;
         }
     }
@@ -367,7 +383,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
             intent.putExtra("staff",arrStaff.get(i));
             startActivity(intent);
         }else {
-            if (changArray1==2){
+            if (changArray1==true){
                 Intent intent = new Intent(MainForManagerActivity.this,ProfileActivity.class);
                 intent.putExtra("key","m");
                 intent.putExtra("staff",arrStaff1.get(i));
@@ -430,8 +446,8 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         final EditText edtDateOfBirth = editStaff.findViewById(R.id.edtDateBirthStaffEditStaff);
         final EditText edtDateStart = editStaff.findViewById(R.id.edtDateStartStaffEditStaff);
         final RadioGroup groupSex = editStaff.findViewById(R.id.groupSexEditStaff);
-        Button btnDone = editStaff.findViewById(R.id.btnDoneEditStaff);
-        Button btnExit = editStaff.findViewById(R.id.btnExitEditStaff);
+        final Button btnDone = editStaff.findViewById(R.id.btnDoneEditStaff);
+        final Button btnExit = editStaff.findViewById(R.id.btnExitEditStaff);
         RadioButton radioButton_male = editStaff.findViewById(R.id.radioButton_male_EditStaff);
         RadioButton radioButton_female = editStaff.findViewById(R.id.radioButton_female_EditStaff);
         final RadioGroup groupPosition = editStaff.findViewById(R.id.groupPositionEditStaff);
@@ -477,6 +493,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnExit.startAnimation(animationButton);
                 editStaff.dismiss();
             }
         });
@@ -485,6 +502,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnDone.startAnimation(animationButton);
 
                 RadioButton radioSexButton;
                 RadioButton radioPositionButton;
@@ -531,7 +549,6 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
         initDialogQuitApp();
         dilogQuitApp.show();
     }
@@ -541,18 +558,20 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         dilogQuitApp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dilogQuitApp.setContentView(R.layout.quit_app_dilog);
         dilogQuitApp.setCancelable(false);
-        Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
-        Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
+        final Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
+        final Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
 
         btnHuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnHuy.startAnimation(animationButton);
                 dilogQuitApp.dismiss();
             }
         });
         btnThoat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnThoat.startAnimation(animationButton);
                 dilogQuitApp.dismiss();
 //                Intent intent = new Intent(Intent.ACTION_MAIN);
 //                intent.addCategory(Intent.CATEGORY_HOME);
@@ -565,18 +584,27 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         if (TextUtils.isEmpty(newText)){
-            //adap.
+            adap.getFilter().filter("");
             lvStaff.clearTextFilter();
-        }else {
-            //
-            // adap.getFilter().filter(newText.toString());
         }
+//        else if (newText.equalsIgnoreCase("a")){
+//            ArrayList<Staff>arrStaffT =new ArrayList<>();
+//            arrStaffT.clear();
+//            for (Staff staff:arrStaff){
+//                if (staff.getName().contentEquals("a")){
+//                    arrStaffT.add(staff);
+//                }
+//            }
+//            adap =new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaffT);
+//            lvStaff.setAdapter(adap);
+//            adap.notifyDataSetChanged();
+//        }
         return true;
     }
 }

@@ -260,6 +260,17 @@
             android:text="Quản lý nhân viên"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <Button
+            android:layout_marginTop="20dp"
+            android:id="@+id/btnDangThongBao"
+            android:padding="10dp"
+            android:drawablePadding="15dp"
+            android:drawableLeft="@drawable/ic_border_color_black_24dp"
+            android:background="#00ffffff"
+            style="?android:attr/textAppearanceMedium"
+            android:text="Đăng thông báo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <Button
             android:layout_marginTop="20dp"

@@ -14,8 +14,9 @@ public class ItemMenu implements Serializable{
     private String check;
     private String image;
     private int count = 0;
+    private int tinhTrangOder;
 
-    public ItemMenu(String group, String name, String price, String unit, String check, String image) {
+    public ItemMenu(String group, String name, String price, String unit, String check, String image,int tinhTrangOder) {
         this.group = group;
         this.name = name;
         this.price = price;
@@ -23,6 +24,15 @@ public class ItemMenu implements Serializable{
         this.check = check;
         this.image = image;
         this.count = 0;
+        this.tinhTrangOder=tinhTrangOder;
+    }
+
+    public int getTinhTrangOder() {
+        return tinhTrangOder;
+    }
+
+    public void setTinhTrangOder(int tinhTrangOder) {
+        this.tinhTrangOder = tinhTrangOder;
     }
 
     public String getGroup() {

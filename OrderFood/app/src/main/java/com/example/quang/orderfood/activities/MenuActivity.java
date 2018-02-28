@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -80,6 +82,8 @@ public class MenuActivity extends AppCompatActivity {
     private String foodLast;
     private String numPeo;
 
+    private Animation animationButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +110,7 @@ public class MenuActivity extends AppCompatActivity {
         radioButtonDrink = findViewById(R.id.radioButton_drink);
         radioButtonFood = findViewById(R.id.radioButton_food);
         spinner = findViewById(R.id.spinner);
+        animationButton= AnimationUtils.loadAnimation(MenuActivity.this,R.anim.button_apha);
     }
 
     private void initSockets() {
@@ -134,6 +139,7 @@ public class MenuActivity extends AppCompatActivity {
         tvGoToBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                tvGoToBill.startAnimation(animationButton);
                 for (int i=0; i<drink.size();i++)
                 {
                     if (drink.get(i).getCount() != 0)
@@ -280,7 +286,7 @@ public class MenuActivity extends AppCompatActivity {
                         String unit = object.getString("tenDVTinh");
                         String check = object.getString("tinhTrang");
                         String img = object.getString("anhMonAn");
-                        ItemMenu itemMenu = new ItemMenu(group,name,price,unit,check,img);
+                        ItemMenu itemMenu = new ItemMenu(group,name,price,unit,check,img,0);
                         drink.add(itemMenu);
                         if (!arrItemSpinnerDrink.toString().contains(group))
                             arrItemSpinnerDrink.add(group);
@@ -315,7 +321,7 @@ public class MenuActivity extends AppCompatActivity {
                         String unit = object.getString("tenDVTinh");
                         String check = object.getString("tinhTrang");
                         String img = object.getString("anhMonAn");
-                        ItemMenu itemMenu = new ItemMenu(group,name,price,unit,check,img);
+                        ItemMenu itemMenu = new ItemMenu(group,name,price,unit,check,img,0);
                         food.add(itemMenu);
                         if (!arrItemSpinnerFood.toString().contains(group))
                             arrItemSpinnerFood.add(group);
@@ -331,7 +337,7 @@ public class MenuActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
         finish();
     }
 }

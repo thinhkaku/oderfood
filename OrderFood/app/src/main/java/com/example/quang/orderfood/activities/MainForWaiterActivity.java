@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +81,8 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
 
     private SearchView searchView;
 
+    private Animation animationButton;
+
     private Button btnShowListFree;
     private Button btnShowListBooked;
     private Button btnShowAll;
@@ -92,6 +96,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private Button btnProfile;
     private Button btnListBill;
     private Button btnLogOut;
+    private Button btnBangTin;
 
     private Dialog dialogPeople, dilogQuitApp;
     private int number;
@@ -149,18 +154,20 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         dialogPeople.setContentView(R.layout.dialog_check_number);
         dialogPeople.setCancelable(false);
         final EditText edtPeople = dialogPeople.findViewById(R.id.edtPeopleDialog);
-        Button btnExit = dialogPeople.findViewById(R.id.btnExitDialog);
-        Button btnDone = dialogPeople.findViewById(R.id.btnDoneDialog);
+        final Button btnExit = dialogPeople.findViewById(R.id.btnExitDialog);
+        final Button btnDone = dialogPeople.findViewById(R.id.btnDoneDialog);
 
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnExit.startAnimation(animationButton);
                 dialogPeople.dismiss();
             }
         });
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnDone.startAnimation(animationButton);
                 people = edtPeople.getText().toString();
                 if (people.isEmpty()){
                     Snackbar snackbar = Snackbar
@@ -185,18 +192,20 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         dilogQuitApp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dilogQuitApp.setContentView(R.layout.quit_app_dilog);
         dilogQuitApp.setCancelable(false);
-        Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
-        Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
+        final Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
+        final Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
 
         btnHuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnHuy.startAnimation(animationButton);
                 dilogQuitApp.dismiss();
             }
         });
         btnThoat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnThoat.startAnimation(animationButton);
                 dilogQuitApp.dismiss();
 //                Intent intent = new Intent(Intent.ACTION_MAIN);
 //                intent.addCategory(Intent.CATEGORY_HOME);
@@ -232,6 +241,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         btnShowListBooked.setOnClickListener(this);
         btnProfile.setOnClickListener(this);
         btnLogOut.setOnClickListener(this);
+        btnBangTin.setOnClickListener(this);
         btnListBill.setOnClickListener(this);
         Glide.with(this).load(Constants.PORT+MainForWaiterActivity.user.getImage())
                 .into(avatar);
@@ -312,6 +322,8 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         btnShowListFree = findViewById(R.id.btnShowListTableFree);
         btnShowListBooked = findViewById(R.id.btnShowListTableBooked);
 
+        animationButton = AnimationUtils.loadAnimation(MainForWaiterActivity.this,R.anim.button_apha);
+
         line1 = findViewById(R.id.line1);
         line2 = findViewById(R.id.line2);
         line3 = findViewById(R.id.line3);
@@ -323,6 +335,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         btnProfile = findViewById(R.id.btnProfile);
         btnListBill = findViewById(R.id.btnListHistoryBill);
         btnLogOut = findViewById(R.id.btnLogOut);
+        btnBangTin = findViewById(R.id.btnBangTin);
     }
 
     private void setLine(View v, Button b)
@@ -469,6 +482,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         switch (view.getId())
         {
             case R.id.btnShowListTable:
+                btnShowAll.startAnimation(animationButton);
                 changeArray =false;
                 gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable);
                 gridView.setAdapter(gridviewTableAdapter);
@@ -476,6 +490,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 setLine(line3,btnShowAll);
                 break;
             case R.id.btnShowListTableFree:
+                btnShowListFree.startAnimation(animationButton);
                 changeArray=true;
                 arrTable1.clear();
                 for (Table t: arrTable)
@@ -491,6 +506,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 setLine(line1,btnShowListFree);
                 break;
             case R.id.btnShowListTableBooked:
+                btnShowListBooked.startAnimation(animationButton);
                 changeArray=true;
                 arrTable1.clear();
                 for (Table t: arrTable)
@@ -506,20 +522,29 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 setLine(line2,btnShowListBooked);
                 break;
             case R.id.btnProfile:
+                btnProfile.startAnimation(animationButton);
+                drawerLayout.closeDrawers();
                 Intent intent = new Intent(MainForWaiterActivity.this,ProfileActivity.class);
                 intent.putExtra("key","w");
                 startActivity(intent);
                 break;
             case R.id.btnLogOut:
+                btnLogOut.startAnimation(animationButton);
+                drawerLayout.closeDrawers();
                 Singleton.Instance().getmSocket().emit(LOG_OUT,user.getId());
                 Intent intent1 = new Intent(MainForWaiterActivity.this,LoginActivity.class);
                 startActivity(intent1);
                 finish();
                 break;
             case R.id.btnListHistoryBill:
+                btnListBill.startAnimation(animationButton);
+                drawerLayout.closeDrawers();
                 Intent in = new Intent(MainForWaiterActivity.this, HistoryBillActivity.class);
                 in.putExtra("u",user);
                 startActivity(in);
+                break;
+            case R.id.btnBangTin:
+                drawerLayout.closeDrawers();
                 break;
         }
     }

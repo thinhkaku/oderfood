@@ -4,7 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,12 +28,14 @@ public class ListviewBillAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private ArrayList<ItemMenu> arrItem;
+    private Animation animationButton;
 
 
     public ListviewBillAdapter(Context context, int layout, ArrayList<ItemMenu> arrItem) {
         this.context = context;
         this.layout = layout;
         this.arrItem = arrItem;
+        animationButton= AnimationUtils.loadAnimation(context,R.anim.button_apha);
     }
 
     private class ViewHolder{
@@ -39,6 +44,7 @@ public class ListviewBillAdapter extends BaseAdapter {
         ImageView btnUp;
         ImageView btnDown;
         TextView tvCount;
+        ImageButton btnTinhTrangOder;
     }
 
     @Override
@@ -70,7 +76,7 @@ public class ListviewBillAdapter extends BaseAdapter {
             viewHolder.btnUp = viewRow.findViewById(R.id.btnUpBill);
             viewHolder.btnDown = viewRow.findViewById(R.id.btnDownBill);
             viewHolder.tvCount = viewRow.findViewById(R.id.tvCountBill);
-
+            viewHolder.btnTinhTrangOder=viewRow.findViewById(R.id.btnTinhTrangOder);
             viewRow.setTag(viewHolder);
         }
 
@@ -79,9 +85,28 @@ public class ListviewBillAdapter extends BaseAdapter {
         viewHolder.tvName.setText(itemMenu.getName());
         viewHolder.tvPrice.setText(itemMenu.getPrice());
         viewHolder.tvCount.setText(itemMenu.getCount()+"");
+        if (itemMenu.getTinhTrangOder()==0){
+            viewHolder.btnTinhTrangOder.setBackgroundResource(R.drawable.ic_hourglass_empty_black_24dp);
+        }else {
+            viewHolder.btnTinhTrangOder.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
+        }
+        viewHolder.btnTinhTrangOder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewHolder.btnTinhTrangOder.startAnimation(animationButton);
+                if (itemMenu.getTinhTrangOder()==0){
+                    itemMenu.setTinhTrangOder(1);
+                    viewHolder.btnTinhTrangOder.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
+                }else {
+                    itemMenu.setTinhTrangOder(0);
+                    viewHolder.btnTinhTrangOder.setBackgroundResource(R.drawable.ic_hourglass_empty_black_24dp);
+                }
+            }
+        });
         viewHolder.btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                viewHolder.btnUp.startAnimation(animationButton);
                 int i = itemMenu.getCount();
                 i = i + 1;
                 viewHolder.tvCount.setText(String.valueOf(i));
@@ -92,6 +117,7 @@ public class ListviewBillAdapter extends BaseAdapter {
         viewHolder.btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                viewHolder.btnDown.startAnimation(animationButton);
                 int i = itemMenu.getCount();
                 if (i == 0)
                 {

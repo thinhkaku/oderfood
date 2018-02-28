@@ -1,9 +1,11 @@
 package com.example.quang.orderfood.activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final String CLIENT_SEND_REQUEST_LOGIN = "CLIENT_SEND_REQUEST_LOGIN";
     private final String SERVER_SEND_RESULT = "SERVER_SEND_RESULT";
     private CheckBox checkBox;
+    private Dialog dilogQuitApp;
     private SharedPreferences.Editor editor;
     //Socket mSocket;
     Emitter.Listener onResult;
@@ -274,5 +277,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences.Editor editor = sharedPreferences1.edit();
         editor.putBoolean("checked", isChecked);
         editor.commit();
+    }
+    private void initDialogQuitApp() {
+        dilogQuitApp = new Dialog(this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+        dilogQuitApp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dilogQuitApp.setContentView(R.layout.quit_app_dilog);
+        dilogQuitApp.setCancelable(false);
+        final Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
+        final Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnHuy.startAnimation(buttonAnimationApha);
+                dilogQuitApp.dismiss();
+            }
+        });
+        btnThoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnThoat.startAnimation(buttonAnimationApha);
+                dilogQuitApp.dismiss();
+//                Intent intent = new Intent(Intent.ACTION_MAIN);
+//                intent.addCategory(Intent.CATEGORY_HOME);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                finishAffinity();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        initDialogQuitApp();
+        dilogQuitApp.show();
     }
 }
