@@ -30,6 +30,7 @@
         <activity android:name=".activities.HistoryBillActivity" />
         <activity android:name=".activities.AddStaffActivity" />
         <activity android:name=".activities.AddItemMenuActivity" />
+        <activity android:name=".activities.MenuManagementActivity" />
         <activity android:name=".activities.MenuManagerActivity"></activity>
     </application>
 

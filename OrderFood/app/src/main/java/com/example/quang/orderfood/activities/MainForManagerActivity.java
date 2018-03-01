@@ -349,6 +349,8 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 setLine(line1,btnShowStaffOnline);
                 break;
             case R.id.btnStaffManager:
+                Intent intent =new Intent(MainForManagerActivity.this,MenuManagementActivity.class);
+                startActivity(intent);
                 btnStaffManager.startAnimation(animationButton);
                 drawerLayout.closeDrawers();
                 break;
@@ -366,8 +368,8 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.addStaff:
                 imAddStaff.startAnimation(animationButton);
-                Intent intent = new Intent(MainForManagerActivity.this,AddStaffActivity.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(MainForManagerActivity.this,AddStaffActivity.class);
+                startActivity(intent2);
                 break;
             case R.id.btnDangThongBao:
                 drawerLayout.closeDrawers();

@@ -41,6 +41,11 @@ io.sockets.on('connection', function (socket) {
       getMenuFood(socket);
   });
 
+    socket.on('CLIENT_SEND_MENU', function(data){
+      console.log(data);
+      getMenu(socket);
+    });
+
     socket.on('CLIENT_SEND_TEMP_BILL', function(data){
       //console.log(data);
       insertTempBill(socket,data);
@@ -100,6 +105,7 @@ function checkUserAndPass(userPass,socket)
   con.query("SELECT * FROM nhanvien WHERE userPass = '"+userPass+"'", function (err, result, fields) {
     if (err) throw err;
     socket.emit('SERVER_SEND_RESULT',result);
+    console.log(result);
     if (result.length == 1) {
     	con.query("UPDATE nhanvien SET online = 1 WHERE userPass = '"+userPass+"'", function (err, result, fields) {
     	if (err) throw err;});
@@ -154,6 +160,17 @@ function getMenuDrink(socket)
 		"FROM nhommonan INNER JOIN danhsachmonan ON nhommonan.tenNhom = danhsachmonan.tenNhom WHERE nhommonan.loai = 'drink'", function (err, result, fields) {
     if (err) throw err;
     socket.emit('SERVER_SEND_MENU_DRINK',result);
+    //console.log(result);
+  });
+}
+
+function getMenu(socket)
+{
+  con.query("SELECT nhommonan.tenNhom, danhsachmonan.tenMonAn, danhsachmonan.gia, danhsachmonan.tenDVTinh"+
+    ", danhsachmonan.tinhTrang, danhsachmonan.anhMonAn "+
+    "FROM nhommonan INNER JOIN danhsachmonan ON nhommonan.tenNhom = danhsachmonan.tenNhom", function (err, result, fields) {
+    if (err) throw err;
+    socket.emit('SERVER_SEND_MENU',result);
     //console.log(result);
   });
 }
