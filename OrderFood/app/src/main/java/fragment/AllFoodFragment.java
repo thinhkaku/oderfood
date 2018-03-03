@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import adapter.ListviewMenuAdapter;
 import adapter.MenuManagementAdapterPager;
+import adapter.MenuManagerAdapter;
 import objects.ItemMenu;
 import objects.PagerTitle;
 import singleton.Singleton;
@@ -33,6 +34,7 @@ public class AllFoodFragment extends Fragment {
     private ArrayList<ItemMenu>arrAllFood;
     private ListView lvMenu;
     private ListviewMenuAdapter listviewMenuAdapter;
+    private MenuManagerAdapter menuManagerAdapter;
     private Emitter.Listener onResult;
 
     {
@@ -87,9 +89,10 @@ public class AllFoodFragment extends Fragment {
 
 
                 }
-                listviewMenuAdapter=new ListviewMenuAdapter(getContext(),R.layout.item_listview_menu,arrAllFood);
-                lvMenu.setAdapter(listviewMenuAdapter);
-                listviewMenuAdapter.notifyDataSetChanged();
+                //listviewMenuAdapter=new ListviewMenuAdapter(getContext(),R.layout.item_listview_menu,arrAllFood);
+                menuManagerAdapter =new MenuManagerAdapter(getContext(),arrAllFood);
+                lvMenu.setAdapter(menuManagerAdapter);
+                menuManagerAdapter.notifyDataSetChanged();
             }
         });
     }

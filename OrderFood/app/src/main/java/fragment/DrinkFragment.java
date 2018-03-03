@@ -3,7 +3,11 @@ package fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -18,6 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import adapter.ListviewMenuAdapter;
+import adapter.MenuManagerAdapter;
 import objects.ItemMenu;
 import singleton.Singleton;
 
@@ -25,12 +30,12 @@ import singleton.Singleton;
  * Created by Administrator on 3/1/2018.
  */
 
-public class DrinkFragment extends Fragment {
+public class DrinkFragment extends Fragment{
     private static String CLIENT_SEND_MENU="CLIENT_SEND_MENU";
     private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU";
     private ArrayList<ItemMenu> arrAllFood;
     private ListView lvMenu;
-    private ListviewMenuAdapter listviewMenuAdapter;
+    private MenuManagerAdapter menuManagerAdapter;
     private Emitter.Listener onResult;
 
     {
@@ -84,9 +89,9 @@ public class DrinkFragment extends Fragment {
                     }
                 }
 
-                listviewMenuAdapter=new ListviewMenuAdapter(getContext(),R.layout.item_listview_menu,arrAllFood);
-                lvMenu.setAdapter(listviewMenuAdapter);
-                listviewMenuAdapter.notifyDataSetChanged();
+                menuManagerAdapter=new MenuManagerAdapter(getContext(),arrAllFood);
+                lvMenu.setAdapter(menuManagerAdapter);
+                menuManagerAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -95,4 +100,5 @@ public class DrinkFragment extends Fragment {
         Singleton.Instance().getmSocket().emit(CLIENT_SEND_MENU,123);
         Singleton.Instance().getmSocket().on(SERVER_SEND_MENU_DRINK,onResult);
     }
+
 }
