@@ -31,8 +31,8 @@ import singleton.Singleton;
  */
 
 public class DrinkFragment extends Fragment{
-    private static String CLIENT_SEND_MENU="CLIENT_SEND_MENU";
-    private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU";
+    private static String CLIENT_SEND_MENU="CLIENT_SEND_REQUEST_DRINNK";
+    private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU_DRINK";
     private ArrayList<ItemMenu> arrAllFood;
     private ListView lvMenu;
     private MenuManagerAdapter menuManagerAdapter;

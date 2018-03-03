@@ -349,14 +349,15 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 setLine(line1,btnShowStaffOnline);
                 break;
             case R.id.btnStaffManager:
-                Intent intent =new Intent(MainForManagerActivity.this,MenuManagementActivity.class);
-                startActivity(intent);
+
                 btnStaffManager.startAnimation(animationButton);
                 drawerLayout.closeDrawers();
                 break;
             case R.id.btnMenuManager:
                 btnMenuManager.startAnimation(animationButton);
                 drawerLayout.closeDrawers();
+                Intent intent =new Intent(MainForManagerActivity.this,MenuManagementActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btnLogOutManager:
                 btnLogOut.startAnimation(animationButton);

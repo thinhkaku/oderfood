@@ -1,5 +1,6 @@
 package com.example.quang.orderfood.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -101,7 +103,6 @@ public class MenuManagementActivity extends AppCompatActivity implements View.On
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        finish();
     }
 
     @Override
@@ -122,5 +123,10 @@ public class MenuManagementActivity extends AppCompatActivity implements View.On
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }

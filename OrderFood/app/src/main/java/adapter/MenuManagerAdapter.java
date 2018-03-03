@@ -1,12 +1,19 @@
 package adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.renderscript.ScriptIntrinsicHistogram;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,24 +27,29 @@ import java.util.List;
 
 import consts.Constants;
 import objects.ItemMenu;
+import singleton.Singleton;
 
 /**
  * Created by Administrator on 3/2/2018.
  */
 
 public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
+    private static String CLIENT_SEND_DELETE_MENU="CLIENT_SEND_DELETE_MENU";
     private LayoutInflater inflater;
+    private Dialog dialogRemove;
     private ArrayList<ItemMenu>arrMenu=new ArrayList<>();
+    private Animation animationButton;
     public MenuManagerAdapter(@NonNull Context context, @NonNull ArrayList<ItemMenu> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
         inflater=LayoutInflater.from(context);
         arrMenu=objects;
+        animationButton= AnimationUtils.loadAnimation(getContext(),R.anim.button_apha);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View v, @NonNull ViewGroup parent) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (v==null){
             viewHolder=new ViewHolder();
             v= inflater.inflate(R.layout.item_list_menu_manager,parent,false);
@@ -50,7 +62,7 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
         }else {
             viewHolder= (ViewHolder) v.getTag();
         }
-        ItemMenu itemMenu =arrMenu.get(position);
+        final ItemMenu itemMenu =arrMenu.get(position);
         Glide.with(getContext()).load(Constants.PORT+itemMenu.getImage()).into(viewHolder.imgFood);
         viewHolder.tvName.setText(itemMenu.getName());
         viewHolder.tvPrice.setText(itemMenu.getPrice());
@@ -63,7 +75,9 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
         viewHolder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                 viewHolder.btnRemove.startAnimation(animationButton);
+                 intitDiLogReMove(itemMenu.getImage());
+                 dialogRemove.show();
             }
         });
         return v;
@@ -74,4 +88,28 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
         TextView tvPrice;
         ImageButton btnEdit, btnRemove;
     }
+    private void  intitDiLogReMove(final String anhMonAn){
+        dialogRemove =new Dialog(getContext(),android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
+        dialogRemove.setContentView(R.layout.remove_manager_dilog);
+        dialogRemove.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogRemove.setCancelable(false);
+        final Button btnHuy=dialogRemove.findViewById(R.id.btnHuyRemove);
+        final Button btnDongY=dialogRemove.findViewById(R.id.btnDongYRemoveDialog);
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnHuy.startAnimation(animationButton);
+                dialogRemove.dismiss();
+            }
+        });
+        btnDongY.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnDongY.startAnimation(animationButton);
+                dialogRemove.dismiss();
+                Singleton.Instance().getmSocket().emit(CLIENT_SEND_DELETE_MENU,anhMonAn);
+            }
+        });
+    }
+
 }

@@ -29,11 +29,10 @@ import singleton.Singleton;
  */
 
 public class AllFoodFragment extends Fragment {
-    private static String CLIENT_SEND_MENU="CLIENT_SEND_REQUEST_DRINNK";
-    private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU_DRINK";
+    private static String CLIENT_SEND_MENU="CLIENT_SEND_MENU";
+    private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU";
     private ArrayList<ItemMenu>arrAllFood;
     private ListView lvMenu;
-    private ListviewMenuAdapter listviewMenuAdapter;
     private MenuManagerAdapter menuManagerAdapter;
     private Emitter.Listener onResult;
 
@@ -50,6 +49,7 @@ public class AllFoodFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fm_all_food, container, false);
+
     }
 
     @Override
@@ -57,6 +57,11 @@ public class AllFoodFragment extends Fragment {
         super.onStart();
         initSocket();
         initView();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     private void initView() {
@@ -89,7 +94,6 @@ public class AllFoodFragment extends Fragment {
 
 
                 }
-                //listviewMenuAdapter=new ListviewMenuAdapter(getContext(),R.layout.item_listview_menu,arrAllFood);
                 menuManagerAdapter =new MenuManagerAdapter(getContext(),arrAllFood);
                 lvMenu.setAdapter(menuManagerAdapter);
                 menuManagerAdapter.notifyDataSetChanged();
