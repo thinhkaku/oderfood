@@ -76,7 +76,7 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
             @Override
             public void onClick(View view) {
                  viewHolder.btnRemove.startAnimation(animationButton);
-                 intitDiLogReMove(itemMenu.getImage());
+                 intitDiLogReMove(itemMenu.getName());
                  dialogRemove.show();
             }
         });
@@ -88,7 +88,7 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
         TextView tvPrice;
         ImageButton btnEdit, btnRemove;
     }
-    private void  intitDiLogReMove(final String anhMonAn){
+    private void  intitDiLogReMove(final String tenMonAn){
         dialogRemove =new Dialog(getContext(),android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
         dialogRemove.setContentView(R.layout.remove_manager_dilog);
         dialogRemove.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -107,7 +107,7 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
             public void onClick(View view) {
                 btnDongY.startAnimation(animationButton);
                 dialogRemove.dismiss();
-                Singleton.Instance().getmSocket().emit(CLIENT_SEND_DELETE_MENU,anhMonAn);
+                Singleton.Instance().getmSocket().emit(CLIENT_SEND_DELETE_MENU,tenMonAn);
             }
         });
     }

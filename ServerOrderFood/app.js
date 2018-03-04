@@ -42,8 +42,12 @@ io.sockets.on('connection', function (socket) {
   });
 
     socket.on('CLIENT_SEND_MENU', function(data){
-      console.log(data);
       getMenu(socket);
+    });
+
+    socket.on('CLIENT_SEND_DELETE_MENU',function(data){
+      console.log(data);
+      deleteMenu(socket,data);
     });
 
     socket.on('CLIENT_SEND_TEMP_BILL', function(data){
@@ -99,6 +103,31 @@ io.sockets.on('connection', function (socket) {
 
 });
 
+function deleteMenu(socket, data)
+{
+  con.query("DELETE FROM `dsmonantheohd` WHERE `tenMonAn` = '"+data+"'",function(err, result,fields){
+    if (err) {
+      socket.emit('SEVER_SEND_RESULT_DELETE_MENU_MANAGER',"false");
+    }else{
+        con.query("DELETE FROM `hoadonchothanhtoan` WHERE `tenMonAn` = '"+data+"'",function(err,result,fields){
+          if (err) {
+            socket.emit('SEVER_SEND_RESULT_DELETE_MENU_MANAGER',"false");
+          }else{
+               con.query("DELETE FROM `danhsachmonan` WHERE `tenMonAn`='"+data+"'",function(err,result,fields){
+                    if (err) {
+                      socket.emit('SEVER_SEND_RESULT_DELETE_MENU_MANAGER',"false");
+                    }else{
+                        con.query("SELECT * FROM danhsachmonan",function(err,result,fields){
+                          if (err) throw err;
+                          io.sockets.emit('SERVER_SEND_MENU',result);
+                        });
+                    }
+               });
+          }
+        });
+    }
+  });
+}
 
 function checkUserAndPass(userPass,socket)
 {
