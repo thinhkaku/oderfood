@@ -68,6 +68,7 @@ public class MenuActivity extends AppCompatActivity {
     private Spinner spinner;
     private ArrayList<String> arrItemSpinnerDrink = new ArrayList<>();
     private ArrayList<String> arrItemSpinnerFood = new ArrayList<>();
+    private boolean ktTraDaySoNguoi=false;
 
 
     private ArrayAdapter<String> adapter;
@@ -339,5 +340,6 @@ public class MenuActivity extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
         finish();
+
     }
 }

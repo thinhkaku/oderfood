@@ -183,6 +183,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                     startActivity(intent);
                     dialogPeople.dismiss();
                 }
+                edtPeople.setText("");
             }
         });
     }

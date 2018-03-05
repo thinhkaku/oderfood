@@ -39,6 +39,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     private final String CLIENT_SEND_REQUEST_BILL = "CLIENT_SEND_REQUEST_BILL";
     private final String SERVER_SEND_BILL = "SERVER_SEND_BILL";
     private final String DELETE_BILL = "DELETE_BILL";
+    private boolean ktDaySoNguoi=false;
 
     Emitter.Listener onBill;
     {
@@ -158,6 +159,9 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                 listviewBillAdapter = new ListviewBillAdapter(BillActivity.this,R.layout.item_listview_bill,arrItem);
                 listView.setAdapter(listviewBillAdapter);
                 listviewBillAdapter.notifyDataSetChanged();
+                if (arrItem.size()!=0){
+                    ktDaySoNguoi=true;
+                }
             }
         });
     }
@@ -469,5 +473,15 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        if (ktDaySoNguoi==false){
+            Toast.makeText(BillActivity.this,"Bạn chưa đẩy hóa đơn!",Toast.LENGTH_SHORT).show();
+        }else {
+            finish();
+        }
     }
 }
