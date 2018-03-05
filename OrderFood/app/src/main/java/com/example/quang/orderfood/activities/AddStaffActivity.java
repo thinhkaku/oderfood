@@ -68,7 +68,8 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void run() {
                 String object = (String) arg;
-                if (object.equalsIgnoreCase("false"))
+                Toast.makeText(AddStaffActivity.this,object+"",Toast.LENGTH_SHORT).show();
+                if (object.split("").equals("1"))
                 {
                     Snackbar snackbar = Snackbar
                             .make(edtAddress, "Thất bại!", Snackbar.LENGTH_SHORT);

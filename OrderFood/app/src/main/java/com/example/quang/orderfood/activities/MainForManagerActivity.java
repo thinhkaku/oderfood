@@ -421,7 +421,8 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                             break;
                         case R.id.delete:
                             String id = arrStaff.get(i).getId();
-                            String query = "DELETE FROM `nhanvien` WHERE `idNhanVien` = '"+id+"'";
+                            //String query = "DELETE FROM `nhanvien` WHERE `idNhanVien` = '"+id+"'";
+                            String query = id;
                             Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_DELETE_STAFF,query);
                             break;
                     }

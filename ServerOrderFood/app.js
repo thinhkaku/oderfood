@@ -120,6 +120,8 @@ function deleteMenu(socket, data)
                         con.query("SELECT * FROM danhsachmonan",function(err,result,fields){
                           if (err) throw err;
                           io.sockets.emit('SERVER_SEND_MENU',result);
+                          getMenuFood(socket);
+                          getMenuDrink(socket);
                         });
                     }
                });
@@ -277,7 +279,7 @@ function getListItemBill(socket,idBill)
 
 function getListStaff(socket)
 {
-    con.query("SELECT * FROM `nhanvien` WHERE chucVu = 'BB'", function (err, result, fields) {
+    con.query("SELECT * FROM `nhanvien`", function (err, result, fields) {
     if (err) throw err;
       io.sockets.emit('SERVER_SEND_LIST_STAFF',result);
       //console.log(result);
@@ -314,7 +316,7 @@ function insertStaff(socket,que)
       console.log(err);
     }
     else{
-      io.sockets.emit('SERVER_SEND_LIST_STAFF',result);
+      io.sockets.emit('SERVER_SEND_RESULT_INSERT_STAFF',"1");
       console.log(result);
     }
 
@@ -323,20 +325,52 @@ function insertStaff(socket,que)
 
 function deleteStaff(socket,que)
 {
-    con.query(que, function (err, result, fields) {
-    if (err) {
-      socket.emit('SERVER_SEND_RESULT_DELETE_STAFF',"false");
-    }
-    else{
-        con.query("SELECT * FROM `nhanvien` WHERE chucVu = 'BB'", function (err, result, fields) {
-        if (err) throw err;
-          io.sockets.emit('SERVER_SEND_LIST_STAFF',result);
-          //console.log(result);
-        });
-    }
+  var idHoaDonCucBo="";
+    con.query("SELECT `idHoaDon` FROM `thongkehoadon` WHERE idNhanVien = '"+que+"'",function(err,result,fields){
+      if (err) {
+          socket.emit('SERVER_SEND_RESULT_DELETE_STAFF',"false");
+          console.log(err);
+      }else
+      {
+        idHoaDonCucBo=JSON.stringify(result);
+        idHoaDonCucBo=idHoaDonCucBo.substring(1,idHoaDonCucBo.length-1);
+        console.log(idHoaDonCucBo);
+        var n=13;
+        var m=19;
+        var l=16;
+        var x="";
+        for (var i = 0; i <= 50; i++) {
+            x=idHoaDonCucBo.substr(n,m);
+            con.query("DELETE FROM `dsmonantheohd` WHERE idHoaDon='"+x+"'",function(err,result,fields){
+                if (err) {
+                  socket.emit('SERVER_SEND_RESULT_DELETE_STAFF',"false");
+                }
+            });
+              n=m+n+l;
+        }
 
-    });
+        con.query("DELETE FROM `thongkehoadon` WHERE idNhanVien='"+que+"'",function(err,result,fields){
+            if (err) {
+              socket.emit('SERVER_SEND_RESULT_DELETE_STAFF',"false");
+            }else{
+              con.query("DELETE FROM `nhanvien` WHERE idNhanVien='"+que+"'",function(err,result,fields){
+                if (err) {
+                  socket.emit('SERVER_SEND_RESULT_DELETE_STAFF',"false");
+                }else{
+                  con.query("SELECT * FROM `nhanvien`",function(err, resultt,fields){
+            if (err) throw err;
+               io.sockets.emit('SERVER_SEND_LIST_STAFF',resultt);
+          });
+                }
+              });
+              }
+            });
+            } 
+        });
 }
+
+
+
 
 function editStaff(socket,que)
 {

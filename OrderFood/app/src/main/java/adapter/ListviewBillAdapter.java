@@ -1,6 +1,8 @@
 package adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.quang.orderfood.R;
+import com.example.quang.orderfood.activities.BillActivity;
+import com.example.quang.orderfood.activities.MainForWaiterActivity;
 
 import java.util.ArrayList;
 
@@ -95,8 +99,7 @@ public class ListviewBillAdapter extends BaseAdapter {
             public void onClick(View view) {
                 viewHolder.btnTinhTrangOder.startAnimation(animationButton);
                 if (itemMenu.getTinhTrangOder()==0){
-                    itemMenu.setTinhTrangOder(1);
-                    viewHolder.btnTinhTrangOder.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
+                    showDialogConfigPrint(itemMenu,viewHolder);
                 }else {
                     itemMenu.setTinhTrangOder(0);
                     viewHolder.btnTinhTrangOder.setBackgroundResource(R.drawable.ic_hourglass_empty_black_24dp);
@@ -133,5 +136,28 @@ public class ListviewBillAdapter extends BaseAdapter {
             }
         });
         return viewRow;
+    }
+
+    private void showDialogConfigPrint(final ItemMenu itemMenu, final ViewHolder viewHolder)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("XÁC NHẬN");
+        builder.setMessage("Món ăn này đã được oder xong");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Thoát", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton("Xuất", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                itemMenu.setTinhTrangOder(1);
+                viewHolder.btnTinhTrangOder.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

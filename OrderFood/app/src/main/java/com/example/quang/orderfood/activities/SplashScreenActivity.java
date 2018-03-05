@@ -1,5 +1,6 @@
 package com.example.quang.orderfood.activities;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private String MY_PREFS_NAME="oderfood";
     private Socket mSocket;
     private boolean ktSocket=false;
+    private Dialog dilogQuitApp;
+    private Animation animationButton;
     private TextView txtScreen;
     private Emitter.Listener onResult;
     private java.lang.String CLIENT_SEND_REQUEST_LOGIN="CLIENT_SEND_REQUEST_LOGIN";
@@ -97,6 +102,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         Singleton.Instance().setmSocket(mSocket);
         Singleton.Instance().setOnResult(onResult);
         txtCreenAnimation = AnimationUtils.loadAnimation(this,R.anim.txt_creen_apha);
+        animationButton =AnimationUtils.loadAnimation(SplashScreenActivity.this,R.anim.button_apha);
         txtScreen=findViewById(R.id.txtScreen);
         txtScreen.startAnimation(txtCreenAnimation);
     }
@@ -106,6 +112,35 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onResume();
         IntentFilter intentFilter =new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(ktKetnoi,intentFilter);
+    }
+
+    private void initDialogQuitApp() {
+        dilogQuitApp = new Dialog(this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
+        dilogQuitApp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dilogQuitApp.setContentView(R.layout.quit_app_dilog);
+        dilogQuitApp.setCancelable(false);
+        final Button btnHuy = dilogQuitApp.findViewById(R.id.btnHuyExit);
+        final Button btnThoat = dilogQuitApp.findViewById(R.id.btnThoatDialog);
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnHuy.startAnimation(animationButton);
+                dilogQuitApp.dismiss();
+            }
+        });
+        btnThoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnThoat.startAnimation(animationButton);
+                dilogQuitApp.dismiss();
+//                Intent intent = new Intent(Intent.ACTION_MAIN);
+//                intent.addCategory(Intent.CATEGORY_HOME);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                finishAffinity();
+            }
+        });
     }
 
     @Override
@@ -272,5 +307,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void initSockets() {
         mSocket.connect();
         mSocket.on(SERVER_SEND_RESULT,onResult);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        initDialogQuitApp();
+        dilogQuitApp.show();
     }
 }
