@@ -85,6 +85,7 @@ public class MenuManagementActivity extends AppCompatActivity implements View.On
         animationButton= AnimationUtils.loadAnimation(MenuManagementActivity.this,R.anim.button_apha);
         menuManagementAdapterPager=new MenuManagementAdapterPager(getSupportFragmentManager(),pagerTitles);
         viewPager.setAdapter(menuManagementAdapterPager);
+        menuManagementAdapterPager.notifyDataSetChanged();
     }
 
     @Override
@@ -92,6 +93,8 @@ public class MenuManagementActivity extends AppCompatActivity implements View.On
         switch (view.getId()){
             case R.id.btnBackManager:
                 btnBack.startAnimation(animationButton);
+                Intent intent=new Intent(MenuManagementActivity.this,MainForManagerActivity.class);
+                startActivity(intent);
                 finish();
                 break;
             case R.id.fab:

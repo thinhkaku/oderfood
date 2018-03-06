@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +61,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private  boolean kiemTraTrangThaiApp=true;
     Emitter.Listener onListTable;
     private static  String KET_NOI_LAI="KET_NOI_LAI";
+    private String KEY_PUSH_USER_DATA="KEY_PUSH_USER_DATA";
 
     {
         onListTable = new Emitter.Listener() {
@@ -251,8 +254,13 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
 
     private void getUser()
     {
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra(Constants.KEY_PUSH_USER);
+        Gson gson = new Gson();
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.getApplicationContext());
+        String json = appSharedPrefs.getString(KEY_PUSH_USER_DATA, "");
+        user = gson.fromJson(json, User.class);
+//        Intent intent = getIntent();
+//        user = (User) intent.getSerializableExtra(Constants.KEY_PUSH_USER);
         ID_USER = user.getId();
     }
 

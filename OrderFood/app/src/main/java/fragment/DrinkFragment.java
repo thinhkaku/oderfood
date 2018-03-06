@@ -1,5 +1,7 @@
 package fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,18 +13,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import adapter.ListviewMenuAdapter;
 import adapter.MenuManagerAdapter;
+import consts.Constants;
 import objects.ItemMenu;
 import singleton.Singleton;
 
@@ -35,6 +41,8 @@ public class DrinkFragment extends Fragment{
     private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU_DRINK";
     private ArrayList<ItemMenu> arrAllFood;
     private ListView lvMenu;
+    private Activity activity;
+    private Context context;
     private MenuManagerAdapter menuManagerAdapter;
     private Emitter.Listener onResult;
 
@@ -62,12 +70,12 @@ public class DrinkFragment extends Fragment{
 
     private void initView() {
         arrAllFood=new ArrayList<>();
-        lvMenu=getActivity().findViewById(R.id.lvDrinkManager);
+        lvMenu=activity.findViewById(R.id.lvDrinkManager);
 
     }
 
     private void resultAllFood(final Object args) {
-        getActivity().runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 JSONArray data = (JSONArray) args;
@@ -89,7 +97,7 @@ public class DrinkFragment extends Fragment{
                     }
                 }
 
-                menuManagerAdapter=new MenuManagerAdapter(getContext(),arrAllFood);
+                menuManagerAdapter=new MenuManagerAdapter(context,arrAllFood);
                 lvMenu.setAdapter(menuManagerAdapter);
                 menuManagerAdapter.notifyDataSetChanged();
             }
@@ -97,8 +105,21 @@ public class DrinkFragment extends Fragment{
     }
 
     private void initSocket() {
+        Toast.makeText(context,"initSocket3",Toast.LENGTH_SHORT).show();
         Singleton.Instance().getmSocket().emit(CLIENT_SEND_MENU,123);
         Singleton.Instance().getmSocket().on(SERVER_SEND_MENU_DRINK,onResult);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context=context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
     }
 
 }

@@ -177,7 +177,7 @@ function logOut(idStaff,socket)
     //console.log(result);
   });
 
-  con.query("SELECT * FROM `nhanvien` WHERE chucVu = 'BB'", function (err, result, fields) {
+  con.query("SELECT * FROM `nhanvien`", function (err, result, fields) {
     if (err) throw err;
       io.sockets.emit('SERVER_SEND_LIST_STAFF',result);
       //console.log(result);

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //Socket mSocket;
     Emitter.Listener onResult;
     private String MY_PREFS_NAME="oderfood";
+    private String KEY_PUSH_USER_DATA="KEY_PUSH_USER_DATA";
     private static  String KET_NOI_LAI="KET_NOI_LAI";
 
     {
@@ -109,14 +112,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         if (user.getPosition().equalsIgnoreCase("QL"))
                         {
+                            SharedPreferences appSharedPrefs = PreferenceManager
+                                    .getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(user);
+                            prefsEditor.putString(KEY_PUSH_USER_DATA, json);
+                            prefsEditor.commit();
                             Intent intent = new Intent(LoginActivity.this,MainForManagerActivity.class);
-                            intent.putExtra(Constants.KEY_PUSH_USER,user);
+                            //intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();
                         }else if (user.getPosition().equalsIgnoreCase("BB")){
+                            SharedPreferences appSharedPrefs = PreferenceManager
+                                    .getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(user);
+                            prefsEditor.putString(KEY_PUSH_USER_DATA, json);
+                            prefsEditor.commit();
                             Intent intent = new Intent(LoginActivity.this,MainForWaiterActivity.class);
-                            intent.putExtra(Constants.KEY_PUSH_USER,user);
+                            //intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();

@@ -1,5 +1,7 @@
 package fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,19 +9,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import adapter.ListviewMenuAdapter;
 import adapter.MenuManagementAdapterPager;
 import adapter.MenuManagerAdapter;
+import consts.Constants;
 import objects.ItemMenu;
 import objects.PagerTitle;
 import singleton.Singleton;
@@ -33,10 +40,18 @@ public class AllFoodFragment extends Fragment {
     private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU";
     private ArrayList<ItemMenu>arrAllFood;
     private ListView lvMenu;
+    private Context context;
+    private Activity activity;
+    private Socket mSocket;
     private MenuManagerAdapter menuManagerAdapter;
     private Emitter.Listener onResult;
 
     {
+        try {
+            mSocket = IO.socket(Constants.PORT);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         onResult=new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -71,7 +86,7 @@ public class AllFoodFragment extends Fragment {
     }
 
     private void resultAllFood(final Object args) {
-        getActivity().runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 JSONArray data = (JSONArray) args;
@@ -94,7 +109,7 @@ public class AllFoodFragment extends Fragment {
 
 
                 }
-                menuManagerAdapter =new MenuManagerAdapter(getContext(),arrAllFood);
+                menuManagerAdapter =new MenuManagerAdapter(context,arrAllFood);
                 lvMenu.setAdapter(menuManagerAdapter);
                 menuManagerAdapter.notifyDataSetChanged();
             }
@@ -102,8 +117,23 @@ public class AllFoodFragment extends Fragment {
     }
 
     private void initSocket() {
+        mSocket.connect();
+        Singleton.Instance().setmSocket(mSocket);
+        Toast.makeText(context,"initSocke1t",Toast.LENGTH_SHORT).show();
         Singleton.Instance().getmSocket().emit(CLIENT_SEND_MENU,123);
         Singleton.Instance().getmSocket().on(SERVER_SEND_MENU_DRINK,onResult);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context=context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
     }
 
 }

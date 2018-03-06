@@ -1,5 +1,7 @@
 package fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
@@ -30,6 +33,8 @@ public class FoodFragment extends Fragment {
     private static String SERVER_SEND_MENU_FOOD="SERVER_SEND_MENU_FOOD";
     private ArrayList<ItemMenu> arrAllFood;
     private ListView lvMenu;
+    private Activity activity;
+    private Context context;
     private MenuManagerAdapter menuManagerAdapter;
     private Emitter.Listener onResult;
 
@@ -57,12 +62,12 @@ public class FoodFragment extends Fragment {
 
     private void initView() {
         arrAllFood=new ArrayList<>();
-        lvMenu=getActivity().findViewById(R.id.lvFoodManager);
+        lvMenu=activity.findViewById(R.id.lvFoodManager);
 
     }
 
     private void resultAllFood(final Object args) {
-        getActivity().runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 JSONArray data = (JSONArray) args;
@@ -84,7 +89,7 @@ public class FoodFragment extends Fragment {
                     }
                 }
 
-                menuManagerAdapter=new MenuManagerAdapter(getContext(),arrAllFood);
+                menuManagerAdapter=new MenuManagerAdapter(context,arrAllFood);
                 lvMenu.setAdapter(menuManagerAdapter);
                 menuManagerAdapter.notifyDataSetChanged();
             }
@@ -92,7 +97,20 @@ public class FoodFragment extends Fragment {
     }
 
     private void initSocket() {
+        Toast.makeText(context,"initSocket2",Toast.LENGTH_SHORT).show();
         Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_FOOD,123);
         Singleton.Instance().getmSocket().on(SERVER_SEND_MENU_FOOD,onResult);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context=context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
     }
 }

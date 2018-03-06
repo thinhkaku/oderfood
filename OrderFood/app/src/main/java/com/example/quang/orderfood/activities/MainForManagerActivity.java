@@ -2,9 +2,11 @@ package com.example.quang.orderfood.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,11 +31,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import adapter.ListviewStaffAdapter;
@@ -49,6 +55,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     private final String SERVER_SEND_LIST_STAFF = "SERVER_SEND_LIST_STAFF";
     private final String CLIENT_SEND_REQUEST_DELETE_STAFF = "CLIENT_SEND_REQUEST_DELETE_STAFF";
     private final String CLIENT_SEND_REQUEST_EDIT_STAFF = "CLIENT_SEND_REQUEST_EDIT_STAFF";
+    private String KEY_PUSH_USER_DATA="KEY_PUSH_USER_DATA";
     private  boolean changArray = false;
     private  boolean changArray1 = false;
     private static String LOG_OUT = "LOG_OUT";
@@ -236,8 +243,14 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
     }
 
     private void getUser() {
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra(Constants.KEY_PUSH_USER);
+        Gson gson = new Gson();
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.getApplicationContext());
+        String json = appSharedPrefs.getString(KEY_PUSH_USER_DATA, "");
+        user = gson.fromJson(json, User.class);
+
+//        Intent intent = getIntent();
+//        user = (User) intent.getSerializableExtra(Constants.KEY_PUSH_USER);
     }
 
     private void getData() {
