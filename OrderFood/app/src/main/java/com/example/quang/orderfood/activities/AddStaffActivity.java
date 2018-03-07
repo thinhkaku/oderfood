@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 
@@ -47,6 +48,8 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
 
     Emitter.Listener onResult;
     Emitter.Listener onResultInsert;
+    private int THUMBNAIL_SIZE=300;
+
     {
         onResult = new Emitter.Listener() {
         @Override
@@ -126,9 +129,14 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
         int isCheckedPosition = groupPosition.getCheckedRadioButtonId();
         radioPositionButton = findViewById(isCheckedPosition);
         String position = radioPositionButton.getText().toString();
+        if (ktTaiLen==false){
+            ktTaiLen=true;
+            String query = "INSERT INTO `nhanvien` VALUES ('"+id+"','"+name+"','"+sex+"','"+dateBirth+"','"+address+"','"+phone+"','"+position+"','"+dateStart1+"','"+salary+"','"+user+"-"+pass+"','"+url+"',0)";
+            Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_INSERT_STAFF,query);
+        }else {
+            return;
+        }
 
-        String query = "INSERT INTO `nhanvien` VALUES ('"+id+"','"+name+"','"+sex+"','"+dateBirth+"','"+address+"','"+phone+"','"+position+"','"+dateStart1+"','"+salary+"','"+user+"-"+pass+"','"+url+"',0)";
-        Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_INSERT_STAFF,query);
     }
 
 
@@ -146,6 +154,7 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     private Button btnChooseAvatar;
     private Button btnDone;
     private Button btnExit;
+    private boolean ktTaiLen=false;
     private RadioGroup groupSex;
     private RadioButton radioButton_male;
     private RadioButton radioButton_female;
@@ -163,7 +172,7 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     static final int DATE_PICKER_ID = 1111;
     private boolean checkClick;
 
-    private byte[] bytes;
+    private byte[] bytes=new byte[]{};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,15 +302,32 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
         int isCheckedPosition = groupPosition.getCheckedRadioButtonId();
         radioPositionButton = findViewById(isCheckedPosition);
         String position = radioPositionButton.getText().toString();
-        if (id.isEmpty()||name.isEmpty()||address.isEmpty()||phone.isEmpty()
-                ||salary.isEmpty()||user.isEmpty()||pass.isEmpty())
+        if (id.isEmpty()|| id.length() != 5||name.isEmpty()||address.isEmpty()||phone.isEmpty()
+                ||salary.isEmpty()||user.isEmpty()||pass.isEmpty() ||bytes.length==0)
         {
-            Snackbar snackbar = Snackbar
-                    .make(edtAddress, "Bạn chưa nhập đủ thông tin!", Snackbar.LENGTH_SHORT);
-            snackbar.setActionTextColor(Color.WHITE);
-            View snackbarView = snackbar.getView();
-            snackbarView.setBackgroundColor(Color.DKGRAY);
-            snackbar.show();
+            if (id.length() != 5){
+                Snackbar snackbar = Snackbar
+                        .make(edtAddress, "Mã nhân nhiên bắt buộc phải có 5 kí tự!", Snackbar.LENGTH_SHORT);
+                snackbar.setActionTextColor(Color.WHITE);
+                View snackbarView = snackbar.getView();
+                snackbarView.setBackgroundColor(Color.DKGRAY);
+                snackbar.show();
+            }else if (bytes.length==0){
+                Snackbar snackbar = Snackbar
+                        .make(edtAddress, "Bạn chưa chọn ảnh!", Snackbar.LENGTH_SHORT);
+                snackbar.setActionTextColor(Color.WHITE);
+                View snackbarView = snackbar.getView();
+                snackbarView.setBackgroundColor(Color.DKGRAY);
+                snackbar.show();
+            }else {
+                Snackbar snackbar = Snackbar
+                        .make(edtAddress, "Bạn chưa nhập đủ thông tin!", Snackbar.LENGTH_SHORT);
+                snackbar.setActionTextColor(Color.WHITE);
+                View snackbarView = snackbar.getView();
+                snackbarView.setBackgroundColor(Color.DKGRAY);
+                snackbar.show();
+            }
+
             return;
         }
         if (btnDateOfBirth.getText().toString().equalsIgnoreCase("Ngày sinh")
@@ -323,16 +349,16 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CHOOSE_PICTURE && resultCode == RESULT_OK)
         {
-            try {
                 Uri imageURI = data.getData();
-                InputStream is = getContentResolver().openInputStream(imageURI);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                //bitmap = resize(bitmap,100,100);
-                bytes = getByteArrayFromBitmap(bitmap);
-                imAvatar.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+                try {
+                    Bitmap bitmap = getThumbnail(imageURI);
+                    bytes = getByteArrayFromBitmap(bitmap);
+                    imAvatar.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
         }
     }
     private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
@@ -360,6 +386,40 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
+    }
+
+    public Bitmap getThumbnail(Uri uri) throws FileNotFoundException, IOException {
+        InputStream input = this.getContentResolver().openInputStream(uri);
+
+        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+        onlyBoundsOptions.inJustDecodeBounds = true;
+        onlyBoundsOptions.inDither=true;//optional
+        onlyBoundsOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+        input.close();
+
+        if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1)) {
+            return null;
+        }
+
+        int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
+
+        double ratio = (originalSize > THUMBNAIL_SIZE) ? (originalSize / THUMBNAIL_SIZE) : 1.0;
+
+        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+        bitmapOptions.inDither = true; //optional
+        bitmapOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//
+        input = this.getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+        input.close();
+        return bitmap;
+    }
+
+    private static int getPowerOfTwoForSampleRatio(double ratio){
+        int k = Integer.highestOneBit((int)Math.floor(ratio));
+        if(k==0) return 1;
+        else return k;
     }
 
 }

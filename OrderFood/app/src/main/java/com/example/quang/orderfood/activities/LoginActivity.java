@@ -120,8 +120,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             prefsEditor.putString(KEY_PUSH_USER_DATA, json);
                             prefsEditor.commit();
                             Intent intent = new Intent(LoginActivity.this,MainForManagerActivity.class);
-                            //intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
+                            Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();
                         }else if (user.getPosition().equalsIgnoreCase("BB")){
@@ -133,8 +133,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             prefsEditor.putString(KEY_PUSH_USER_DATA, json);
                             prefsEditor.commit();
                             Intent intent = new Intent(LoginActivity.this,MainForWaiterActivity.class);
-                            //intent.putExtra(Constants.KEY_PUSH_USER,user);
                             startActivity(intent);
+                            Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();
                         }

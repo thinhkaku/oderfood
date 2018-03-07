@@ -98,7 +98,8 @@ public class MenuManagementActivity extends AppCompatActivity implements View.On
                 finish();
                 break;
             case R.id.fab:
-                Toast.makeText(MenuManagementActivity.this,"OKe",Toast.LENGTH_SHORT).show();
+                Intent intent1 =new Intent(MenuManagementActivity.this,AddItemMenuActivity.class);
+                startActivity(intent1);
                 break;
         }
     }
@@ -106,6 +107,9 @@ public class MenuManagementActivity extends AppCompatActivity implements View.On
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        Intent intent=new Intent(MenuManagementActivity.this,MainForManagerActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

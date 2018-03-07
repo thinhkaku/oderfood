@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -32,6 +33,7 @@
         <activity android:name=".activities.AddItemMenuActivity" />
         <activity android:name=".activities.MenuManagementActivity" />
         <activity android:name=".activities.MenuManagerActivity"></activity>
+        <activity android:name=".activities.EditMenuActivity"></activity>
     </application>
 
 </manifest>

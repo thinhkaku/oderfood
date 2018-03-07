@@ -26,6 +26,85 @@
                 android:textColor="#ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:hint="Tên món ăn"
+                    android:paddingLeft="15sp"
+                    android:textColorHint="@android:color/white"
+                    android:id="@+id/edtAddTenMonAn"
+                    android:layout_height="50sp" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:hint="Giá món ăn"
+                    android:textColorHint="@android:color/white"
+                    android:paddingLeft="15sp"
+                    android:inputType="number"
+                    android:id="@+id/edtAddGiaMonAn"
+                    android:layout_height="50sp" />
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Loại món ăn"
+                    android:gravity="right|center"
+                    android:layout_weight="1"/>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/spLoaiMonAn"
+                    android:layout_weight="1"></Spinner>
+            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Đơn vị tính"
+                        android:gravity="right|center"
+                        android:layout_weight="1"/>
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/spDonViTinh"
+                        android:layout_weight="1"></Spinner>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="300sp"
+                    android:id="@+id/imgAddHinhMonAn"
+                    android:src="@drawable/bg"
+                    android:layout_height="200sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:gravity="center"
+                    android:layout_marginTop="20sp"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="100sp"
+                        android:text="Hủy"
+                        android:id="@+id/btnHuyAddMenu"
+                        android:layout_marginRight="80sp"
+                        android:background="@drawable/background_btn_login"
+                        android:layout_height="50sp" />
+                    <Button
+                        android:layout_width="100sp"
+                        android:text="Xong"
+                        android:id="@+id/btnDongYAddMenu"
+                        android:background="@drawable/background_btn_login"
+                        android:layout_height="50sp" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+
     </ScrollView>
 </LinearLayout>

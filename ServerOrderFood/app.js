@@ -80,6 +80,12 @@ io.sockets.on('connection', function (socket) {
       getListStaff(socket);
   });
 
+    socket.on('CLIENT_REQUEST_ADD_MENU',function(data){
+      console.log(data);
+      addMenu(socket,data);
+    });
+
+
     socket.on('CLIENT_SEND_IMAGE_STAFF', function(data){
       //console.log(data);
       serverSendResultUpImage(socket,data);
@@ -102,6 +108,14 @@ io.sockets.on('connection', function (socket) {
   });
 
 });
+
+function addMenu(socket,data){
+   con.query(data,function(err,result,fields){
+    if (err) throw err;
+     socket.emit('SEVER_SEND_RESULT_ADD_MENU',"1");
+     getMenu(socket);
+   });
+}
 
 function deleteMenu(socket, data)
 {
@@ -290,6 +304,7 @@ function getFileNameImage(id)
 {
   return "image/staff/" + id.substring(2) + getMilis() + ".png";
 }
+
 
 function getMilis()
 {

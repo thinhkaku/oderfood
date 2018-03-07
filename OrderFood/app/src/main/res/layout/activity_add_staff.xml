@@ -34,7 +34,7 @@
                 android:textColor="#ffffff"
                 android:gravity="center"
                 android:inputType="text"
-                android:hint="Mã nhân viên"
+                android:hint="Mã nhân viên (5 kí tự)"
                 android:padding="15dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"

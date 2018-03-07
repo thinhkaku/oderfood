@@ -2,8 +2,10 @@ package adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.renderscript.ScriptIntrinsicHistogram;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,12 +16,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.quang.orderfood.R;
+import com.example.quang.orderfood.activities.EditMenuActivity;
 import com.example.quang.orderfood.activities.MenuManagementActivity;
 
 import java.util.ArrayList;
@@ -29,6 +33,9 @@ import consts.Constants;
 import objects.ItemMenu;
 import singleton.Singleton;
 
+
+
+
 /**
  * Created by Administrator on 3/2/2018.
  */
@@ -36,7 +43,8 @@ import singleton.Singleton;
 public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
     private static String CLIENT_SEND_DELETE_MENU="CLIENT_SEND_DELETE_MENU";
     private LayoutInflater inflater;
-    private Dialog dialogRemove;
+    private String PICK_PHOTO_FOR_AVATAR ="PICK_PHOTO_FOR_AVATAR";
+    private Dialog dialogRemove, diglogEditMenu;
     private ArrayList<ItemMenu>arrMenu=new ArrayList<>();
     private Animation animationButton;
     public MenuManagerAdapter(@NonNull Context context, @NonNull ArrayList<ItemMenu> objects) {
@@ -56,7 +64,6 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
             viewHolder.imgFood=v.findViewById(R.id.imgOfFoodMenuManager);
             viewHolder.tvName =v.findViewById(R.id.tvNameOdFoodMenuManager);
             viewHolder.tvPrice =v.findViewById(R.id.tvPriceOfFoodMenuManager);
-            viewHolder.btnEdit =v.findViewById(R.id.btnEditMenuManager);
             viewHolder.btnRemove =v.findViewById(R.id.btnRemoveMenuManager);
             v.setTag(viewHolder);
         }else {
@@ -66,12 +73,6 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
         Glide.with(getContext()).load(Constants.PORT+itemMenu.getImage()).into(viewHolder.imgFood);
         viewHolder.tvName.setText(itemMenu.getName());
         viewHolder.tvPrice.setText(itemMenu.getPrice());
-        viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
         viewHolder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +87,7 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
         ImageView imgFood;
         TextView tvName;
         TextView tvPrice;
-        ImageButton btnEdit, btnRemove;
+         ImageButton btnRemove;
     }
     private void  intitDiLogReMove(final String tenMonAn){
         dialogRemove =new Dialog(getContext(),android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
@@ -110,6 +111,43 @@ public class MenuManagerAdapter extends ArrayAdapter<ItemMenu> {
                 Singleton.Instance().getmSocket().emit(CLIENT_SEND_DELETE_MENU,tenMonAn);
             }
         });
+    }
+
+    private void  initDialogEditMenu(String name, String price, String image){
+        diglogEditMenu=new Dialog(getContext(),android.R.style.Theme_DeviceDefault_Dialog_NoActionBar_MinWidth);
+        diglogEditMenu.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        diglogEditMenu.setContentView(R.layout.edit_menu_dialog);
+        diglogEditMenu.setCancelable(false);
+        EditText edtTenMonAn =diglogEditMenu.findViewById(R.id.edtEditTenMonAn);
+        EditText edtGiaMonAn =diglogEditMenu.findViewById(R.id.edtEditGiaMonAn);
+        final ImageView imgEdit=diglogEditMenu.findViewById(R.id.imgEditHinhMonAn);
+        final Button btnHuy=diglogEditMenu.findViewById(R.id.btnHuyEditMenu);
+        edtTenMonAn.setText(name);
+        edtGiaMonAn.setText(price);
+        Glide.with(getContext()).load(Constants.PORT+image).into(imgEdit);
+        final Button btnOK=diglogEditMenu.findViewById(R.id.btnDongYEditMenu);
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnHuy.startAnimation(animationButton);
+                diglogEditMenu.dismiss();
+            }
+        });
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnOK.startAnimation(animationButton);
+                diglogEditMenu.dismiss();
+            }
+        });
+        imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgEdit.startAnimation(animationButton);
+
+            }
+        });
+        diglogEditMenu.show();
     }
 
 }

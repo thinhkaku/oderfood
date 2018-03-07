@@ -112,7 +112,6 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_for_waiter);
 
-        Toast.makeText(this,"ok",Toast.LENGTH_SHORT).show();
         initSockets();
         getUser();
         findId();
@@ -148,7 +147,6 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     protected void onDestroy() {
         super.onDestroy();
         Singleton.Instance().getmSocket().emit(LOG_OUT,user.getId());
-        Log.e("destroy","ok");
     }
 
     private void initDialogPeople() {
