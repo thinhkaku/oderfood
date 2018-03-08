@@ -37,11 +37,14 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private final String CLIENT_SEND_TEMP_BILL = "CLIENT_SEND_TEMP_BILL";
     private final String CLIENT_SEND_REQUEST_BILL = "CLIENT_SEND_REQUEST_BILL";
+
     private final String SERVER_SEND_BILL = "SERVER_SEND_BILL";
     private final String DELETE_BILL = "DELETE_BILL";
     private boolean ktDaySoNguoi=false;
 
     Emitter.Listener onBill;
+    private boolean ktDaChonMonAnChua=false;
+
     {
         onBill = new Emitter.Listener() {
             @Override
@@ -59,7 +62,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private ListView listView;
     private ListviewBillAdapter listviewBillAdapter;
-    private ArrayList<ItemMenu> arrItem;
+    private ArrayList<ItemMenu> arrItem,arr;
     private String table;
     private String people;
     private String time;
@@ -231,21 +234,28 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                 String minute = str3[3]+str3[4];
                 String sec = str3[5]+str3[6];
                 String time = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+sec;
-                for (ItemMenu i: arrItem)
-                {
-                    String temp = "INSERT INTO `hoadonchothanhtoan` VALUES (null,"
-                            +Integer.parseInt(table)+",'"+i.getName()+"',"+i.getCount()+",'"+time+"',"+people+","+i.getTinhTrangOder()+")";
-                    if (query.equalsIgnoreCase(""))
+                if (arrItem.size()!=0){
+                    for (ItemMenu i: arrItem)
                     {
-                        query = query + temp;
+                        String temp = "INSERT INTO `hoadonchothanhtoan` VALUES (null,"
+                                +Integer.parseInt(table)+",'"+i.getName()+"',"+i.getCount()+",'"+time+"',"+people+","+i.getTinhTrangOder()+")";
+                        if (query.equalsIgnoreCase(""))
+                        {
+                            query = query + temp;
+                        }
+                        else {
+                            query = query + ";" + temp;
+                        }
                     }
-                    else {
-                        query = query + ";" + temp;
-                    }
+
+
+                    Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table+";"+query);
+                    finish();
+                }else {
+                    Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table);
+                    finish();
                 }
 
-                Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table+";"+query);
-                finish();
             }
         });
         AlertDialog alertDialog = builder.create();
@@ -275,7 +285,12 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 imgPushBill.startAnimation(animationButton);
-                showDialogConfigPush();
+                if (ktDaChonMonAnChua==false){
+                    Toast.makeText(BillActivity.this,"Bạn chưa chọn món ăn nào!",Toast.LENGTH_SHORT).show();
+                }else {
+                    showDialogConfigPush();
+                }
+
             }
         });
 
@@ -318,7 +333,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 111) {
             if(resultCode == Activity.RESULT_OK){
-                ArrayList<ItemMenu> arr = new ArrayList<>();
+                arr = new ArrayList<>();
                 arr = (ArrayList<ItemMenu>) data.getSerializableExtra("result");
                 String str = "";
                 for (ItemMenu item : arrItem)
@@ -342,6 +357,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }
                 }
+
                 CHECK_START_MENU = false;
                 listviewBillAdapter.notifyDataSetChanged();
             }
@@ -359,6 +375,12 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         String[] str = numPeo.split("-");
         table = str[0];
         people = str[1];
+        if (arrItem.size()==0){
+
+            Toast.makeText(BillActivity.this,"Bạn chưa chọn món ăn nào!",Toast.LENGTH_SHORT).show();
+        }else {
+            ktDaChonMonAnChua=true;
+        }
     }
 
     private void getDataCheckTrue() {

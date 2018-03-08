@@ -42,16 +42,10 @@ public class AllFoodFragment extends Fragment {
     private ListView lvMenu;
     private Context context;
     private Activity activity;
-    private Socket mSocket;
     private MenuManagerAdapter menuManagerAdapter;
     private Emitter.Listener onResult;
 
     {
-        try {
-            mSocket = IO.socket(Constants.PORT);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
         onResult=new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -117,8 +111,6 @@ public class AllFoodFragment extends Fragment {
     }
 
     private void initSocket() {
-        mSocket.connect();
-        Singleton.Instance().setmSocket(mSocket);
         Toast.makeText(context,"initSocke1t",Toast.LENGTH_SHORT).show();
         Singleton.Instance().getmSocket().emit(CLIENT_SEND_MENU,123);
         Singleton.Instance().getmSocket().on(SERVER_SEND_MENU_DRINK,onResult);

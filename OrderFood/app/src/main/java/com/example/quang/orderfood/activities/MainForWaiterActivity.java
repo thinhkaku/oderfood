@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
@@ -41,9 +42,11 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import adapter.GridviewTableAdapter;
+import adapter.ListviewBillAdapter;
 import consts.Constants;
 import de.hdodenhof.circleimageview.CircleImageView;
 import objects.HistoryBill;
+import objects.ItemMenu;
 import objects.Table;
 import objects.User;
 import singleton.Singleton;
@@ -63,11 +66,21 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private static  String KET_NOI_LAI="KET_NOI_LAI";
     private String KEY_PUSH_USER_DATA="KEY_PUSH_USER_DATA";
 
+    private final String CLIENT_SEND_TEMP_BILL = "CLIENT_SEND_TEMP_BILL";
+    private final String CLIENT_SEND_REQUEST_BILL = "CLIENT_SEND_REQUEST_BILL";
+    private Emitter.Listener onBill;
+
     {
         onListTable = new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 getListTable(args[0]);
+            }
+        };
+        onBill = new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                getBillExists(args[0]);
             }
         };
     }
@@ -81,6 +94,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private GridviewTableAdapter gridviewTableAdapter;
     private ArrayList<Table> arrTable;
     private ArrayList<Table> arrTable1;
+    private ArrayList<ItemMenu>arrItem;
 
     private SearchView searchView;
 
@@ -118,6 +132,51 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         initViews();
         getData();
         initDialogPeople();
+    }
+
+    private void getBillExists(final Object arg) {
+        arrItem = new ArrayList<>();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray data = (JSONArray) arg;
+
+                for (int i=0; i<data.length(); i++)
+                {
+                    try {
+                        JSONObject object = data.getJSONObject(i);
+                        String nameOfFood = object.getString("tenMonAn");
+                        int count = object.getInt("soLuong");
+                        String group = object.getString("tenNhom");
+                        String price = object.getString("gia");
+                        String unit = object.getString("tenDVTinh");
+                        String check = object.getString("tinhTrang");
+                        String image = object.getString("anhMonAn");
+                        int tinhTrangOder = object.getInt("tinhTrangOder");
+                        ItemMenu itemMenu = new ItemMenu(group,nameOfFood,price,unit,check,image,tinhTrangOder);
+                        itemMenu.setCount(count);
+                        arrItem.add(itemMenu);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+//                final Handler handler = new Handler();
+//                Runnable runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        getPrice();
+//                        handler.postDelayed(this, 1000);
+//                    }
+//                };
+//                handler.post(runnable);
+//                listviewBillAdapter = new ListviewBillAdapter(BillActivity.this,R.layout.item_listview_bill,arrItem);
+//                listView.setAdapter(listviewBillAdapter);
+//                listviewBillAdapter.notifyDataSetChanged();
+//                if (arrItem.size()!=0){
+//                    ktDaySoNguoi=true;
+//                }
+            }
+        });
     }
 
     private void ketNoiLai(){
@@ -322,6 +381,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     }
 
     private void findId() {
+        arrItem=new ArrayList<>();
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         gridView = findViewById(R.id.gridview);

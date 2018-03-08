@@ -133,7 +133,7 @@ public class MenuActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                dayMenu();
             }
         });
 
@@ -141,35 +141,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tvGoToBill.startAnimation(animationButton);
-                for (int i=0; i<drink.size();i++)
-                {
-                    if (drink.get(i).getCount() != 0)
-                    {
-                        arrItemChecked.add(drink.get(i));
-                    }
-                }
-
-                for (int i=0; i<food.size();i++)
-                {
-                    if (food.get(i).getCount() != 0)
-                    {
-                        arrItemChecked.add(food.get(i));
-                    }
-                }
-                if (BillActivity.CHECK_START_MENU)
-                {
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result",arrItemChecked);
-                    setResult(Activity.RESULT_OK,returnIntent);
-                    finish();
-                }else {
-                    Intent intent = new Intent(MenuActivity.this,BillActivity.class);
-                    intent.putExtra("list",arrItemChecked);
-                    intent.putExtra("numPeo",numPeo);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-                    finish();
-                }
+                dayMenu();
             }
         });
 
@@ -215,6 +187,38 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void dayMenu(){
+        for (int i=0; i<drink.size();i++)
+        {
+            if (drink.get(i).getCount() != 0)
+            {
+                arrItemChecked.add(drink.get(i));
+            }
+        }
+
+        for (int i=0; i<food.size();i++)
+        {
+            if (food.get(i).getCount() != 0)
+            {
+                arrItemChecked.add(food.get(i));
+            }
+        }
+        if (BillActivity.CHECK_START_MENU)
+        {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result",arrItemChecked);
+            setResult(Activity.RESULT_OK,returnIntent);
+            finish();
+        }else {
+            Intent intent = new Intent(MenuActivity.this,BillActivity.class);
+            intent.putExtra("list",arrItemChecked);
+            intent.putExtra("numPeo",numPeo);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+            finish();
+        }
     }
 
     private class MyProcessEvent implements AdapterView.OnItemSelectedListener{
@@ -339,7 +343,7 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        finish();
+        dayMenu();
 
     }
 }

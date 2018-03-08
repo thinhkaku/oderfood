@@ -27,6 +27,7 @@ import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,8 +36,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
+import adapter.ListviewStaffAdapter;
 import consts.Constants;
+import objects.Staff;
 import singleton.Singleton;
 
 public class AddStaffActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,8 +51,12 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     private final String SERVER_SEND_RESULT_INSERT_STAFF = "SERVER_SEND_RESULT_INSERT_STAFF";
 
     Emitter.Listener onResult;
-    Emitter.Listener onResultInsert;
+    Emitter.Listener onResultInsert, onListStaff;
     private int THUMBNAIL_SIZE=300;
+    private String id;
+    private ArrayList<Staff>arrStaff;
+    private String CLIENT_SEND_REQUEST_LIST_STAFF="CLIENT_SEND_REQUEST_LIST_STAFF";
+    private String SERVER_SEND_LIST_STAFF="SERVER_SEND_LIST_STAFF";
 
     {
         onResult = new Emitter.Listener() {
@@ -64,6 +72,55 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
                 getResultInsert(args[0]);
             }
         };
+         onListStaff =new Emitter.Listener() {
+             @Override
+             public void call(Object... args) {
+                 getListStaff(args[0]);
+             }
+         };
+    }
+
+    private void getListStaff(final Object arg) {
+        arrStaff =new ArrayList<>();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray data = (JSONArray) arg;
+                arrStaff.clear();
+                for (int i=0; i<data.length(); i++)
+                {
+                    try {
+                        JSONObject object = data.getJSONObject(i);
+                        String id1 = object.getString("idNhanVien");
+                        String name = object.getString("tenNhanVien");
+                        String sex = object.getString("gioiTinh");
+                        String dateOfBirth = object.getString("ngaySinh");
+                        String address = object.getString("queQuan");
+                        String phone = object.getString("soDienThoai");
+                        String dateStart = object.getString("ngayVao");
+                        String image = object.getString("anhDaiDien");
+                        int check = object.getInt("online");
+                        String salary = object.getString("luongNgay");
+                        String userPass = object.getString("userPass");
+                        String position = object.getString("chucVu");
+                        Staff staff = new Staff(name,id1,sex,dateOfBirth,address
+                                ,phone,dateStart,image,check,salary);
+                        staff.setUserPass(userPass);
+                        staff.setPosition(position);
+                        if (check == 1)
+                        {
+                            arrStaff.add(0,staff);
+                        }
+                        else {
+                            arrStaff.add(staff);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     private void getResultInsert(final Object arg) {
@@ -110,7 +167,7 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     private void getResult(Object arg) {
         String url = (String) arg;
 
-        String id = edtId.getText().toString();
+        id = edtId.getText().toString();
         String name = edtName.getText().toString();
         String address = edtAddress.getText().toString();
         String phone = edtPhone.getText().toString();
@@ -170,7 +227,7 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     private int day;
 
     static final int DATE_PICKER_ID = 1111;
-    private boolean checkClick;
+    private boolean checkClick, ktSoLanTaiLen=false;
 
     private byte[] bytes=new byte[]{};
 
@@ -187,6 +244,8 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     private void initSockets() {
         Singleton.Instance().getmSocket().on(SERVER_SEND_RESULT_UP_IMAGE,onResult);
         Singleton.Instance().getmSocket().on(SERVER_SEND_RESULT_INSERT_STAFF,onResultInsert);
+        Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_LIST_STAFF,"123");
+        Singleton.Instance().getmSocket().on(SERVER_SEND_LIST_STAFF,onListStaff);
     }
 
     private void clickEvents() {
@@ -287,6 +346,7 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void clickDone(){
+        ktSoLanTaiLen=false;
         String id = edtId.getText().toString();
         String name = edtName.getText().toString();
         String address = edtAddress.getText().toString();
@@ -341,8 +401,20 @@ public class AddStaffActivity extends AppCompatActivity implements View.OnClickL
             snackbar.show();
             return;
         }
+        int dem=0;
 
-        Singleton.Instance().getmSocket().emit(CLIENT_SEND_IMAGE_STAFF,bytes);
+        for (int i=0;i<arrStaff.size();i++){
+            if (arrStaff.get(i).getId().equalsIgnoreCase(id)){
+                dem++;
+            }
+        }
+        if (dem==0 &&ktSoLanTaiLen==false){
+            ktSoLanTaiLen=true;
+            Singleton.Instance().getmSocket().emit(CLIENT_SEND_IMAGE_STAFF,bytes);
+        }else {
+            ktSoLanTaiLen=true;
+            Toast.makeText(AddStaffActivity.this, "Mã nhân viên này đã tồn tại!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

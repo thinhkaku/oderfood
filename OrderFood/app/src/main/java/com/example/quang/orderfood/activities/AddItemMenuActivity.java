@@ -24,12 +24,18 @@ import android.widget.Toast;
 import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import adapter.MenuManagerAdapter;
+import objects.ItemMenu;
 import singleton.Singleton;
 
 public class AddItemMenuActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,6 +47,8 @@ public class AddItemMenuActivity extends AppCompatActivity implements View.OnCli
     private Animation animationButton;
     private int PICK_IMAGE=1;
     private boolean ktTaiLen=false;
+    private boolean ktTrungTenMonAn=false;
+    private ArrayList<ItemMenu>arrAllFood;
     private int THUMBNAIL_SIZE=300;
     private byte[] aByte=new byte[]{};
     private String CLIENT_SEND_IMAGE_STAFF="CLIENT_SEND_IMAGE_STAFF";
@@ -50,7 +58,20 @@ public class AddItemMenuActivity extends AppCompatActivity implements View.OnCli
     private String CLIENT_REQUEST_ADD_MENU="CLIENT_REQUEST_ADD_MENU";
     private String SEVER_SEND_RESULT_ADD_MENU="SEVER_SEND_RESULT_ADD_MENU";
 
+    private static String CLIENT_SEND_MENU="CLIENT_SEND_MENU";
+    private static String SERVER_SEND_MENU_DRINK="SERVER_SEND_MENU";
+
+    private Emitter.Listener onResultAllFood;
+
+
     {
+        onResultAllFood=new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                resultAllFood(args[0]);
+            }
+
+        };
         onResult=new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -63,6 +84,35 @@ public class AddItemMenuActivity extends AppCompatActivity implements View.OnCli
                 getResultAddMenu(args[0]);
             }
         };
+    }
+
+    private void resultAllFood(final Object args) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray data = (JSONArray) args;
+                arrAllFood.clear();
+                for (int i=0; i<data.length(); i++)
+                {
+                    try {
+                        JSONObject object = data.getJSONObject(i);
+                        String group = object.getString("tenNhom");
+                        String name = object.getString("tenMonAn");
+                        String price = object.getString("gia");
+                        String unit = object.getString("tenDVTinh");
+                        String check = object.getString("tinhTrang");
+                        String img = object.getString("anhMonAn");
+                        ItemMenu itemMenu = new ItemMenu(group,name,price,unit,check,img,0);
+                        arrAllFood.add(itemMenu);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+            }
+        });
     }
 
     private void getResultAddMenu(final  Object arg) {
@@ -120,6 +170,9 @@ public class AddItemMenuActivity extends AppCompatActivity implements View.OnCli
     private void initSocket() {
         Singleton.Instance().getmSocket().on(SERVER_SEND_RESULT_UP_IMAGE,onResult);
         Singleton.Instance().getmSocket().on(SEVER_SEND_RESULT_ADD_MENU,onResultAddMenu);
+
+        Singleton.Instance().getmSocket().emit(CLIENT_SEND_MENU,123);
+        Singleton.Instance().getmSocket().on(SERVER_SEND_MENU_DRINK,onResultAllFood);
     }
 
     private void addEvent() {
@@ -158,6 +211,7 @@ public class AddItemMenuActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initView() {
+        arrAllFood =new ArrayList<>();
         edtGiaMonAn=findViewById(R.id.edtAddGiaMonAn);
         edtTenMonAn=findViewById(R.id.edtAddTenMonAn);
         btnHuy=findViewById(R.id.btnHuyAddMenu);
@@ -216,6 +270,8 @@ public class AddItemMenuActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void upLoadHinh(){
+        int dem=0;
+        ktTrungTenMonAn=false;
         String tenMonAn=edtTenMonAn.getText().toString();
         String giaMonAn =edtGiaMonAn.getText().toString();
         if (tenMonAn.isEmpty()||giaMonAn.isEmpty()||aByte.length==0){
@@ -235,7 +291,18 @@ public class AddItemMenuActivity extends AppCompatActivity implements View.OnCli
                 snackbar.show();
             }
         }else {
-            Singleton.Instance().getmSocket().emit(CLIENT_SEND_IMAGE_STAFF,aByte);
+            for (int i=0;i<arrAllFood.size();i++){
+                if(arrAllFood.get(i).getName().equalsIgnoreCase(tenMonAn)){
+                    dem++;
+                }
+            }
+            if (dem==0 &&ktTrungTenMonAn==false){
+                ktTrungTenMonAn=true;
+                Singleton.Instance().getmSocket().emit(CLIENT_SEND_IMAGE_STAFF,aByte);
+            }else {
+                ktTrungTenMonAn=true;
+                Toast.makeText(AddItemMenuActivity.this,"Tên món ăn này đã tồn tại!",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
