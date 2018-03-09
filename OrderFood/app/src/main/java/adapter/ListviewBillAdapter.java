@@ -126,7 +126,6 @@ public class ListviewBillAdapter extends BaseAdapter {
 
                 if (j[0] == 0)
                 {
-                    //viewHolder.tvCount.setText(i);
                     itemMenu.setCount(j[0]);
                     itemMenu.setTinhTrangOder(0);
                 }
@@ -148,13 +147,13 @@ public class ListviewBillAdapter extends BaseAdapter {
         builder.setTitle("XÁC NHẬN");
         builder.setMessage("Món ăn này đã được oder xong");
         builder.setCancelable(false);
-        builder.setPositiveButton("Thoát", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Chưa", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        builder.setNegativeButton("Xuất", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Xong", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 itemMenu.setTinhTrangOder(1);

@@ -1,6 +1,5 @@
 package com.example.quang.orderfood.activities;
 
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,16 +36,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import adapter.GridviewTableAdapter;
-import adapter.ListviewBillAdapter;
 import consts.Constants;
 import de.hdodenhof.circleimageview.CircleImageView;
-import objects.HistoryBill;
-import objects.ItemMenu;
-import objects.ListBill;
 import objects.Table;
 import objects.User;
 import singleton.Singleton;
@@ -232,7 +225,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
             @Override
             public void run() {
                 Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
-                handler.postDelayed(this,1000);
+                handler.postDelayed(this,1200);
             }
         };
          handler.post(runnable1);
@@ -594,6 +587,9 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 break;
             case R.id.btnBangTin:
                 drawerLayout.closeDrawers();
+                Intent intent2 =new Intent(MainForWaiterActivity.this,NewsActivity.class);
+                startActivity(intent2);
+                //finish();
                 break;
         }
     }

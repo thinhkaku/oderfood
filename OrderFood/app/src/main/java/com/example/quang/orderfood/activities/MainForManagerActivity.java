@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.quang.orderfood.R;
@@ -387,6 +388,8 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.btnDangThongBao:
                 drawerLayout.closeDrawers();
+                Intent intent3=new Intent(MainForManagerActivity.this,DangTinActivity.class);
+                startActivity(intent3);
                 break;
         }
     }
@@ -447,13 +450,12 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         return true;
     }
 
-    private void initDialogEdit(Staff staff) {
+    private void initDialogEdit(final Staff staff) {
         editStaff = new Dialog(this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         editStaff.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         editStaff.setContentView(R.layout.dialog_edit_info_staff);
         editStaff.setCancelable(false);
 
-        final EditText edtId = editStaff.findViewById(R.id.edtIdStaffEditStaff);
         final EditText edtName = editStaff.findViewById(R.id.edtNameStaffEditStaff);
         final EditText edtAddress = editStaff.findViewById(R.id.edtAddressStaffEditStaff);
         final EditText edtPhone = editStaff.findViewById(R.id.edtPhoneStaffEditStaff);
@@ -472,7 +474,6 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
         RadioButton radioButton_QL = editStaff.findViewById(R.id.radioButton_QL_EditStaff);
         ImageView imAvatar = editStaff.findViewById(R.id.imAvatarEditStaff);
 
-        edtId.setText(staff.getId());
         edtName.setText(staff.getName());
         edtAddress.setText(staff.getAddress());
         edtPhone.setText(staff.getPhone());
@@ -523,7 +524,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
 
                 RadioButton radioSexButton;
                 RadioButton radioPositionButton;
-                String id = edtId.getText().toString();
+                String id = staff.getId();
                 String name = edtName.getText().toString();
                 String address = edtAddress.getText().toString();
                 String phone = edtPhone.getText().toString();
@@ -545,9 +546,13 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
                 String position = radioPositionButton.getText().toString();
 
                 final String query = "UPDATE `nhanvien` SET `tenNhanVien`= '"+name+"',`gioiTinh`= '"+sex+"',`ngaySinh`= '"+dateBirth+"',`queQuan`= '"+address+"',`soDienThoai`= '"+phone+"',`chucVu`= '"+position+"',`ngayVao`= '"+dateStart1+"',`luongNgay`= '"+salary+"',`userPass`= '"+user+"-"+pass+"' WHERE `idNhanVien`= '"+id+"'";
+                if(id.length()!=5){
+                    Toast.makeText(MainForManagerActivity.this,"Mã nhân viên phải có 5 kí tự",Toast.LENGTH_SHORT).show();
+                }else {
+                    Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_EDIT_STAFF,query);
+                    editStaff.dismiss();
+                }
 
-                Singleton.Instance().getmSocket().emit(CLIENT_SEND_REQUEST_EDIT_STAFF,query);
-                editStaff.dismiss();
             }
         });
     }

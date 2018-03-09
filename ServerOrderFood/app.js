@@ -117,14 +117,42 @@ io.sockets.on('connection', function (socket) {
       //console.log(data);
       deleteStaff(socket,data);
   });
+    socket.on('CLIENT_SEND_NEWS',function(data){
+      console.log(data);
+      getNews(socket);
+    });
 
+     socket.on('CLIEND_REQUEST_DANG_TIN',function(data){
+          insertBangTin(socket,data);
+      });
     socket.on('CLIENT_SEND_REQUEST_EDIT_STAFF', function(data){
       //console.log(data);
       editStaff(socket,data);
       console.log(data);
+
   });
 
 });
+
+function insertBangTin(socket,data){
+    con.query(data,function(err,result,fields){
+      if (err) {
+        console.log(err);
+      }else{
+          socket.emit('SERVER_REQUEST_RESULT_DANGTIN',"1");
+      }
+    });
+}
+
+function getNews(socket){
+     con.query("SELECT * FROM bangtin",function(err,result,fields){
+      if (err) {
+        console.log(err);
+      }else{
+        io.sockets.emit('SEVER_SEND_NEWS',result);
+      }
+     });
+}
 
 function editTinhTrang(socket,data){
     con.query("UPDATE `danhsachban` SET `tinhTrang` = 3 WHERE `tenBan`="+data,function(err,result,fields){
@@ -505,7 +533,7 @@ function editStaff(socket,que)
       console.log(err);
     }
     else{
-        con.query("SELECT * FROM `nhanvien` WHERE chucVu = 'BB'", function (err, result, fields) {
+        con.query("SELECT * FROM `nhanvien`", function (err, result, fields) {
         if (err) throw err;
           io.sockets.emit('SERVER_SEND_LIST_STAFF',result);
           //console.log(result);

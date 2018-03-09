@@ -34,6 +34,8 @@
         <activity android:name=".activities.MenuManagementActivity" />
         <activity android:name=".activities.MenuManagerActivity"></activity>
         <activity android:name=".activities.EditMenuActivity"></activity>
+        <activity android:name=".activities.NewsActivity"></activity>
+        <activity android:name=".activities.DangTinActivity"></activity>
     </application>
 
 </manifest>

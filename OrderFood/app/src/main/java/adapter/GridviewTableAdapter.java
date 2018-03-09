@@ -2,23 +2,18 @@ package adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.quang.orderfood.R;
 
 import java.util.ArrayList;
 
-import objects.ItemMenu;
-import objects.ListBill;
 import objects.Table;
 
 /**
@@ -38,7 +33,7 @@ public class GridviewTableAdapter extends BaseAdapter {
         this.layout = layout;
         this.arrTable = arrTable;
 
-        //animation = AnimationUtils.loadAnimation(context,R.anim.txt_creen_apha);
+        animation = AnimationUtils.loadAnimation(context,R.anim.txt_creen_apha);
 
     }
 
@@ -80,12 +75,14 @@ public class GridviewTableAdapter extends BaseAdapter {
         final Table table = arrTable.get(i);
         viewHolder.tvNum.setText(table.getNumber()+"");
         if (table.getCheck() == 1) {
+            viewHolder.tvNum.startAnimation(animation);
             viewHolder.tvNum.setTextColor(Color.RED);
             viewHolder.tvNum.setBackgroundResource(R.drawable.background_table_wait);
 
         }
         else if (table.getCheck()==2)
         {
+            viewHolder.tvNum.startAnimation(animation);
             viewHolder.tvNum.setTextColor(Color.WHITE);
             viewHolder.tvNum.setBackgroundResource(R.drawable.background_table_off);
 

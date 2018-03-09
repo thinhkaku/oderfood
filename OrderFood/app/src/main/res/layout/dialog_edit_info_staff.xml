@@ -27,19 +27,6 @@
                 android:layout_height="wrap_content" />
 
             <EditText
-                android:layout_marginTop="10dp"
-                android:id="@+id/edtIdStaffEditStaff"
-                android:background="@drawable/background_edt"
-                android:textColorHint="#ffffff"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:hint="Mã nhân viên"
-                android:padding="15dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <EditText
                 android:layout_marginTop="20dp"
                 android:id="@+id/edtNameStaffEditStaff"
                 android:background="@drawable/background_edt"

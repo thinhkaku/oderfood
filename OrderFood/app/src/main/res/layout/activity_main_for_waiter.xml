@@ -239,47 +239,51 @@
             android:layout_marginTop="20dp"
             android:id="@+id/btnBangTin"
             android:padding="10dp"
-            android:drawablePadding="15dp"
+            android:drawablePadding="30sp"
+            android:gravity="center|left"
             android:drawableLeft="@drawable/list_bill"
             android:background="#00ffffff"
             style="?android:attr/textAppearanceMedium"
             android:text="Bảng tin"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
             android:layout_marginTop="20dp"
             android:id="@+id/btnProfile"
             android:padding="10dp"
-            android:drawablePadding="15dp"
+            android:drawablePadding="30sp"
+            android:gravity="center|left"
             android:drawableLeft="@drawable/profile"
             android:background="#00ffffff"
             style="?android:attr/textAppearanceMedium"
             android:text="Thông tin cá nhân"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
             android:layout_marginTop="20dp"
             android:id="@+id/btnListHistoryBill"
             android:padding="10dp"
-            android:drawablePadding="15dp"
+            android:drawablePadding="30sp"
+            android:gravity="center|left"
             android:drawableLeft="@drawable/list_bill"
             android:background="#00ffffff"
             style="?android:attr/textAppearanceMedium"
             android:text="Danh sách hóa đơn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <Button
             android:layout_marginTop="20dp"
             android:id="@+id/btnLogOut"
             android:padding="10dp"
-            android:drawablePadding="15dp"
+            android:drawablePadding="30sp"
+            android:gravity="center|left"
             android:drawableLeft="@drawable/log_out"
             android:background="#00ffffff"
             style="?android:attr/textAppearanceMedium"
             android:text="Đăng xuất"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 

@@ -15,6 +15,7 @@
             android:layout_height="100sp"
             android:text="Bạn có muốn xóa món ăn này khỏi danh sách không"
             android:textStyle="bold"
+            android:textColor="#00E676"
             android:textSize="20sp"
             android:gravity="center"/>
 
