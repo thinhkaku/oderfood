@@ -44,6 +44,9 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
 
     Emitter.Listener onBill;
     private boolean ktDaChonMonAnChua=false;
+    private boolean ktMonAnTraVe=false;
+    private java.lang.String REQUEST_BOOK="REQUEST_BOOK";
+    private java.lang.String CLIENT_SEND_ALL_TEMP_BILL="CLIENT_SEND_ALL_TEMP_BILL";
 
     {
         onBill = new Emitter.Listener() {
@@ -248,11 +251,16 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }
 
-
+                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
                     Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table+";"+query);
+                    Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
+
                     finish();
                 }else {
+                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
                     Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table);
+                    Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
+
                     finish();
                 }
 
@@ -285,10 +293,13 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 imgPushBill.startAnimation(animationButton);
-                if (ktDaChonMonAnChua==false){
+                if (ktDaChonMonAnChua==false&&ktMonAnTraVe==false&&ktDaySoNguoi==false){
+
                     Toast.makeText(BillActivity.this,"Bạn chưa chọn món ăn nào!",Toast.LENGTH_SHORT).show();
                 }else {
                     showDialogConfigPush();
+
+
                 }
 
             }
@@ -357,7 +368,11 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }
                 }
-
+                if (arr.size()==0){
+                    //ktMonAnTraVe=false;
+                }else {
+                    ktMonAnTraVe=true;
+                }
                 CHECK_START_MENU = false;
                 listviewBillAdapter.notifyDataSetChanged();
             }

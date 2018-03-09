@@ -2,6 +2,7 @@ package adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.quang.orderfood.R;
 
 import java.util.ArrayList;
 
+import objects.ItemMenu;
+import objects.ListBill;
 import objects.Table;
 
 /**
@@ -25,19 +29,23 @@ public class GridviewTableAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private Animation animation;
+
     private ArrayList<Table> arrTable;
+
 
     public GridviewTableAdapter(Context context, int layout, ArrayList<Table> arrTable) {
         this.context = context;
         this.layout = layout;
         this.arrTable = arrTable;
-        animation = AnimationUtils.loadAnimation(context,R.anim.txt_creen_apha);
+
+        //animation = AnimationUtils.loadAnimation(context,R.anim.txt_creen_apha);
+
     }
 
     private class ViewHolder
     {
         TextView tvNum;
-        ImageView imgCheck;
+        //ImageView imgCheck;
     }
 
     @Override
@@ -58,31 +66,30 @@ public class GridviewTableAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View viewRow = view;
+        final ViewHolder viewHolder;
         if (viewRow == null)
         {
+            viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             viewRow = inflater.inflate(layout,viewGroup,false);
-            ViewHolder viewHolder = new ViewHolder();
-
             viewHolder.tvNum = viewRow.findViewById(R.id.number);
-            viewHolder.imgCheck = viewRow.findViewById(R.id.imCheck);
-
             viewRow.setTag(viewHolder);
+        }else {
+            viewHolder = (ViewHolder) viewRow.getTag();
         }
-
-        Table table = arrTable.get(i);
-        ViewHolder viewHolder = (ViewHolder) viewRow.getTag();
+        final Table table = arrTable.get(i);
         viewHolder.tvNum.setText(table.getNumber()+"");
-        if (table.getCheck() == 1)
+        if (table.getCheck() == 1) {
+            viewHolder.tvNum.setTextColor(Color.RED);
+            viewHolder.tvNum.setBackgroundResource(R.drawable.background_table_wait);
+
+        }
+        else if (table.getCheck()==2)
         {
-            viewHolder.tvNum.startAnimation(animation);
             viewHolder.tvNum.setTextColor(Color.WHITE);
             viewHolder.tvNum.setBackgroundResource(R.drawable.background_table_off);
-            viewHolder.imgCheck.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            viewHolder.imgCheck.setVisibility(View.VISIBLE);
+
+        }else {
             viewHolder.tvNum.setBackgroundResource(R.drawable.background_table);
         }
         return viewRow;

@@ -47,6 +47,7 @@ import consts.Constants;
 import de.hdodenhof.circleimageview.CircleImageView;
 import objects.HistoryBill;
 import objects.ItemMenu;
+import objects.ListBill;
 import objects.Table;
 import objects.User;
 import singleton.Singleton;
@@ -66,21 +67,11 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private static  String KET_NOI_LAI="KET_NOI_LAI";
     private String KEY_PUSH_USER_DATA="KEY_PUSH_USER_DATA";
 
-    private final String CLIENT_SEND_TEMP_BILL = "CLIENT_SEND_TEMP_BILL";
-    private final String CLIENT_SEND_REQUEST_BILL = "CLIENT_SEND_REQUEST_BILL";
-    private Emitter.Listener onBill;
-
     {
         onListTable = new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 getListTable(args[0]);
-            }
-        };
-        onBill = new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                getBillExists(args[0]);
             }
         };
     }
@@ -94,7 +85,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private GridviewTableAdapter gridviewTableAdapter;
     private ArrayList<Table> arrTable;
     private ArrayList<Table> arrTable1;
-    private ArrayList<ItemMenu>arrItem;
+
 
     private SearchView searchView;
 
@@ -134,50 +125,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
         initDialogPeople();
     }
 
-    private void getBillExists(final Object arg) {
-        arrItem = new ArrayList<>();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                JSONArray data = (JSONArray) arg;
 
-                for (int i=0; i<data.length(); i++)
-                {
-                    try {
-                        JSONObject object = data.getJSONObject(i);
-                        String nameOfFood = object.getString("tenMonAn");
-                        int count = object.getInt("soLuong");
-                        String group = object.getString("tenNhom");
-                        String price = object.getString("gia");
-                        String unit = object.getString("tenDVTinh");
-                        String check = object.getString("tinhTrang");
-                        String image = object.getString("anhMonAn");
-                        int tinhTrangOder = object.getInt("tinhTrangOder");
-                        ItemMenu itemMenu = new ItemMenu(group,nameOfFood,price,unit,check,image,tinhTrangOder);
-                        itemMenu.setCount(count);
-                        arrItem.add(itemMenu);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-//                final Handler handler = new Handler();
-//                Runnable runnable = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        getPrice();
-//                        handler.postDelayed(this, 1000);
-//                    }
-//                };
-//                handler.post(runnable);
-//                listviewBillAdapter = new ListviewBillAdapter(BillActivity.this,R.layout.item_listview_bill,arrItem);
-//                listView.setAdapter(listviewBillAdapter);
-//                listviewBillAdapter.notifyDataSetChanged();
-//                if (arrItem.size()!=0){
-//                    ktDaySoNguoi=true;
-//                }
-            }
-        });
-    }
 
     private void ketNoiLai(){
         SharedPreferences sharedPreferences =getSharedPreferences(KET_NOI_LAI,MODE_PRIVATE);
@@ -238,6 +186,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                     snackbar.show();
                 }else {
                     Singleton.Instance().getmSocket().emit(REQUEST_BOOK,number);
+                    Singleton.Instance().getmSocket().emit("CLIENT_REQUEST_TINH_TRANG_BAN",number);
                     Intent intent = new Intent(MainForWaiterActivity.this, MenuActivity.class);
                     intent.putExtra("numPeo",number+"-"+people);
                     startActivity(intent);
@@ -278,24 +227,36 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     }
 
     private void initSockets() {
-        Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
+        final Handler handler =new Handler();
+         Runnable runnable1=new Runnable() {
+            @Override
+            public void run() {
+                Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
+                handler.postDelayed(this,1000);
+            }
+        };
+         handler.post(runnable1);
+        Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
+
         Singleton.Instance().getmSocket().on(SERVER_SEND_LIST_TABLE,onListTable);
         Singleton.Instance().getmSocket().emit("CLIENT_SEND_REQUEST_LIST_STAFF","123");
+
+
 
     }
 
     private void getData() {
         arrTable = new ArrayList<>();
         arrTable1 = new ArrayList<>();
-        if (changeArray==false){
-            gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable);
-        }else {
-            gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable1);
-        }
-
-
-        gridView.setAdapter(gridviewTableAdapter);
-        gridviewTableAdapter.notifyDataSetChanged();
+//        if (changeArray==false){
+//            gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable,arrListBill);
+//        }else {
+//            gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable1,arrListBill);
+//        }
+//
+//
+//        gridView.setAdapter(gridviewTableAdapter);
+//        gridviewTableAdapter.notifyDataSetChanged();
         gridView.setOnItemClickListener(this);
         btnShowAll.setOnClickListener(this);
         btnShowListFree.setOnClickListener(this);
@@ -352,16 +313,25 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 }
                 for (int i=0;i<arrTable.size()-1;i++)
                 {
-                    if (arrTable.get(i).getCheck() == 1)
+                    if (arrTable.get(i).getCheck() == 1||arrTable.get(i).getCheck()==2)
                     {
                         if (banDangChon==i){
                             dialogPeople.dismiss();
                         }
                     }
                 }
+                if (changeArray==false){
+                    gridviewTableAdapter = new GridviewTableAdapter(MainForWaiterActivity.this,R.layout.item_gridview,arrTable);
+                }else {
+                    gridviewTableAdapter = new GridviewTableAdapter(MainForWaiterActivity.this,R.layout.item_gridview,arrTable1);
+                }
+
+
+                gridView.setAdapter(gridviewTableAdapter);
+                gridviewTableAdapter.notifyDataSetChanged();
                 txtBanTrong.setText(dem+""); //dem so ban trong
                 txtBanDaDat.setText(arrTable.size()-dem+""); // dem so ban da dat
-                gridviewTableAdapter.notifyDataSetChanged();
+                //gridviewTableAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -381,7 +351,6 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     }
 
     private void findId() {
-        arrItem=new ArrayList<>();
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
         gridView = findViewById(R.id.gridview);
@@ -438,35 +407,48 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                     Table table = arrTable.get(i);
                     int check = table.getCheck();
                     number = table.getNumber();
-                    if (check == 0)
-                    {
-                        MainForWaiterActivity.CHECK_TABLE = false;
-                        dialogPeople.show();
+                    if (table.getCheck()==3){
+                        Toast.makeText(MainForWaiterActivity.this,"Bàn này đang có người chọn",Toast.LENGTH_SHORT).show();
+                    }else {
+                        if (check == 0)
+                        {
+                            MainForWaiterActivity.CHECK_TABLE = false;
+                            dialogPeople.show();
+                        }
+                        else
+                        {
+                            MainForWaiterActivity.CHECK_TABLE = true;
+                            Intent intent = new Intent(MainForWaiterActivity.this,BillActivity.class);
+                            intent.putExtra("table",number+"");
+                            startActivity(intent);
+                        }
                     }
-                    else if (check == 1)
-                    {
-                        MainForWaiterActivity.CHECK_TABLE = true;
-                        Intent intent = new Intent(MainForWaiterActivity.this,BillActivity.class);
-                        intent.putExtra("table",number+"");
-                        startActivity(intent);
-                    }
+
+
                 }
                 else if (changeArray==true){
                     Table table1 = arrTable1.get(i);
                     int check1 = table1.getCheck();
                     number = table1.getNumber();
-                    if (check1 == 0)
-                    {
-                        MainForWaiterActivity.CHECK_TABLE = false;
-                        dialogPeople.show();
+                    if (table1.getCheck()==3){
+                        Toast.makeText(MainForWaiterActivity.this,"Bàn này đang có người chọn",Toast.LENGTH_SHORT).show();
+                    }else {
+                        if (check1 == 0)
+                        {
+                            MainForWaiterActivity.CHECK_TABLE = false;
+                            dialogPeople.show();
+                        }
+                        else
+                        {
+                            MainForWaiterActivity.CHECK_TABLE = true;
+                            Intent intent = new Intent(MainForWaiterActivity.this,BillActivity.class);
+                            intent.putExtra("table",number+"");
+                            startActivity(intent);
+                        }
+
                     }
-                    else if (check1 == 1)
-                    {
-                        MainForWaiterActivity.CHECK_TABLE = true;
-                        Intent intent = new Intent(MainForWaiterActivity.this,BillActivity.class);
-                        intent.putExtra("table",number+"");
-                        startActivity(intent);
-                    }
+
+
                 }
                 break;
         }
@@ -518,7 +500,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
             ArrayList<Table> tables = new ArrayList<>();
             for (Table t: arrTable)
             {
-                if (t.getCheck() == 1)
+                if (t.getCheck() == 1||t.getCheck()==2)
                 {
                     tables.add(t);
                 }
@@ -578,7 +560,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 arrTable1.clear();
                 for (Table t: arrTable)
                 {
-                    if (t.getCheck() == 1)
+                    if (t.getCheck() == 1||t.getCheck()==2)
                     {
                         arrTable1.add(t);
                     }

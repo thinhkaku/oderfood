@@ -106,14 +106,16 @@ public class ListviewBillAdapter extends BaseAdapter {
                 }
             }
         });
+        final int[] j = {itemMenu.getCount()};
         viewHolder.btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 viewHolder.btnUp.startAnimation(animationButton);
-                int i = itemMenu.getCount();
-                i = i + 1;
-                viewHolder.tvCount.setText(String.valueOf(i));
-                itemMenu.setCount(i);
+
+                j[0] = j[0] + 1;
+                viewHolder.tvCount.setText(String.valueOf(j[0]));
+                itemMenu.setCount(j[0]);
+                itemMenu.setTinhTrangOder(0);
             }
         });
 
@@ -121,17 +123,19 @@ public class ListviewBillAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 viewHolder.btnDown.startAnimation(animationButton);
-                int i = itemMenu.getCount();
-                if (i == 0)
+
+                if (j[0] == 0)
                 {
                     //viewHolder.tvCount.setText(i);
-                    itemMenu.setCount(i);
+                    itemMenu.setCount(j[0]);
+                    itemMenu.setTinhTrangOder(0);
                 }
                 else
                 {
-                    i = i - 1;
-                    viewHolder.tvCount.setText(String.valueOf(i));
-                    itemMenu.setCount(i);
+                    j[0] = j[0] - 1;
+                    viewHolder.tvCount.setText(String.valueOf(j[0]));
+                    itemMenu.setCount(j[0]);
+                    itemMenu.setTinhTrangOder(0);
                 }
             }
         });

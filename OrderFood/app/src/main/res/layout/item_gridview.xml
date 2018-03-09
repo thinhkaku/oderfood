@@ -41,10 +41,5 @@
             </FrameLayout>
 
         </LinearLayout>
-        <ImageView
-            android:id="@+id/imCheck"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="3sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
 </FrameLayout>

@@ -26,8 +26,16 @@ io.sockets.on('connection', function (socket) {
   });
 
    socket.on('REQUEST_BOOK', function(data){
+    
 	 getListTable(data,socket);
+   
   });
+
+   socket.on('REQUEST_TINH_TRANG',function(data){
+       console.log(data);
+       ktTinhTranBan(socket);
+
+   });
 
     socket.on('LOG_OUT', function(data){
   	logOut(data,socket);
@@ -79,10 +87,19 @@ io.sockets.on('connection', function (socket) {
       //console.log(data);
       getListStaff(socket);
   });
+    socket.on('CLIENT_REQUEST_TINH_TRANG_BAN',function(data){
+      console.log(data);
+        editTinhTrang(socket,data);
+    });
 
     socket.on('CLIENT_REQUEST_ADD_MENU',function(data){
       console.log(data);
       addMenu(socket,data);
+    });
+
+    socket.on('CLIENT_SEND_ALL_TEMP_BILL',function(data){
+      console.log(data);
+      getListAllBill(socket);
     });
 
 
@@ -108,6 +125,99 @@ io.sockets.on('connection', function (socket) {
   });
 
 });
+
+function editTinhTrang(socket,data){
+    con.query("UPDATE `danhsachban` SET `tinhTrang` = 3 WHERE `tenBan`="+data,function(err,result,fields){
+       if (err) {
+        console.log(err);
+       }else{
+           con.query("SELECT * FROM danhsachban", function (err, result, fields) {
+    if (err) throw err;
+      io.sockets.emit('SERVER_SEND_LIST_TABLE',result);
+      //console.log(result);
+    });
+       }
+    });
+}
+
+function duaX(x){
+  if (x!="") {
+                
+              con.query("SELECT COUNT(*) FROM `hoadonchothanhtoan` WHERE `tenBan`='"+x+"' AND `tinhTrangOder`=0",function(err,result,fields){
+              if (err) {
+                console.log(err);
+              }else{
+                y=JSON.stringify(result);
+                y=y.substr(13,1);
+                if (y!=0) {
+                   con.query("UPDATE `danhsachban` SET `tinhTrang` = 2 WHERE `tenBan`='"+x+"'",function(err,result,fields){
+                      if (err) {
+                        console.log(err);
+                      }else{
+                        con.query("SELECT * FROM danhsachban", function (err, result, fields) {
+    if (err) throw err;
+      io.sockets.emit('SERVER_SEND_LIST_TABLE',result);
+      //console.log(result);
+    });
+                      }
+                   });
+                }else{
+                  con.query("UPDATE `danhsachban` SET `tinhTrang` = 1 WHERE `tenBan`='"+x+"'",function(err,result,fields){
+                      if (err) {
+                        console.log(err);
+                      }else{
+                        con.query("SELECT * FROM danhsachban", function (err, result, fields) {
+    if (err) throw err;
+      io.sockets.emit('SERVER_SEND_LIST_TABLE',result);
+      //console.log(result);
+    });
+                      }
+                   });
+                }
+                
+              }
+            });
+
+            }
+}
+
+function ktTinhTranBan(socket){
+  var idHoaDonCucBo ="";
+  var n=10;
+  var x="";
+        var m=1;
+        var l=12;
+        var y="";
+  con.query("SELECT tenBan FROM danhsachban WHERE tinhTrang!=0",function(err,result,fields){
+    if (err) {
+      console.log(err);
+    }else{
+      idHoaDonCucBo=JSON.stringify(result);
+        idHoaDonCucBo=idHoaDonCucBo.substring(1,idHoaDonCucBo.length-1);
+        for (var i = 0; i <= 50; i++) {
+            x=idHoaDonCucBo.substr(n,m);
+            
+            duaX(x);
+
+              n=m+n+l;
+        }
+
+
+       
+    }
+  });
+ 
+}
+
+function getListAllBill(socket){
+  con.query("SELECT * FROM `hoadonchothanhtoan`",function(err,result,fields){
+     if (err) {
+      
+     }else{
+      io.sockets.emit('SEVER_SEND_ALL_REQUEST_BILL',result);
+     }
+  });
+}
 
 function addMenu(socket,data){
    con.query(data,function(err,result,fields){
