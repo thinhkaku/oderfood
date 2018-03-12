@@ -224,9 +224,7 @@ function ktTinhTranBan(socket){
         idHoaDonCucBo=idHoaDonCucBo.substring(1,idHoaDonCucBo.length-1);
         for (var i = 0; i <= 50; i++) {
             x=idHoaDonCucBo.substr(n,m);
-            
             duaX(x);
-
               n=m+n+l;
         }
 
@@ -251,7 +249,11 @@ function addMenu(socket,data){
    con.query(data,function(err,result,fields){
     if (err) throw err;
      socket.emit('SEVER_SEND_RESULT_ADD_MENU',"1");
-     getMenu(socket);
+     con.query("SELECT * FROM danhsachmonan",function(err,result,fields){
+                          if (err) throw err;
+                          io.sockets.emit('SERVER_SEND_MENU',result);
+                          
+                        });
    });
 }
 

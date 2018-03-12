@@ -53,6 +53,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
     private static String LOG_OUT = "LOG_OUT";
     private static String REQUEST_BOOK = "REQUEST_BOOK";
     private boolean changeArray=false;
+    private boolean changeArray1=false;
     public static boolean CHECK_TABLE = false;
     public static String ID_USER = "ID_USER";
     private  boolean kiemTraTrangThaiApp=true;
@@ -225,7 +226,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
             @Override
             public void run() {
                 Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
-                handler.postDelayed(this,1200);
+                handler.postDelayed(this,1000);
             }
         };
          handler.post(runnable1);
@@ -304,18 +305,28 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                         dem=dem+1;
                     }
                 }
-                for (int i=0;i<arrTable.size()-1;i++)
-                {
-                    if (arrTable.get(i).getCheck() == 1||arrTable.get(i).getCheck()==2)
+
+                if (changeArray==false){
+                    for (int i=0;i<arrTable.size()-1;i++)
                     {
-                        if (banDangChon==i){
-                            dialogPeople.dismiss();
+                        if (arrTable.get(i).getCheck() == 1||arrTable.get(i).getCheck()==2)
+                        {
+                            if (banDangChon==i){
+                                dialogPeople.dismiss();
+                            }
                         }
                     }
-                }
-                if (changeArray==false){
                     gridviewTableAdapter = new GridviewTableAdapter(MainForWaiterActivity.this,R.layout.item_gridview,arrTable);
                 }else {
+                    for (int i=0;i<arrTable1.size()-1;i++)
+                    {
+                        if (arrTable1.get(i).getCheck() == 1||arrTable1.get(i).getCheck()==2)
+                        {
+                            if (banDangChon==i){
+                                dialogPeople.dismiss();
+                            }
+                        }
+                    }
                     gridviewTableAdapter = new GridviewTableAdapter(MainForWaiterActivity.this,R.layout.item_gridview,arrTable1);
                 }
 
@@ -420,6 +431,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
 
                 }
                 else if (changeArray==true){
+                    banDangChon=i;
                     Table table1 = arrTable1.get(i);
                     int check1 = table1.getCheck();
                     number = table1.getNumber();
@@ -526,6 +538,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
             case R.id.btnShowListTable:
                 btnShowAll.startAnimation(animationButton);
                 changeArray =false;
+                changeArray1 =false;
                 gridviewTableAdapter = new GridviewTableAdapter(this,R.layout.item_gridview,arrTable);
                 gridView.setAdapter(gridviewTableAdapter);
                 gridviewTableAdapter.notifyDataSetChanged();
@@ -534,6 +547,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
             case R.id.btnShowListTableFree:
                 btnShowListFree.startAnimation(animationButton);
                 changeArray=true;
+                changeArray1=false;
                 arrTable1.clear();
                 for (Table t: arrTable)
                 {
@@ -550,6 +564,7 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
             case R.id.btnShowListTableBooked:
                 btnShowListBooked.startAnimation(animationButton);
                 changeArray=true;
+                changeArray1=true;
                 arrTable1.clear();
                 for (Table t: arrTable)
                 {
@@ -589,7 +604,6 @@ public class MainForWaiterActivity extends AppCompatActivity implements  Adapter
                 drawerLayout.closeDrawers();
                 Intent intent2 =new Intent(MainForWaiterActivity.this,NewsActivity.class);
                 startActivity(intent2);
-                //finish();
                 break;
         }
     }

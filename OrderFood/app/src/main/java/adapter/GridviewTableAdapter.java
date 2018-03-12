@@ -33,7 +33,7 @@ public class GridviewTableAdapter extends BaseAdapter {
         this.layout = layout;
         this.arrTable = arrTable;
 
-        animation = AnimationUtils.loadAnimation(context,R.anim.txt_creen_apha);
+        //animation = AnimationUtils.loadAnimation(context,R.anim.txt_creen_apha);
 
     }
 
@@ -75,14 +75,14 @@ public class GridviewTableAdapter extends BaseAdapter {
         final Table table = arrTable.get(i);
         viewHolder.tvNum.setText(table.getNumber()+"");
         if (table.getCheck() == 1) {
-            viewHolder.tvNum.startAnimation(animation);
+            //viewHolder.tvNum.startAnimation(animation);
             viewHolder.tvNum.setTextColor(Color.RED);
             viewHolder.tvNum.setBackgroundResource(R.drawable.background_table_wait);
 
         }
         else if (table.getCheck()==2)
         {
-            viewHolder.tvNum.startAnimation(animation);
+            //viewHolder.tvNum.startAnimation(animation);
             viewHolder.tvNum.setTextColor(Color.WHITE);
             viewHolder.tvNum.setBackgroundResource(R.drawable.background_table_off);
 

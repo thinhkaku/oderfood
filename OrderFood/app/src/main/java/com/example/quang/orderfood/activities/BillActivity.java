@@ -46,7 +46,6 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     private boolean ktDaChonMonAnChua=false;
     private boolean ktMonAnTraVe=false;
     private java.lang.String REQUEST_BOOK="REQUEST_BOOK";
-    private java.lang.String CLIENT_SEND_ALL_TEMP_BILL="CLIENT_SEND_ALL_TEMP_BILL";
 
     {
         onBill = new Emitter.Listener() {

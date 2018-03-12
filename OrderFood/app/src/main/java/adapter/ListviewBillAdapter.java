@@ -111,7 +111,6 @@ public class ListviewBillAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 viewHolder.btnUp.startAnimation(animationButton);
-
                 j[0] = j[0] + 1;
                 viewHolder.tvCount.setText(String.valueOf(j[0]));
                 itemMenu.setCount(j[0]);

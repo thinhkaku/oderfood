@@ -27,19 +27,20 @@
                 android:layout_height="wrap_content" />
 
             <EditText
-                android:layout_marginTop="10dp"
                 android:id="@+id/edtIdStaffAddStaff"
-                android:background="@drawable/background_edt"
-                android:textColorHint="#ffffff"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:inputType="text"
-                android:hint="Mã nhân viên (5 kí tự)"
-                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_marginTop="10dp"
+                android:maxLength="5"
+                android:background="@drawable/background_edt"
+                android:gravity="center"
+                android:hint="Mã nhân viên (5 kí tự)"
+                android:inputType="text"
+                android:padding="15dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
             <EditText
                 android:layout_marginTop="20dp"
                 android:id="@+id/edtNameStaffAddStaff"
