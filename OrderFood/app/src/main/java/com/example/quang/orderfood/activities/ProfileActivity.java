@@ -57,22 +57,22 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void setData() {
-        Glide.with(this).load(Constants.PORT+MainForWaiterActivity.user.getImage())
+        Glide.with(this).load(Constants.PORT+MainForWaiterActivity1.user.getImage())
                 .into(imAvatar);
-        tvName.setText(MainForWaiterActivity.user.getName());
-        tvID.setText(MainForWaiterActivity.user.getId());
-        tvSex.setText(MainForWaiterActivity.user.getSex());
-        String[] arr = MainForWaiterActivity.user.getDateOfBirth().split("T");
+        tvName.setText(MainForWaiterActivity1.user.getName());
+        tvID.setText(MainForWaiterActivity1.user.getId());
+        tvSex.setText(MainForWaiterActivity1.user.getSex());
+        String[] arr = MainForWaiterActivity1.user.getDateOfBirth().split("T");
         String[] a = arr[0].split("-");
         tvDateOfBirth.setText((Integer.parseInt(a[2])+1) + "-" + a[1] +"-"+ a[0]);
-        tvAddress.setText(MainForWaiterActivity.user.getAddress());
-        tvPhone.setText(MainForWaiterActivity.user.getPhone());
-        String[] arr1 = MainForWaiterActivity.user.getDateOfstart().split("T");
+        tvAddress.setText(MainForWaiterActivity1.user.getAddress());
+        tvPhone.setText(MainForWaiterActivity1.user.getPhone());
+        String[] arr1 = MainForWaiterActivity1.user.getDateOfstart().split("T");
         String[] b = arr1[0].split("-");
         tvDateStart.setText((Integer.parseInt(b[2])+1) + "-" + b[1] +"-"+ b[0]);
         DecimalFormat decimalFormat =new DecimalFormat("###,###,###");
         //tvSalary.setText(decimalFormat.format(Integer.parseInt(MainForWaiterActivity.user.getSalaryPerDay()))+" vnđ");
-        tvSalary.setText(MainForWaiterActivity.user.getSalaryPerDay());
+        tvSalary.setText(MainForWaiterActivity1.user.getSalaryPerDay());
     }
 
     private void setDataManager()
