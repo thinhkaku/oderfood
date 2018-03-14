@@ -36,6 +36,7 @@
         <activity android:name=".activities.EditMenuActivity"></activity>
         <activity android:name=".activities.NewsActivity"></activity>
         <activity android:name=".activities.DangTinActivity"></activity>
+        <activity android:name=".activities.MainForWaiterActivity1" />
     </application>
 
 </manifest>

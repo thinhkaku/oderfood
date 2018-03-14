@@ -105,7 +105,6 @@ public class DrinkFragment extends Fragment{
     }
 
     private void initSocket() {
-        Toast.makeText(context,"initSocket3",Toast.LENGTH_SHORT).show();
         Singleton.Instance().getmSocket().emit(CLIENT_SEND_MENU,123);
         Singleton.Instance().getmSocket().on(SERVER_SEND_MENU_DRINK,onResult);
     }

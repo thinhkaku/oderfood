@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.example.quang.orderfood.R;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,6 +78,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         }
     };
+    private String KEY_PUSH_USER_DATA="KEY_PUSH_USER_DATA";
 
     {
         try {
@@ -190,8 +193,14 @@ public class SplashScreenActivity extends AppCompatActivity {
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();
                         }else if (user.getPosition().equalsIgnoreCase("BB")){
-                            Intent intent = new Intent(SplashScreenActivity.this,MainForWaiterActivity.class);
-                            intent.putExtra(Constants.KEY_PUSH_USER,user);
+                            SharedPreferences appSharedPrefs = PreferenceManager
+                                    .getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(user);
+                            prefsEditor.putString(KEY_PUSH_USER_DATA, json);
+                            prefsEditor.commit();
+                            Intent intent = new Intent(SplashScreenActivity.this,MainForWaiterActivity1.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                             finish();

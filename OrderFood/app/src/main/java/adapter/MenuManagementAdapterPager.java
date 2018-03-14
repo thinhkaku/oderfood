@@ -25,6 +25,7 @@ public class MenuManagementAdapterPager extends FragmentPagerAdapter {
         return arrPage.get(position).getTitle();
     }
 
+
     @Override
     public Fragment getItem(int position) {
         return arrPage.get(position).getPage();

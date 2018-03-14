@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             String json = gson.toJson(user);
                             prefsEditor.putString(KEY_PUSH_USER_DATA, json);
                             prefsEditor.commit();
-                            Intent intent = new Intent(LoginActivity.this,MainForWaiterActivity.class);
+                            Intent intent = new Intent(LoginActivity.this,MainForWaiterActivity1.class);
                             startActivity(intent);
                             Toast.makeText(LoginActivity.this,"Đăng nhập thành công",Toast.LENGTH_SHORT).show();
                             overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);

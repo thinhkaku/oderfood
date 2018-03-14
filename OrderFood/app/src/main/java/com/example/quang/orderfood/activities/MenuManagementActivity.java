@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -39,7 +40,7 @@ import singleton.Singleton;
  * Created by Administrator on 3/1/2018.
  */
 
-public class MenuManagementActivity extends AppCompatActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
+public class MenuManagementActivity extends FragmentActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
     private MenuManagementAdapterPager menuManagementAdapterPager;
     private ArrayList<PagerTitle>pagerTitles;
     private ViewPager viewPager;
@@ -50,7 +51,6 @@ public class MenuManagementActivity extends AppCompatActivity implements View.On
     private FloatingActionButton floatingActionButton;
    private Animation animationButton;
    private SearchView searchView;
-
 
 
 

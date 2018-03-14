@@ -82,7 +82,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_bill);
 
         findId();
-        if (MainForWaiterActivity.CHECK_TABLE == false)
+        if (MainForWaiterActivity1.CHECK_TABLE1 == false)
         {
             getDataCheckFalse();
             initViewsCheckFalse();
@@ -201,7 +201,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                 String t = tvTotalBill.getText().toString();
                 String[] a = t.split("Tổng tiền:");
                 a[1] = a[1].trim();
-                queryDeleteBill(table,MainForWaiterActivity.ID_USER,arrItem,people,a[1]);
+                queryDeleteBill(table,MainForWaiterActivity1.ID_USER,arrItem,people,a[1]);
                 finish();
             }
         });
@@ -251,15 +251,17 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
 
                     Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
+                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_DA_DAT",-1);
                     Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table+";"+query);
                     Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
-
+                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_TRONG",-1);
                     finish();
                 }else {
                     Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
+                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_DA_DAT",-1);
                     Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table);
                     Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
-
+                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_TRONG",-1);
                     finish();
                 }
 
@@ -337,6 +339,9 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         query = query + ";" + "UPDATE `danhsachban` SET `tinhTrang`= 0 WHERE `tenBan`= "+table;
 
         Singleton.Instance().getmSocket().emit(DELETE_BILL,query);
+        Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
+        Singleton.Instance().getmSocket().emit("REQUEST_TABLE_TRONG",-1);
+        Singleton.Instance().getmSocket().emit("REQUEST_TABLE_DA_DAT",-1);
     }
 
     @Override

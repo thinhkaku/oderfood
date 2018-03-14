@@ -31,6 +31,15 @@ io.sockets.on('connection', function (socket) {
    
   });
 
+   socket.on('REQUEST_TABLE_TRONG',function(data){
+    console.log(data);
+      getListBanTrong(socket);
+   });
+
+   socket.on('REQUEST_TABLE_DA_DAT',function(data){
+      getListBanDaDat(socket);
+   });
+
    socket.on('REQUEST_TINH_TRANG',function(data){
        console.log(data);
        ktTinhTranBan(socket);
@@ -133,6 +142,28 @@ io.sockets.on('connection', function (socket) {
   });
 
 });
+
+
+function getListBanDaDat(socket){
+   con.query("SELECT * FROM `danhsachban` WHERE tinhTrang !=0",function(err,result,fields){
+        if (err) {
+          console.log(err);
+        }else{
+           io.sockets.emit('RESULT_TABLE_DA_DAT',result);
+        }
+   });
+}
+
+
+function getListBanTrong(socket){
+     con.query("SELECT * FROM `danhsachban` WHERE tinhTrang = 0",function(err,result,fields){
+      if (err) {
+        console.log(err);
+      }else{
+        io.sockets.emit('RESULT_TABLE_TRONG',result);
+      }
+     });
+}
 
 function insertBangTin(socket,data){
     con.query(data,function(err,result,fields){
