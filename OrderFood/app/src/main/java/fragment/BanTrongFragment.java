@@ -50,13 +50,17 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
     private ArrayList<Table> arrTable;
     private GridviewTableAdapter gridviewTableAdapter;
     private String REQUEST_TABLE_TRONG="REQUEST_TABLE_TRONG";
-    private Emitter.Listener onResult;
+    private java.lang.String CLIENT_SEND_CHECK_TABLE="CLIENT_SEND_CHECK_TABLE";
+    private Emitter.Listener onResult,onResultTinhTrang,onResultChanged;
     private String RESULT_TABLE_TRONG="RESULT_TABLE_TRONG";
     private int banDangChon;
     private Animation animationButton;
+    private String SEVER_SEND_TINH_TRANG="SEVER_SEND_TINH_TRANG";
+    private String CHANGE_TINH_TRANG_BAN="CHANGE_TINH_TRANG_BAN";
     private Dialog dialogPeople;
     private java.lang.String REQUEST_BOOK="REQUEST_BOOK";
     private String people;
+    private java.lang.String CLIENT_REQUEST_TINH_TRANG_DA_DAT="CLIENT_REQUEST_TINH_TRANG_DA_DAT";
 
     {
         onResult=new Emitter.Listener() {
@@ -65,6 +69,38 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
                 getResult(args[0]);
             }
         };
+        onResultTinhTrang=new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                //getTinhTrang(args[0]);
+            }
+        };
+        onResultChanged=new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                //getChanged(args[0]);
+            }
+        };
+    }
+
+
+    private void getTinhTrang(final Object arg) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray data=(JSONArray)arg;
+                for (int i=0;i<data.length();i++){
+                    try {
+                        JSONObject jsonObject =data.getJSONObject(i);
+                        //tinhTrang=jsonObject.getInt("tinhTrang");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //Singleton.Instance().getmSocket().emit(CLIENT_REQUEST_TINH_TRANG_DA_DAT,tinhTrang+";"+number);
+            }
+        });
     }
 
     private void getResult(final  Object arg) {
@@ -133,12 +169,7 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
                     snackbarView.setBackgroundColor(Color.DKGRAY);
                     snackbar.show();
                 }else {
-                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,number);
-                    Singleton.Instance().getmSocket().emit("CLIENT_REQUEST_TINH_TRANG_BAN",number);
-                    Intent intent = new Intent(activity, MenuActivity.class);
-                    intent.putExtra("numPeo",number+"-"+people);
-                    startActivity(intent);
-                    dialogPeople.dismiss();
+                    //Singleton.Instance().getmSocket().emit(CLIENT_SEND_CHECK_TABLE,number);
                 }
                 edtPeople.setText("");
             }
@@ -179,6 +210,8 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
     private void initSocket() {
         Singleton.Instance().getmSocket().emit(REQUEST_TABLE_TRONG,-1);
         Singleton.Instance().getmSocket().on(RESULT_TABLE_TRONG,onResult);
+        Singleton.Instance().getmSocket().on(SEVER_SEND_TINH_TRANG,onResultTinhTrang);
+        Singleton.Instance().getmSocket().on(CHANGE_TINH_TRANG_BAN,onResultChanged);
     }
 
     private void initView() {

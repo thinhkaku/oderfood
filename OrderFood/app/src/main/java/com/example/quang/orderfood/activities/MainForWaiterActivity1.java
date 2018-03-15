@@ -228,7 +228,6 @@ public class MainForWaiterActivity1 extends AppCompatActivity implements View.On
 
     private void initSocket() {
         Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
-
         Singleton.Instance().getmSocket().on(SERVER_SEND_LIST_TABLE,onListTable);
     }
 

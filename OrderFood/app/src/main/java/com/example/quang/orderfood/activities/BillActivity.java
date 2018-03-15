@@ -3,6 +3,7 @@ package com.example.quang.orderfood.activities;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -41,11 +42,12 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     private final String SERVER_SEND_BILL = "SERVER_SEND_BILL";
     private final String DELETE_BILL = "DELETE_BILL";
     private boolean ktDaySoNguoi=false;
-
+    private SharedPreferences sharedPreferences;
     Emitter.Listener onBill;
     private boolean ktDaChonMonAnChua=false;
     private boolean ktMonAnTraVe=false;
     private java.lang.String REQUEST_BOOK="REQUEST_BOOK";
+    private String MY_PREFS_NAME="table";
 
     {
         onBill = new Emitter.Listener() {
@@ -66,7 +68,7 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     private ListviewBillAdapter listviewBillAdapter;
     private ArrayList<ItemMenu> arrItem,arr;
     private String table;
-    private String people;
+    private String people="0";
     private String time;
 
     private TextView tvTotalBill;
@@ -198,11 +200,15 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         builder.setNegativeButton("Xuất", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                if (people.equals("0")){
+                    Toast.makeText(BillActivity.this,"Bàn đang có người chọn món!",Toast.LENGTH_SHORT).show();
+                }else {
                 String t = tvTotalBill.getText().toString();
                 String[] a = t.split("Tổng tiền:");
                 a[1] = a[1].trim();
                 queryDeleteBill(table,MainForWaiterActivity1.ID_USER,arrItem,people,a[1]);
                 finish();
+                }
             }
         });
         AlertDialog alertDialog = builder.create();
@@ -223,47 +229,54 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         builder.setNegativeButton("Đẩy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int in) {
-                String query = "";
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-                String[] str = timeStamp.split("_");
-                String[] str2 = str[0].split("");
-                String year = str2[1]+str2[2]+str2[3]+str2[4];
-                String month = str2[5]+str2[6];
-                String day = str2[7]+str2[8];
-
-                String[] str3 = str[1].split("");
-                String hour = str3[1]+str3[2];
-                String minute = str3[3]+str3[4];
-                String sec = str3[5]+str3[6];
-                String time = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+sec;
-                if (arrItem.size()!=0){
-                    for (ItemMenu i: arrItem)
-                    {
-                        String temp = "INSERT INTO `hoadonchothanhtoan` VALUES (null,"
-                                +Integer.parseInt(table)+",'"+i.getName()+"',"+i.getCount()+",'"+time+"',"+people+","+i.getTinhTrangOder()+")";
-                        if (query.equalsIgnoreCase(""))
-                        {
-                            query = query + temp;
-                        }
-                        else {
-                            query = query + ";" + temp;
-                        }
-                    }
-
-                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
-                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_DA_DAT",-1);
-                    Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table+";"+query);
-                    Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
-                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_TRONG",-1);
-                    finish();
+                if (people.equals("0")){
+                    Toast.makeText(BillActivity.this,"Bàn đang có người chọn món!",Toast.LENGTH_SHORT).show();
                 }else {
-                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
-                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_DA_DAT",-1);
-                    Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table);
-                    Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
-                    Singleton.Instance().getmSocket().emit("REQUEST_TABLE_TRONG",-1);
-                    finish();
+                    String query = "";
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+                    String[] str = timeStamp.split("_");
+                    String[] str2 = str[0].split("");
+                    String year = str2[1]+str2[2]+str2[3]+str2[4];
+                    String month = str2[5]+str2[6];
+                    String day = str2[7]+str2[8];
+
+                    String[] str3 = str[1].split("");
+                    String hour = str3[1]+str3[2];
+                    String minute = str3[3]+str3[4];
+                    String sec = str3[5]+str3[6];
+                    String time = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+sec;
+                    if (arrItem.size()!=0){
+                        for (ItemMenu i: arrItem)
+                        {
+                            String temp = "INSERT INTO `hoadonchothanhtoan` VALUES (null,"
+                                    +Integer.parseInt(table)+",'"+i.getName()+"',"+i.getCount()+",'"+time+"',"+people+","+i.getTinhTrangOder()+")";
+                            if (query.equalsIgnoreCase(""))
+                            {
+                                query = query + temp;
+                            }
+                            else {
+                                query = query + ";" + temp;
+                            }
+                        }
+                        Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table+";"+query);
+                        Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
+                        Singleton.Instance().getmSocket().emit("REQUEST_TABLE_DA_DAT",-1);
+                        Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
+                        Singleton.Instance().getmSocket().emit("REQUEST_TABLE_TRONG",-1);
+                        Intent intent =new Intent(BillActivity.this,MainForWaiterActivity1.class);
+                        startActivity(intent);
+                    }else {
+                        Singleton.Instance().getmSocket().emit(CLIENT_SEND_TEMP_BILL,"DELETE FROM `hoadonchothanhtoan` WHERE `tenBan` ="+table);
+                        Singleton.Instance().getmSocket().emit(REQUEST_BOOK,"-1");
+                        Singleton.Instance().getmSocket().emit("REQUEST_TABLE_DA_DAT",-1);
+                        Singleton.Instance().getmSocket().emit("REQUEST_TINH_TRANG",567);
+                        Singleton.Instance().getmSocket().emit("REQUEST_TABLE_TRONG",-1);
+                        Intent intent =new Intent(BillActivity.this,MainForWaiterActivity1.class);
+                        startActivity(intent);
+                    }
                 }
+
+
 
             }
         });
@@ -276,9 +289,13 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 imgAddItem.startAnimation(animationButton);
+                if (people.equals("0")){
+                    Toast.makeText(BillActivity.this,"Bàn đang có người chọn món!",Toast.LENGTH_SHORT).show();
+                }else {
                 CHECK_START_MENU = true;
                 Intent intent = new Intent(BillActivity.this,MenuActivity.class);
                 startActivityForResult(intent,111);
+                }
             }
         });
 
@@ -390,7 +407,10 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
         arrItem = new ArrayList<>();
         Intent intent = getIntent();
         arrItem = (ArrayList<ItemMenu>) intent.getSerializableExtra("list");
-        String numPeo = intent.getStringExtra("numPeo");
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+
+        //String numPeo = intent.getStringExtra("numPeo");
+        String numPeo = prefs.getString("numPeo","");
         String[] str = numPeo.split("-");
         table = str[0];
         people = str[1];
@@ -405,7 +425,8 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     private void getDataCheckTrue() {
 
         Intent intent = getIntent();
-        table = intent.getStringExtra("table");
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        table = prefs.getString("table1","");
     }
 
     private void initViewsCheckFalse() {
@@ -519,8 +540,10 @@ public class BillActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        if (ktDaySoNguoi==false){
+        if (ktDaySoNguoi==false &&people.equals("0")==false){
             Toast.makeText(BillActivity.this,"Bạn chưa đẩy hóa đơn!",Toast.LENGTH_SHORT).show();
+        }else if (people.equals("0")){
+            finish();
         }else {
             finish();
         }

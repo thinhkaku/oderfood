@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -50,13 +52,18 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
 
     private GridviewTableAdapter gridviewTableAdapter;
     private String REQUEST_BOOK="REQUEST_BOOK";
-    private Emitter.Listener onResult;
+    private Emitter.Listener onResult, onResultTinhTrang, onResultChanged;
     private Dialog dialogPeople;
     private int number;
     private Animation animationButton;
     private String SERVER_SEND_LIST_TABLE="SERVER_SEND_LIST_TABLE";
     private String people;
     private int banDangChon;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
+    private java.lang.String CLIENT_SEND_CHECK_TABLE="CLIENT_SEND_CHECK_TABLE";
+    private String SEVER_SEND_TINH_TRANG="SEVER_SEND_TINH_TRANG";
+    private String MY_PREFS_NAME="table";
 
     {
         onResult=new Emitter.Listener() {
@@ -65,6 +72,36 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
                 getResult(args[0]);
             }
         };
+        onResultTinhTrang=new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                getTinhTrang(args[0]);
+            }
+        };
+    }
+
+
+    private void getTinhTrang(final Object arg) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final  String kp=arg.toString();
+                if (kp.equals("1")){
+
+                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,number);
+                    Intent intent = new Intent(activity, MenuActivity.class);
+                    editor = activity.getSharedPreferences(MY_PREFS_NAME, activity.MODE_PRIVATE).edit();
+                    editor.putString("numPeo",number+"-"+people);
+                    editor.commit();
+                    context.startActivity(intent);
+                    dialogPeople.dismiss();
+                }else if (kp.equals("0")){
+
+                    Toast.makeText(context,"Bàn này đã có người chọn",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
     private void getResult(final  Object arg) {
@@ -126,8 +163,11 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
                         else
                         {
                             MainForWaiterActivity1.CHECK_TABLE1 = true;
+                            editor = activity.getSharedPreferences(MY_PREFS_NAME, activity.MODE_PRIVATE).edit();
+                            editor.putString("table1",number+"");
+                            editor.commit();
                             Intent intent = new Intent(activity,BillActivity.class);
-                            intent.putExtra("table",number+"");
+                            //intent.putExtra("table",number+"");
                             startActivity(intent);
                         }
                 }
@@ -165,12 +205,7 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
                     snackbarView.setBackgroundColor(Color.DKGRAY);
                     snackbar.show();
                 }else {
-                    Singleton.Instance().getmSocket().emit("CLIENT_REQUEST_TINH_TRANG_BAN",number);
-                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,number);
-                    Intent intent = new Intent(activity, MenuActivity.class);
-                    intent.putExtra("numPeo",number+"-"+people);
-                    startActivity(intent);
-                    dialogPeople.dismiss();
+                    Singleton.Instance().getmSocket().emit(CLIENT_SEND_CHECK_TABLE,number);
                 }
                 edtPeople.setText("");
             }
@@ -212,6 +247,7 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
     private void initSocket() {
         Singleton.Instance().getmSocket().emit(REQUEST_BOOK,-1);
         Singleton.Instance().getmSocket().on(SERVER_SEND_LIST_TABLE,onResult);
+        Singleton.Instance().getmSocket().on(SEVER_SEND_TINH_TRANG,onResultTinhTrang);
     }
 
     private void initView() {

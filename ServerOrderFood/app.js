@@ -26,13 +26,18 @@ io.sockets.on('connection', function (socket) {
   });
 
    socket.on('REQUEST_BOOK', function(data){
-    
 	 getListTable(data,socket);
-   
   });
 
+   socket.on('CLIENT_SEND_TABLE_DA_DAT',function(data){
+
+   });
+
+   socket.on('CLIENT_SEND_CHECK_TABLE', function(data){
+    getClientSendCheckTable(socket,data);
+   });
+
    socket.on('REQUEST_TABLE_TRONG',function(data){
-    console.log(data);
       getListBanTrong(socket);
    });
 
@@ -41,7 +46,6 @@ io.sockets.on('connection', function (socket) {
    });
 
    socket.on('REQUEST_TINH_TRANG',function(data){
-       console.log(data);
        ktTinhTranBan(socket);
 
    });
@@ -141,7 +145,23 @@ io.sockets.on('connection', function (socket) {
 
   });
 
+  
+
 });
+
+
+function getClientSendCheckTable(socket, data){
+     con.query("UPDATE `danhsachban` SET tinhTrang = 1 WHERE tenBan="+data,function(err,result,fields){
+      if (err) {
+        console.log(err);
+      }else{
+        result=JSON.stringify(result);
+        result=result.substr(118,1);
+        console.log(result);
+          socket.emit('SEVER_SEND_TINH_TRANG',result);
+      }
+     });
+}
 
 
 function getListBanDaDat(socket){
