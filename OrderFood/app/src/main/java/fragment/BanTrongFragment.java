@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -56,11 +57,11 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
     private int banDangChon;
     private Animation animationButton;
     private String SEVER_SEND_TINH_TRANG="SEVER_SEND_TINH_TRANG";
-    private String CHANGE_TINH_TRANG_BAN="CHANGE_TINH_TRANG_BAN";
     private Dialog dialogPeople;
+    private SharedPreferences.Editor editor;
     private java.lang.String REQUEST_BOOK="REQUEST_BOOK";
     private String people;
-    private java.lang.String CLIENT_REQUEST_TINH_TRANG_DA_DAT="CLIENT_REQUEST_TINH_TRANG_DA_DAT";
+    private String MY_PREFS_NAME="table";
 
     {
         onResult=new Emitter.Listener() {
@@ -72,13 +73,7 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
         onResultTinhTrang=new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                //getTinhTrang(args[0]);
-            }
-        };
-        onResultChanged=new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                //getChanged(args[0]);
+                getTinhTrang(args[0]);
             }
         };
     }
@@ -88,17 +83,21 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                JSONArray data=(JSONArray)arg;
-                for (int i=0;i<data.length();i++){
-                    try {
-                        JSONObject jsonObject =data.getJSONObject(i);
-                        //tinhTrang=jsonObject.getInt("tinhTrang");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                final  String kp=arg.toString();
+                if (kp.equals("1")){
 
-                //Singleton.Instance().getmSocket().emit(CLIENT_REQUEST_TINH_TRANG_DA_DAT,tinhTrang+";"+number);
+                    Singleton.Instance().getmSocket().emit(REQUEST_BOOK,number);
+                    Intent intent = new Intent(activity, MenuActivity.class);
+                    editor = activity.getSharedPreferences(MY_PREFS_NAME, activity.MODE_PRIVATE).edit();
+                    editor.putString("numPeo",number+"-"+people);
+                    editor.commit();
+                    context.startActivity(intent);
+                    dialogPeople.dismiss();
+                }else if (kp.equals("0")){
+
+                    Toast.makeText(context,"Bàn này đã có người chọn",Toast.LENGTH_SHORT).show();
+                    dialogPeople.dismiss();
+                }
             }
         });
     }
@@ -169,7 +168,7 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
                     snackbarView.setBackgroundColor(Color.DKGRAY);
                     snackbar.show();
                 }else {
-                    //Singleton.Instance().getmSocket().emit(CLIENT_SEND_CHECK_TABLE,number);
+                    Singleton.Instance().getmSocket().emit(CLIENT_SEND_CHECK_TABLE,number);
                 }
                 edtPeople.setText("");
             }
@@ -211,7 +210,6 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
         Singleton.Instance().getmSocket().emit(REQUEST_TABLE_TRONG,-1);
         Singleton.Instance().getmSocket().on(RESULT_TABLE_TRONG,onResult);
         Singleton.Instance().getmSocket().on(SEVER_SEND_TINH_TRANG,onResultTinhTrang);
-        Singleton.Instance().getmSocket().on(CHANGE_TINH_TRANG_BAN,onResultChanged);
     }
 
     private void initView() {
@@ -225,15 +223,39 @@ public class BanTrongFragment extends Fragment implements AdapterView.OnItemClic
         switch (parent.getId())
         {
             case R.id.gvBanTrong:
+//                banDangChon=position;
+//                Table table = arrTable.get(position);
+//                number = table.getNumber();
+//                Toast.makeText(context,number+"",Toast.LENGTH_SHORT).show();
+//                if (table.getCheck()==3){
+//                    Toast.makeText(context,"Bàn này đang có người chọn",Toast.LENGTH_SHORT).show();
+//                }else {
+//                        MainForWaiterActivity1.CHECK_TABLE1 = false;
+//                        dialogPeople.show();
+//                }
+//
                 banDangChon=position;
                 Table table = arrTable.get(position);
+                int check = table.getCheck();
                 number = table.getNumber();
                 Toast.makeText(context,number+"",Toast.LENGTH_SHORT).show();
                 if (table.getCheck()==3){
                     Toast.makeText(context,"Bàn này đang có người chọn",Toast.LENGTH_SHORT).show();
                 }else {
+                    if (check == 0)
+                    {
                         MainForWaiterActivity1.CHECK_TABLE1 = false;
                         dialogPeople.show();
+                    }
+                    else
+                    {
+                        MainForWaiterActivity1.CHECK_TABLE1 = true;
+                        editor = activity.getSharedPreferences(MY_PREFS_NAME, activity.MODE_PRIVATE).edit();
+                        editor.putString("table1",number+"");
+                        editor.commit();
+                        Intent intent = new Intent(activity,BillActivity.class);
+                        startActivity(intent);
+                    }
                 }
                 break;
         }

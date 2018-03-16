@@ -52,7 +52,7 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
 
     private GridviewTableAdapter gridviewTableAdapter;
     private String REQUEST_BOOK="REQUEST_BOOK";
-    private Emitter.Listener onResult, onResultTinhTrang, onResultChanged;
+    private Emitter.Listener onResult, onResultTinhTrang;
     private Dialog dialogPeople;
     private int number;
     private Animation animationButton;
@@ -60,7 +60,6 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
     private String people;
     private int banDangChon;
     private SharedPreferences.Editor editor;
-    private SharedPreferences sharedPreferences;
     private java.lang.String CLIENT_SEND_CHECK_TABLE="CLIENT_SEND_CHECK_TABLE";
     private String SEVER_SEND_TINH_TRANG="SEVER_SEND_TINH_TRANG";
     private String MY_PREFS_NAME="table";
@@ -167,7 +166,6 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
                             editor.putString("table1",number+"");
                             editor.commit();
                             Intent intent = new Intent(activity,BillActivity.class);
-                            //intent.putExtra("table",number+"");
                             startActivity(intent);
                         }
                 }
