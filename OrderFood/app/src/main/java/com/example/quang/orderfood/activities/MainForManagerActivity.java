@@ -611,22 +611,7 @@ public class MainForManagerActivity extends AppCompatActivity implements View.On
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (TextUtils.isEmpty(newText)){
-            adap.getFilter().filter("");
-            lvStaff.clearTextFilter();
-        }
-//        else if (newText.equalsIgnoreCase("a")){
-//            ArrayList<Staff>arrStaffT =new ArrayList<>();
-//            arrStaffT.clear();
-//            for (Staff staff:arrStaff){
-//                if (staff.getName().contentEquals("a")){
-//                    arrStaffT.add(staff);
-//                }
-//            }
-//            adap =new ListviewStaffAdapter(MainForManagerActivity.this,R.layout.item_listview_staff,arrStaffT);
-//            lvStaff.setAdapter(adap);
-//            adap.notifyDataSetChanged();
-//        }
+        adap.getFilter().filter(newText);
         return true;
     }
 }

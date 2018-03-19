@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,11 +23,12 @@ import objects.Staff;
  * Created by quang on 31-Jan-18.
  */
 
-public class ListviewStaffAdapter extends ArrayAdapter<Staff> {
+public class ListviewStaffAdapter extends ArrayAdapter<Staff> implements Filterable{
 
     private Context context;
     private int layout;
     private ArrayList<Staff> arrItem=new ArrayList<>();
+    private ArrayList<Staff> arrItem1=new ArrayList<>();
 
 
     public ListviewStaffAdapter(Context context, int layout, ArrayList<Staff> arrItem) {
@@ -34,6 +36,7 @@ public class ListviewStaffAdapter extends ArrayAdapter<Staff> {
         this.context = context;
         this.layout = layout;
         this.arrItem = arrItem;
+        this.arrItem1 = arrItem;
     }
 
     private class ViewHolder{
@@ -42,10 +45,42 @@ public class ListviewStaffAdapter extends ArrayAdapter<Staff> {
 
     }
 
+    @Override
+    public int getCount() {
+        return arrItem.size();
+    }
+
+
+
     @NonNull
     @Override
     public Filter getFilter() {
-        return super.getFilter();
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String charString = constraint.toString();
+                if (charString.isEmpty()){
+                     arrItem =arrItem1;
+                }else {
+                    ArrayList<Staff>arrStaff=new ArrayList<>();
+                    for (Staff staff :arrItem1){
+                        if (staff.getName().toLowerCase().contains(charString)){
+                            arrStaff.add(staff);
+                        }
+                    }
+                    arrItem=arrStaff;
+                }
+                FilterResults filterResults=new FilterResults();
+                filterResults.values=arrItem;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                arrItem= (ArrayList<Staff>) results.values;
+                notifyDataSetChanged();
+            }
+        };
 
     }
 
@@ -64,6 +99,7 @@ public class ListviewStaffAdapter extends ArrayAdapter<Staff> {
 //        return 0;
 //    }
 
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View viewRow = view;
@@ -79,10 +115,10 @@ public class ListviewStaffAdapter extends ArrayAdapter<Staff> {
             viewRow.setTag(viewHolder);
         }
 
-        final Staff staff = arrItem.get(i);
+
         final ListviewStaffAdapter.ViewHolder viewHolder = (ListviewStaffAdapter.ViewHolder) viewRow.getTag();
-        viewHolder.tvName.setText(staff.getName());
-        if (staff.getCheckOnline() == 1)
+        viewHolder.tvName.setText(arrItem.get(i).getName());
+        if (arrItem.get(i).getCheckOnline() == 1)
         {
             viewHolder.imCheckOnline.setVisibility(View.VISIBLE);
         }

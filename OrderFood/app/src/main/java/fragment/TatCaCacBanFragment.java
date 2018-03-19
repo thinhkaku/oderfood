@@ -12,7 +12,12 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -44,7 +49,7 @@ import singleton.Singleton;
  * Created by Administrator on 3/13/2018.
  */
 
-public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
     private GridView gvTatCa;
     private Activity activity;
     private Context context;
@@ -59,6 +64,7 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
     private String SERVER_SEND_LIST_TABLE="SERVER_SEND_LIST_TABLE";
     private String people;
     private int banDangChon;
+    private SearchView searchView;
     private SharedPreferences.Editor editor;
     private java.lang.String CLIENT_SEND_CHECK_TABLE="CLIENT_SEND_CHECK_TABLE";
     private String SEVER_SEND_TINH_TRANG="SEVER_SEND_TINH_TRANG";
@@ -101,6 +107,16 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
 
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_view, menu);
+        MenuItem itemSearch = menu.findItem(R.id.search_view);
+        searchView = (SearchView) itemSearch.getActionView();
+        //set OnQueryTextListener cho search view để thực hiện search theo text
+        searchView.setOnQueryTextListener(this);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void getResult(final  Object arg) {
@@ -252,5 +268,15 @@ public class TatCaCacBanFragment extends Fragment implements AdapterView.OnItemC
         arrTable=new ArrayList<>();
         gvTatCa=activity.findViewById(R.id.gvTatCaBan);
         animationButton= AnimationUtils.loadAnimation(context,R.anim.button_apha);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }
