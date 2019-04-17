@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+<TextView
+    android:id="@+id/textView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/SanFranciscoDisplay_Semibold"
+    android:text="Mã hóa đơn: "/>
+    <TextView
+        android:id="@+id/txtIdBillDL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/SanFranciscoDisplay_Semibold"
+        android:layout_toRightOf="@id/textView1"
+        android:layout_marginLeft="5dp"/>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/SanFranciscoDisplay_Semibold"
+        android:text="Tổng tiền: "
+        android:layout_below="@id/textView1"/>
+    <TextView
+        android:id="@+id/txtTongTienDL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/SanFranciscoDisplay_Semibold"
+        android:layout_toRightOf="@id/textView2"
+        android:layout_below="@id/textView1"
+        android:layout_marginLeft="5dp"/>
+</RelativeLayout>
