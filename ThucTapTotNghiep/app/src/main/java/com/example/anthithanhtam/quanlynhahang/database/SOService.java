@@ -127,8 +127,17 @@ public interface SOService {
 
 
     //Bill Detail
-    @GET("getdatabilldetail.php")
-    Call<List<BillDetail>>getDataBillDetail();
+    @FormUrlEncoded
+    @POST("getdatabilldetail.php")
+    Call<List<BillDetail>>getDataBillDetail(@Field("bill_id")String billId);
+
+    @FormUrlEncoded
+    @POST("deletebilldetail.php")
+    Call<String>deleteBillDetail(@Field("id_bill")String id_bill);
+
+    @FormUrlEncoded
+    @POST("deletebill.php")
+    Call<String>deleteBill(@Field("id_bill")String id_bill);
 
 
     @FormUrlEncoded

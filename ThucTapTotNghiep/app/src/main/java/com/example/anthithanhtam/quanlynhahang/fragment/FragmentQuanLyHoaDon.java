@@ -40,7 +40,7 @@ public class FragmentQuanLyHoaDon extends BaseFragment implements ViewFragmentQu
         mListBill = new ArrayList<>();
         presenterQuanLyHoaDon = new PresenterQuanLyHoaDon(soService, this);
         getData();
-        billManagerAdapter = new BillManagerAdapter(mListBill, mManagerActivity);
+        billManagerAdapter = new BillManagerAdapter(mListBill, mManagerActivity, soService);
         recyclerBill.setLayoutManager(new LinearLayoutManager(mActivity));
         recyclerBill.setHasFixedSize(true);
         recyclerBill.setAdapter(billManagerAdapter);

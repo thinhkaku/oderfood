@@ -1,20 +1,18 @@
 package com.example.anthithanhtam.quanlynhahang.fragment;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.anthithanhtam.quanlynhahang.R;
@@ -31,7 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +47,7 @@ public class FragmentMenu extends BaseFragment implements ViewFragmentMenu, Swip
     FloatingActionButton fabMenu;
     @BindView(R.id.rlMenu)
     RelativeLayout rlMenu;
+    Unbinder unbinder;
 
     private ClientActivity clientActivity;
     private MenuAdapter menuAdapter;
@@ -72,7 +73,7 @@ public class FragmentMenu extends BaseFragment implements ViewFragmentMenu, Swip
         rcMenu.setAdapter(menuAdapter);
         menuAdapter.notifyDataSetChanged();
         swiperefreshMenu.setOnRefreshListener(this);
-        fabMenu.setOnTouchListener(this);
+        //fabMenu.setOnTouchListener(this);
 
     }
 
@@ -98,7 +99,6 @@ public class FragmentMenu extends BaseFragment implements ViewFragmentMenu, Swip
                 }
             }
         }
-
 
 
         for (int i = 0; i < listItemMenu.size(); i++) {
@@ -269,14 +269,13 @@ public class FragmentMenu extends BaseFragment implements ViewFragmentMenu, Swip
         final int Y = (int) event.getRawY();
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                checkClick=false;
+                checkClick = false;
                 RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
                 _xDelta = X - lParams.leftMargin;
                 _yDelta = Y - lParams.topMargin;
                 break;
             case MotionEvent.ACTION_UP:
-                if (!checkClick)
-                {
+                if (!checkClick) {
                     if (ShareConstand.getActionMenu(mActivity).equals("1")) {
                         xacNhanChonMon();
                     } else {
@@ -289,13 +288,13 @@ public class FragmentMenu extends BaseFragment implements ViewFragmentMenu, Swip
             case MotionEvent.ACTION_POINTER_UP:
                 break;
             case MotionEvent.ACTION_MOVE:
-                checkClick=true;
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                layoutParams.leftMargin = X - _xDelta;
-                layoutParams.topMargin = Y - _yDelta;
-                layoutParams.rightMargin = -250;
-                layoutParams.bottomMargin = -250;
-                fabMenu.setLayoutParams(layoutParams);
+                checkClick = true;
+//                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+//                layoutParams.leftMargin = X - _xDelta;
+//                layoutParams.topMargin = Y - _yDelta;
+//                layoutParams.rightMargin = -250;
+//                layoutParams.bottomMargin = -250;
+//                fabMenu.setLayoutParams(layoutParams);
                 break;
         }
         rcMenu.invalidate();
@@ -310,6 +309,12 @@ public class FragmentMenu extends BaseFragment implements ViewFragmentMenu, Swip
 
 
 
-
-
+    @OnClick(R.id.fabMenu)
+    public void onViewClicked() {
+        if (ShareConstand.getActionMenu(mActivity).equals("1")) {
+            xacNhanChonMon();
+        } else {
+            clientActivity.switchFragment(clientActivity.getFragmentBill());
+        }
+    }
 }

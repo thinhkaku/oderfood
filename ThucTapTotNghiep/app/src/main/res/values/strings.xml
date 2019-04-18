@@ -81,5 +81,10 @@
     <string name="employee">Nhân viên</string>
     <string name="manager">Người quản lý</string>
     <string name="customer">Khách hàng</string>
+    <string name="id_bill">Mã hóa đơn: </string>
+    <string name="total_money">Tổng tiền: </string>
+    <string name="date_create">Ngày lập: </string>
+    <string name="employee_create">Tên nhân viên: </string>
+    <string name="menu_call">Danh sách món ăn</string>
 
 </resources>
