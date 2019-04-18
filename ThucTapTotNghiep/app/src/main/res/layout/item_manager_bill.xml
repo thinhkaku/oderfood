@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/btnSelectBill"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingLeft="5dp">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center|left"
+        android:text="Mã hóa đơn: "
+        style="@style/SanFranciscoDisplay_Semibold"/>
+    <TextView
+        android:id="@+id/txtIdBill"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center|left"
+        android:paddingLeft="5dp"
+        style="@style/SanFranciscoDisplay_Semibold"
+        android:text="3"/>
+    <TextView
+        style="@style/SanFranciscoDisplay_Semibold"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center|left"
+        android:text="Số bàn: "/>
+    <TextView
+        android:id="@+id/txtNumberTB"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:gravity="center|left"
+        android:text="4"/>
+
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:text="Số người: "
+            style="@style/SanFranciscoDisplay_Semibold"/>
+        <TextView
+            android:id="@+id/txtPeople"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingLeft="5dp"
+            android:text="3"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            style="@style/SanFranciscoDisplay_Semibold"
+            android:text="Mã nhân viên: "/>
+        <TextView
+            android:id="@+id/txtEmployee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingLeft="5dp"
+            android:text="4"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            style="@style/SanFranciscoDisplay_Semibold"
+            android:text="Ngày lập "/>
+        <TextView
+            android:id="@+id/txtDateCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:paddingLeft="5dp"
+            android:text="25/06/1997"/>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/btnDeleteBill"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_delete_sweep_red_24dp"/>
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="15dp"/>
+</LinearLayout>
