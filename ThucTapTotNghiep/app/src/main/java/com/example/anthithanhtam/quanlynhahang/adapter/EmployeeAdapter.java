@@ -57,6 +57,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         final Employee employee=arrEmploy.get(i);
         viewHodlerEmploy.txtTen.setText(employee.getTenNhanVien());
         viewHodlerEmploy.txtTuoi.setText(Utils.fomatDate(employee.getNgaySinh()));
+        viewHodlerEmploy.txtSDT.setText(employee.getSoDienThoai());
         Glide.with(context).load(Constant.PORT_IMAGE+employee.getAnh()).into(viewHodlerEmploy.imgProfile);
         viewHodlerEmploy.btnXoa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,6 +204,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
         private CircleImageView imgProfile;
         private ImageButton btnXoa, btnSua;
         private CardView cardItem;
+        private TextView txtSDT;
         public ViewHodlerEmploy(@NonNull View itemView) {
             super(itemView);
             txtTen=itemView.findViewById(R.id.txtTen);
@@ -211,6 +213,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
             btnXoa=itemView.findViewById(R.id.btnXoa);
             imgProfile=itemView.findViewById(R.id.imgProfile);
             cardItem=itemView.findViewById(R.id.cardItem);
+            txtSDT=itemView.findViewById(R.id.txtSDT);
         }
     }
 }

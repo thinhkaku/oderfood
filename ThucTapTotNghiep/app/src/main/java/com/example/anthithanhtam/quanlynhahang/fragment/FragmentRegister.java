@@ -1,21 +1,30 @@
 package com.example.anthithanhtam.quanlynhahang.fragment;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.view.MotionEvent;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.anthithanhtam.quanlynhahang.R;
-import com.example.anthithanhtam.quanlynhahang.activity.SwichBeginAppActivity;
+import com.example.anthithanhtam.quanlynhahang.activity.ManagerActivity;
 import com.example.anthithanhtam.quanlynhahang.constant.Constant;
 import com.example.anthithanhtam.quanlynhahang.constant.Utils;
+import com.example.anthithanhtam.quanlynhahang.database.SOService;
+import com.example.anthithanhtam.quanlynhahang.dialog.BaseDialog;
 import com.example.anthithanhtam.quanlynhahang.model.Message;
 
 import java.io.FileNotFoundException;
@@ -25,12 +34,15 @@ import java.util.Date;
 import java.util.Random;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FragmentRegister extends BaseFragment {
+@SuppressLint("ValidFragment")
+public class FragmentRegister extends BaseDialog {
     @BindView(R.id.edtUserUser)
     TextInputEditText edtUserUser;
     @BindView(R.id.edtPassWord)
@@ -47,12 +59,43 @@ public class FragmentRegister extends BaseFragment {
     ImageView imgAnhDaiDien;
     @BindView(R.id.edtTitle)
     TextInputEditText edtTitle;
+    @BindView(R.id.edtDayBirthDL)
+    EditText edtDayBirthDL;
+    @BindView(R.id.edtMonthBirthDL)
+    EditText edtMonthBirthDL;
+    @BindView(R.id.edtYearBirthDL)
+    EditText edtYearBirthDL;
+    @BindView(R.id.edtSalary)
+    TextInputEditText edtSalary;
+    Unbinder unbinder;
 
-    private SwichBeginAppActivity swichBeginAppActivity;
+    private ManagerActivity managerActivity;
     private String nameCheck = "";
     private final int REQUEST_CHOOSE_PICTURE = 321;
 
     private String imageCode;
+    private SOService soService;
+    private ManagerActivity mActivity;
+    static FragmentRegister fragmentRegister;
+
+    public static FragmentRegister newInstance(SOService soService, ManagerActivity activity) {
+        fragmentRegister = new FragmentRegister(soService, activity);
+        fragmentRegister.setStyle(DialogFragment.STYLE_NORMAL,
+                android.R.style.Theme_Black_NoTitleBar);
+        return fragmentRegister;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        return super.onCreateDialog(savedInstanceState);
+    }
+
+    public FragmentRegister(SOService soService, ManagerActivity activity) {
+        this.soService = soService;
+        this.mActivity = activity;
+        this.managerActivity = mActivity;
+    }
 
 
     private void xacNhanDangKi() {
@@ -61,11 +104,15 @@ public class FragmentRegister extends BaseFragment {
         final String userName = edtUserName.getText().toString();
         final String userAddress = edtAddress.getText().toString();
         final String userPhone = edtPhone.getText().toString();
+        final String dayB = edtDayBirthDL.getText().toString();
+        final String monthB= edtMonthBirthDL.getText().toString();
+        final String yearB = edtYearBirthDL.getText().toString();
+        final String salary = edtSalary.getText().toString();
 
         final String userEmail = edtEmail.getText().toString();
         String userTitle = edtTitle.getText().toString();
 
-        if (userUserName.isEmpty() && userPass.isEmpty() && userName.isEmpty() && userAddress.isEmpty() && userPhone.isEmpty() && userEmail.isEmpty() && userTitle.isEmpty()) {
+        if (userUserName.isEmpty() && userPass.isEmpty() && userName.isEmpty() && userAddress.isEmpty() && userPhone.isEmpty() && userEmail.isEmpty() && userTitle.isEmpty() ||salary.isEmpty() ||dayB.isEmpty()||monthB.isEmpty()||yearB.isEmpty()) {
             edtUserUser.setError(getString(R.string.no_enter_infomation));
             edtPassWord.setError(getString(R.string.no_enter_infomation));
             edtUserName.setError(getString(R.string.no_enter_infomation));
@@ -85,15 +132,15 @@ public class FragmentRegister extends BaseFragment {
 
                 final String name = String.valueOf(date.getTime()) + builder + "imagesges.jpg";
                 if (nameCheck.isEmpty()) {
-                    swichBeginAppActivity.getProgressBarSwitchBegin().setVisibility(View.VISIBLE);
+                    managerActivity.getLnProgressBar().setVisibility(View.VISIBLE);
                     soService.uploadImage(imageCode, name).enqueue(new Callback<Message>() {
                         @Override
                         public void onResponse(Call<Message> call, Response<Message> response) {
-                            swichBeginAppActivity.getProgressBarSwitchBegin().setVisibility(View.GONE);
+                            managerActivity.getLnProgressBar().setVisibility(View.GONE);
                             if (response.body() != null) {
                                 nameCheck = name;
                                 if (response.body().getMessage().equals("Success")) {
-                                    insertEmployee(userUserName, userPass, userName, name, userPhone, userAddress, userEmail);
+                                    insertEmployee(userUserName, userPass, userName, name, userPhone, userAddress, userEmail,yearB+"-"+monthB+"-"+dayB,salary);
                                 } else {
                                     Toast.makeText(mActivity, getString(R.string.error_upload_image), Toast.LENGTH_SHORT).show();
                                 }
@@ -107,7 +154,7 @@ public class FragmentRegister extends BaseFragment {
                         }
                     });
                 } else {
-                    insertEmployee(userUserName, userPass, userName, nameCheck, userPhone, userAddress, userEmail);
+                    insertEmployee(userUserName, userPass, userName, nameCheck, userPhone, userAddress, userEmail, yearB+"-"+monthB+"-"+dayB,salary);
                 }
             } else {
                 Toast.makeText(mActivity, getString(R.string.error_select_image), Toast.LENGTH_SHORT).show();
@@ -115,24 +162,23 @@ public class FragmentRegister extends BaseFragment {
         }
     }
 
-    private void insertEmployee(final String userUserName, final String userPass, String userName, String imageName, String userPhone, String userAddress, String userEmail) {
-        swichBeginAppActivity.getProgressBarSwitchBegin().setVisibility(View.VISIBLE);
-        soService.insertEmployee(userUserName, userPass, userName, imageName, userPhone, userAddress, userEmail, "2019-03-21", "1", "90000", "2019-03-21", "2019-03-21")
+    private void insertEmployee(final String userUserName, final String userPass, String userName, String imageName, String userPhone, String userAddress, String userEmail, String birth, String salary) {
+        managerActivity.getLnProgressBar().setVisibility(View.VISIBLE);
+        soService.insertEmployee(userUserName, userPass, userName, imageName, userPhone, userAddress, userEmail, birth, "1", salary, Utils.getCurentDateTime(), "0000-00-00")
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         if (response.body() != null) {
                             if (response.body().equals("1")) {
                                 nameCheck = "";
-                                Utils.toastMessage(swichBeginAppActivity, getString(R.string.success));
-                                swichBeginAppActivity.setData(userUserName, userPass);
-                                swichBeginAppActivity.switchFragment(swichBeginAppActivity.getFragmentLoginClient());
+                                Utils.toastMessage(managerActivity, getString(R.string.success));
                                 cleanText();
+                                fragmentRegister.dismiss();
                             } else if (response.body().equals("2")) {
                                 Toast.makeText(mActivity, getString(R.string.exist_acount), Toast.LENGTH_SHORT).show();
                             }
                         }
-                        swichBeginAppActivity.getProgressBarSwitchBegin().setVisibility(View.GONE);
+                        managerActivity.getLnProgressBar().setVisibility(View.GONE);
                     }
 
                     @Override
@@ -152,6 +198,9 @@ public class FragmentRegister extends BaseFragment {
         edtUserName.setText("");
         imageCode = "";
         nameCheck = "";
+        edtDayBirthDL.setText("");
+        edtMonthBirthDL.setText("");
+        edtYearBirthDL.setText("");
         imgAnhDaiDien.setVisibility(View.GONE);
 
     }
@@ -231,21 +280,6 @@ public class FragmentRegister extends BaseFragment {
         else return k;
     }
 
-    @Override
-    protected void initView() {
-        this.swichBeginAppActivity = (SwichBeginAppActivity) mActivity;
-    }
-
-    @Override
-    protected int layoutID() {
-        return R.layout.layout_register_fragment;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        return false;
-    }
-
 
     @OnClick({R.id.btnSelectImage, R.id.btnXacNhan})
     public void onViewClicked(View view) {
@@ -260,4 +294,15 @@ public class FragmentRegister extends BaseFragment {
                 break;
         }
     }
+
+    @Override
+    public int layoutId() {
+        return R.layout.layout_register_fragment;
+    }
+
+    @Override
+    public void loadData() {
+
+    }
+
 }

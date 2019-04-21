@@ -1,11 +1,15 @@
 package com.example.anthithanhtam.quanlynhahang.fragment;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.anthithanhtam.quanlynhahang.R;
@@ -19,22 +23,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class FragmentQuanLyNhanVien extends BaseFragment implements ViewFragmentQuanLyNhanVien, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.recyclerNhanVien)
     RecyclerView recyclerNhanVien;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout swiperefresh;
+    @BindView(R.id.btnAddEmployee)
+    ImageView btnAddEmployee;
+    Unbinder unbinder;
     private List<Employee> listEmploy;
     private EmployeeAdapter employeeAdapter;
     private PresenterQuanLyNhanVien presenterQuanLyNhanVien;
     private ManagerActivity mManagerActivity;
 
 
-
     @Override
     protected void initView() {
-        mManagerActivity= (ManagerActivity) mActivity;
+        mManagerActivity = (ManagerActivity) mActivity;
         listEmploy = new ArrayList<>();
         swiperefresh.setColorSchemeColors(Color.RED);
         presenterQuanLyNhanVien = new PresenterQuanLyNhanVien(this, soService);
@@ -98,9 +107,15 @@ public class FragmentQuanLyNhanVien extends BaseFragment implements ViewFragment
         presenterQuanLyNhanVien.getEmployee();
     }
 
+
     @Override
     public void onRefresh() {
         addData();
     }
 
+    @OnClick(R.id.btnAddEmployee)
+    public void onViewClicked() {
+        FragmentRegister fragmentRegister=FragmentRegister.newInstance(soService,mManagerActivity);
+        fragmentRegister.show(getFragmentManager(),"");
+    }
 }

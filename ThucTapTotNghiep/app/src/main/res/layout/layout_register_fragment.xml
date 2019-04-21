@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:background="#512DA8">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="100sp"
-        android:text="@string/register"
+        android:text="@string/add_employee"
         android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:gravity="center"/>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:scrollbars="horizontal">
+        android:layout_height="match_parent"
+        android:scrollbars="horizontal"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,10 +26,8 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:layout_marginLeft="30sp"
-                android:textColorHint="#FFFFFF"
-                android:layout_marginRight="30sp">
+                android:layout_marginTop="20dp"
+                android:textColorHint="#FFFFFF">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edtUserUser"
                     android:layout_width="match_parent"
@@ -43,9 +41,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30sp"
-                android:textColorHint="#FFFFFF"
-                android:layout_marginRight="30sp">
+                android:textColorHint="#FFFFFF">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edtPassWord"
                     android:layout_width="match_parent"
@@ -59,9 +55,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30sp"
-                android:textColorHint="#FFFFFF"
-                android:layout_marginRight="30sp">
+                android:textColorHint="#FFFFFF">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edtUserName"
                     android:layout_width="match_parent"
@@ -72,12 +66,91 @@
                     android:maxLines="1"
                     android:drawablePadding="10sp"/>
             </android.support.design.widget.TextInputLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:orientation="horizontal"
+                app:cardBackgroundColor="@color/cardview_shadow_end_color">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:textStyle="bold"
+                    android:text="@string/birth"
+                    android:gravity="center|left"
+                    android:textColor="@android:color/white"
+                    android:paddingLeft="15sp"/>
+            </android.support.v7.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1"
+                    android:textStyle="bold"
+                    android:text="@string/day"
+                    android:textSize="13sp"
+                    android:gravity="center|left"
+                    android:textColor="@android:color/white"
+                    android:paddingLeft="15sp"/>
+
+                <EditText
+                    android:id="@+id/edtDayBirthDL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:inputType="number"
+                    android:gravity="center|left"
+                    android:maxLength="2"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1"
+                    android:textStyle="bold"
+                    android:text="@string/month"
+                    android:textColor="@android:color/white"
+                    android:textSize="13sp"
+                    android:gravity="center|left"/>
+
+                <EditText
+                    android:id="@+id/edtMonthBirthDL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:inputType="number"
+                    android:gravity="center|left"
+                    android:maxLength="2"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.1"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:text="@string/year"
+                    android:gravity="center|left"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:id="@+id/edtYearBirthDL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@android:color/white"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:inputType="number"
+                    android:gravity="center|left"
+                    android:maxLength="4"/>
+            </LinearLayout>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30sp"
-                android:textColorHint="#FFFFFF"
-                android:layout_marginRight="30sp">
+                android:textColorHint="#FFFFFF">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edtAddress"
                     android:layout_width="match_parent"
@@ -91,9 +164,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30sp"
-                android:textColorHint="#FFFFFF"
-                android:layout_marginRight="30sp">
+                android:textColorHint="#FFFFFF">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edtPhone"
                     android:layout_width="match_parent"
@@ -107,9 +178,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30sp"
-                android:textColorHint="#FFFFFF"
-                android:layout_marginRight="30sp">
+                android:textColorHint="#FFFFFF">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
@@ -120,7 +189,20 @@
                     android:maxLines="1"
                     android:drawablePadding="10sp"/>
             </android.support.design.widget.TextInputLayout>
-
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="#FFFFFF">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edtSalary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="@string/salary"
+                    android:textColor="#FFFFFF"
+                    android:maxLines="1"
+                    android:drawablePadding="10sp"/>
+            </android.support.design.widget.TextInputLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,19 +214,24 @@
                     android:layout_height="200dp"
                     android:visibility="gone"
                     />
-                <Button
-                    android:id="@+id/btnSelectImage"
-                    android:layout_width="200sp"
-                    android:layout_height="50sp"
-                    android:text="@string/select_image"
-                    android:background="@android:color/holo_blue_bright"/>
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="@color/cardview_shadow_end_color">
+                    <Button
+                        android:id="@+id/btnSelectImage"
+                        android:layout_width="200sp"
+                        android:layout_height="50sp"
+                        android:text="@string/select_image"
+                        android:textColor="@android:color/white"
+                        android:background="@color/tranprenece"/>
+                </android.support.v7.widget.CardView>
             </LinearLayout>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30sp"
-                android:textColorHint="#FFFFFF"
-                android:layout_marginRight="30sp">
+                android:textColorHint="#FFFFFF">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edtTitle"
                     android:layout_width="match_parent"
@@ -156,18 +243,21 @@
                     android:drawablePadding="10sp"/>
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_gravity="center"
+                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="@color/cardview_shadow_end_color">
                 <Button
                     android:id="@+id/btnXacNhan"
                     android:layout_width="200sp"
                     android:layout_height="70sp"
                     android:text="@string/access"
-                    android:background="@android:color/holo_blue_bright"/>
-            </LinearLayout>
+                    android:textColor="@android:color/white"
+                    android:background="@color/tranprenece"
+                    />
+            </android.support.v7.widget.CardView>
         </LinearLayout>
 
     </ScrollView>

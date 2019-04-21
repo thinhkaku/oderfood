@@ -18,14 +18,13 @@
                 android:id="@+id/imgOfFoodMn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher" />
+                android:scaleType="centerCrop" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_gravity="bottom"
-                android:background="#60000000"></View>
+                android:background="#60000000"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,16 +72,16 @@
                         android:id="@+id/btnEditMn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="3dp"
-                        android:src="@drawable/up" />
+                        android:padding="15dp"
+                        android:src="@drawable/ic_edit_blue_24dp" />
 
 
                     <ImageView
                         android:id="@+id/btnDeleteMenu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="3dp"
-                        android:src="@drawable/down" />
+                        android:padding="15dp"
+                        android:src="@drawable/ic_delete_forever_red_24dp" />
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

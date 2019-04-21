@@ -164,7 +164,7 @@ public class FragmentLoginClient extends BaseFragment {
                 }
                 break;
             case R.id.btnRegister:
-                swichBeginAppActivity.switchFragment(swichBeginAppActivity.getFragmentRegister());
+                //swichBeginAppActivity.switchFragment(swichBeginAppActivity.getFragmentRegister());
                 break;
         }
     }

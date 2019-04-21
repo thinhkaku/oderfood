@@ -18,7 +18,6 @@ public class SwichBeginAppActivity extends BaseActivity {
     private FragmentSelectUser fragmentSelectUser;
     private FragmentLoginClient fragmentLoginClient;
     private FragmentLoginAdmin fragmentLoginAdmin;
-    private FragmentRegister fragmentRegister;
     private LinearLayout progressBarSwitchBegin;
 
     public LinearLayout getProgressBarSwitchBegin() {
@@ -47,11 +46,9 @@ public class SwichBeginAppActivity extends BaseActivity {
         fragmentSelectUser=new FragmentSelectUser();
         fragmentLoginClient=new FragmentLoginClient();
         fragmentLoginAdmin= new FragmentLoginAdmin();
-        fragmentRegister=new FragmentRegister();
         fragmentTransaction.add(R.id.frame,fragmentSelectUser);
         fragmentTransaction.add(R.id.frame,fragmentLoginClient);
         fragmentTransaction.add(R.id.frame,fragmentLoginAdmin);
-        fragmentTransaction.add(R.id.frame,fragmentRegister);
         fragmentTransaction.commit();
         switchFragment(fragmentSelectUser);
     }
@@ -63,7 +60,6 @@ public class SwichBeginAppActivity extends BaseActivity {
         fragmentTransaction.hide(fragmentSelectUser);
         fragmentTransaction.hide(fragmentLoginClient);
         fragmentTransaction.hide(fragmentLoginAdmin);
-        fragmentTransaction.hide(fragmentRegister);
         fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
     }
@@ -77,9 +73,6 @@ public class SwichBeginAppActivity extends BaseActivity {
 
     }
 
-    public FragmentRegister getFragmentRegister() {
-        return fragmentRegister;
-    }
 
     public FragmentSelectUser getFragmentSelectUser() {
         return fragmentSelectUser;

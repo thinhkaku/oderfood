@@ -1,27 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="5sp">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        app:cardCornerRadius="10dp"
         >
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@android:color/black"
-            android:gravity="center"
-            android:text="Danh sách nhân viên"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:layout_alignParentLeft="true"
+                android:text="@string/list_employee"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+            <ImageView
+                android:id="@+id/btnAddEmployee"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignRight="@+id/textView6"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@drawable/ic_add_box_blue_24dp"/>
+        </RelativeLayout>
+
     </android.support.v7.widget.CardView>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerNhanVien"
             android:layout_width="match_parent"

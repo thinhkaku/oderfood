@@ -60,6 +60,8 @@
     <string name="no_remember_pass">Bỏ nhớ mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="register">Đăng ký</string>
+    <string name="add_employee">Thêm nhân viên</string>
+    <string name="list_employee">Danh sách nhân viên</string>
     <string name="pass_false">Sai tên đăng nhập hoặc mật khẩu</string>
     <string name="login_success">Đăng nhập thành công</string>
     <string name="name_user">Họ tên</string>
