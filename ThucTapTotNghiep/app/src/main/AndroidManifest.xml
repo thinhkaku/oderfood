@@ -19,10 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.ClientActivity"/>
+
+        <activity android:name=".activity.ClientActivity" />
         <activity android:name=".activity.ManagerActivity" />
         <activity
-            android:name=".activity.SwichBeginAppActivity"
+            android:name=".activity.ScreenActivity"
             android:theme="@style/SplashscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ScreenActivity" />
+        <activity android:name=".activity.SwichBeginAppActivity" />
+
+        <receiver android:name=".BoardCastReciver">
+            <intent-filter>
+                <action android:name="android.intent.action.CONNECTIVITY_SERVICE" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".ServiceMyTable" />
+
+
     </application>
 
 </manifest>

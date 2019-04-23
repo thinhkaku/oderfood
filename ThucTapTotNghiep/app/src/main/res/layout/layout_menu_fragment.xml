@@ -60,6 +60,7 @@
         app:srcCompat="@drawable/ic_assignment_white_24dp"
         android:layout_alignRight="@+id/frameMenu"
         android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/frameMenu"
         tools:ignore="VectorDrawableCompat" />
 
 </RelativeLayout>

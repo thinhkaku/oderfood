@@ -8,7 +8,7 @@ $time= $_POST['time_check'];
 
 
 
-$sql="UPDATE `mytable` SET  `numpeople` = '$numpeople', `check_tb`='$check_tb', `note`='$note', `time_check`='$time' WHERE `mytable`.`number` = $number";
+$sql="UPDATE `mytable` SET  `numpeople` = '$numpeople', `check_tb`='$check_tb', `note`='$note', `time_check`='$time', `status`='0'  WHERE `mytable`.`number` = $number";
 	if($connect->query($sql)===true)
     {
     	echo "1";

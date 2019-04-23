@@ -457,13 +457,13 @@
             android:layout_width="150sp"
             android:layout_height="match_parent"
             android:text="@string/cancle"
-            android:background="@android:color/holo_blue_bright"
+            android:background="@drawable/ani_button_normal"
             android:layout_marginRight="10sp"/>
         <Button
             android:id="@+id/btnXacNhanDL"
             android:layout_width="150sp"
             android:layout_height="match_parent"
             android:text="@string/access"
-            android:background="@android:color/holo_blue_bright"/>
+            android:background="@drawable/ani_button_normal"/>
     </LinearLayout>
 </FrameLayout>

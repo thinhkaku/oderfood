@@ -42,8 +42,6 @@ public class FragmentMainClient extends BaseFragment implements AdapterView.OnIt
     GridView gVTable;
     @BindView(R.id.swipeRefreshTable)
     SwipeRefreshLayout swipeRefreshTable;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
     private ClientActivity clientActivity;
     private TableAdapter tableAdapter;
     private List<MyTable> arrTable = new ArrayList<>();
@@ -58,9 +56,6 @@ public class FragmentMainClient extends BaseFragment implements AdapterView.OnIt
         presenterMainClient.getListMyTable();
     }
 
-    private void addTable() {
-        getData();
-    }
 
 
     @Override
@@ -132,8 +127,20 @@ public class FragmentMainClient extends BaseFragment implements AdapterView.OnIt
         return false;
     }
 
+
+
     @Override
     public void listMyTable(List<MyTable> listMyTable) {
+        int numTable=0;
+        for (MyTable myTable:listMyTable)
+        {
+            if (myTable.getCheck().equals("1"))
+            {
+                numTable++;
+            }
+        }
+        txtBanDaDat.setText(String.valueOf(numTable));
+        txtBanTrong.setText(String.valueOf(listMyTable.size()-numTable));
         swipeRefreshTable.setRefreshing(false);
         arrTable.clear();
         arrTable.addAll(listMyTable);
@@ -143,7 +150,7 @@ public class FragmentMainClient extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void error() {
-        Toast.makeText(mActivity, "Có lỗi xảy ra? Vui lòng thử lại", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mActivity, getString(R.string.error), Toast.LENGTH_SHORT).show();
         clientActivity.getLnPRClient().setVisibility(View.GONE);
     }
 
@@ -153,15 +160,5 @@ public class FragmentMainClient extends BaseFragment implements AdapterView.OnIt
     }
 
 
-    @OnClick(R.id.fab)
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.fab:
-                addTable();
-                Snackbar.make(view, "Thêm bàn thành công", Snackbar.LENGTH_LONG)
-                        .setAction("Thêm bàn", null).show();
-                break;
-        }
-    }
 
 }

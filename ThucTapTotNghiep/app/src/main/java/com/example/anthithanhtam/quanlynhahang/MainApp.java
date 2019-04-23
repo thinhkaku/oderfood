@@ -13,4 +13,18 @@ public class MainApp extends Application {
                 .setFontAttrId(R.attr.fontPath)
                 .build() );
     }
+
+    public static boolean isActivityVisible() {
+        return activityVisible;
+    }
+
+    public static void activityResumed() {
+        activityVisible = true;
+    }
+
+    public static void activityStop() {
+        activityVisible = false;
+    }
+
+    private static boolean activityVisible;
 }

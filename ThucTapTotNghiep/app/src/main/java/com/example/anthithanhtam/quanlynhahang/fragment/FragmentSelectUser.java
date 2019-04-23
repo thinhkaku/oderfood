@@ -47,7 +47,7 @@ public class FragmentSelectUser extends BaseFragment {
                 swichBeginAppActivity.switchFragment(swichBeginAppActivity.getFragmentLoginClient());
                 break;
             case R.id.btnClient:
-                ShareConstand.setEmployee(getContext(), new Employee());
+                ShareConstand.setEmployee(getContext(), null);
                 Intent i = new Intent(mActivity, ClientActivity.class);
                 startActivity(i);
 

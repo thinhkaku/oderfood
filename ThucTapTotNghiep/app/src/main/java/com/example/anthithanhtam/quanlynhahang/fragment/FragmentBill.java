@@ -24,6 +24,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FragmentBill extends BaseFragment implements ViewFragmentBill {
     @BindView(R.id.tvTableBill)
@@ -114,7 +117,7 @@ public class FragmentBill extends BaseFragment implements ViewFragmentBill {
                 break;
             case R.id.btnPrintBill:
                 Employee employee = ShareConstand.getEmployee(clientActivity);
-                if (employee.getTenNhanVien() == null) {
+                if (employee== null) {
                     pushClient();
 
                 } else {
@@ -125,7 +128,22 @@ public class FragmentBill extends BaseFragment implements ViewFragmentBill {
     }
 
     private void pushClient() {
+        soService.updateStatusTable(nu[0],"1").enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.body()!=null)
+                {
+                    Toast.makeText(clientActivity, "Thành công! Quý khách vui lòng đợi nhân viên ra thanh toán", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(clientActivity, getString(R.string.error), Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
     }
 
     private void pushCustomer() {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.anthithanhtam.quanlynhahang.R;
 import com.example.anthithanhtam.quanlynhahang.model.Employee;
+import com.example.anthithanhtam.quanlynhahang.sharepreferences.ShareConstand;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -36,9 +38,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Utils {
     public static void intiDilogDetailEmploy(Employee employee, Context context){
-        final Dialog dialog=new Dialog(context);
+        final Dialog dialog=new Dialog(context,R.style.Theme_AppCompat_DayNight_NoActionBar);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.dilog_chi_tiet_nhan_vien);
+        dialog.setContentView(R.layout.dilog_employee_detail);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         TextView txtTen=dialog.findViewById(R.id.txtTenDL);
@@ -60,14 +62,9 @@ public class Utils {
         txtPositionID.setText(employee.getChucVu());
         txtPhone.setText(employee.getSoDienThoai());
         txtNgaySinh.setText(fomatDate(employee.getNgaySinh()));
-        Glide.with(context).load(Constant.PORT_IMAGE+employee.getAnh()).into(imgProfile);
+        Glide.with(context).load(Constant.PORT_IMAGE+employee.getAnh()).centerCrop().into(imgProfile);
         txtTen.setText(employee.getTenNhanVien());
-        btnXacNhan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        btnXacNhan.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
@@ -208,6 +205,12 @@ public class Utils {
         builder.setPositiveButton(activity.getString(R.string.exits), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences sharedPreferences1 = activity.getSharedPreferences("oderfood", activity.MODE_PRIVATE);
+                boolean checkRadio = sharedPreferences1.getBoolean("checked", false);
+                if (!checkRadio)
+                {
+                    ShareConstand.setEmployee(activity,null);
+                }
                 dialog.dismiss();
                 activity.finishAffinity();
             }

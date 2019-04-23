@@ -41,7 +41,6 @@
         android:layout_width="match_parent"
         android:layout_height="100sp"
         android:layout_marginLeft="5sp"
-        android:src="@drawable/background"
         app:civ_border_width="2dp"
         android:layout_marginBottom="10sp"
         app:civ_border_color="#FF000000"/>
@@ -269,17 +268,12 @@
 
 </LinearLayout>
 </ScrollView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_gravity="bottom">
-        <Button
-            android:id="@+id/btnXacNhanDL"
-            android:layout_width="150sp"
-            android:layout_height="match_parent"
-            android:text="@string/access"
-            android:background="@android:color/holo_blue_bright"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnXacNhanDL"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:text="@string/access"
+        android:textColor="@android:color/white"
+        android:background="@drawable/ani_button_normal"
+        android:layout_gravity="bottom|center"/>
 </FrameLayout>

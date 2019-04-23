@@ -38,4 +38,24 @@ public class PresenterQuanLyHoaDon implements ImplQuanLyHoaDon{
             }
         });
     }
+
+    @Override
+    public void getDataBillEmployee(String id) {
+        soService.getDataBillEmployee(id).enqueue(new Callback<List<Bill>>() {
+            @Override
+            public void onResponse(Call<List<Bill>> call, Response<List<Bill>> response) {
+                if (response.body()!=null)
+                {
+                    viewFragmentQuanLyHoaDon.getDataBill(response.body());
+                }else {
+                    viewFragmentQuanLyHoaDon.onError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Bill>> call, Throwable t) {
+                call.clone().enqueue(this);
+            }
+        });
+    }
 }

@@ -106,7 +106,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.ViewHo
 
     private void dialogEditEmployee(final Employee employee)
     {
-        final Dialog dialog=new Dialog(context);
+        final Dialog dialog=new Dialog(context, R.style.Theme_AppCompat_DayNight_NoActionBar);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.dialog_edit_employee);
         dialog.setCanceledOnTouchOutside(false);

@@ -4,51 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#512DA8">
+    android:background="@color/c_bg_add_employ"
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_marginTop="50sp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50sp"
+        android:src="@drawable/logo" />
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         android:layout_marginLeft="30sp"
-        android:textColorHint="#FFFFFF"
-        android:layout_marginRight="30sp">
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="30sp"
+        android:textColorHint="#FFFFFF">
+
         <android.support.design.widget.TextInputEditText
             android:id="@+id/edtUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/name_acount"
-            android:textColor="#FFFFFF"
-            android:maxLines="1"
             android:drawableLeft="@drawable/ic_group_black_24dp"
-            android:drawablePadding="10sp"/>
+            android:drawablePadding="10sp"
+            android:hint="@string/name_acount"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#FFFFFF" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="30sp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="30sp"
         android:textColorHint="#FFFFFF">
+
         <android.support.design.widget.TextInputEditText
             android:id="@+id/edtPass"
-            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/pass_acount"
-            android:textColor="#FFFFFF"
-            android:maxLines="1"
             android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
-            android:drawablePadding="10sp"/>
+            android:drawablePadding="10sp"
+            android:hint="@string/pass_acount"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textColor="#FFFFFF" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
@@ -56,43 +59,31 @@
         android:layout_height="50sp"
         android:gravity="right"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="150sp"
-            android:text="@string/remember_pass"
+            android:layout_height="match_parent"
             android:gravity="center|right"
-            android:textStyle="italic|bold"
+            android:text="@string/remember_pass"
             android:textColor="#FFFFFF"
-            android:layout_height="match_parent" />
+            android:textStyle="italic|bold" />
+
         <CheckBox
-            android:layout_width="40sp"
             android:id="@+id/ckNhoMatKhau"
-            android:layout_marginRight="20sp"
-            android:layout_height="match_parent" />
+            android:layout_width="40sp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="20sp" />
     </LinearLayout>
+
     <Button
         android:id="@+id/btnLogin"
-        android:textColor="@android:color/white"
-        android:background="@drawable/background_btn_login"
-        android:layout_marginTop="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
         android:layout_marginRight="20sp"
+        android:background="@drawable/background_btn_login"
         android:padding="15dp"
         android:text="@string/login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnRegister"
-        android:textColor="@android:color/white"
-        android:background="@drawable/background_btn_login"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="50sp"
-        android:layout_marginRight="50sp"
-        android:padding="15dp"
-        android:text="@string/register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-
+        android:textColor="@android:color/white" />
 </LinearLayout>

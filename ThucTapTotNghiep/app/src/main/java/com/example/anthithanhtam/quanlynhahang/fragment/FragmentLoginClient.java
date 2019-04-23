@@ -40,8 +40,6 @@ public class FragmentLoginClient extends BaseFragment {
     CheckBox ckNhoMatKhau;
     @BindView(R.id.btnLogin)
     Button btnLogin;
-    @BindView(R.id.btnRegister)
-    Button btnRegister;
     Unbinder unbinder;
     private String MY_PREFS_NAME = "oderfood";
     private SharedPreferences.Editor editor;
@@ -118,7 +116,7 @@ public class FragmentLoginClient extends BaseFragment {
     }
 
 
-    @OnClick({R.id.btnLogin, R.id.btnRegister})
+    @OnClick({R.id.btnLogin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnLogin:
@@ -162,9 +160,6 @@ public class FragmentLoginClient extends BaseFragment {
                         }
                     });
                 }
-                break;
-            case R.id.btnRegister:
-                //swichBeginAppActivity.switchFragment(swichBeginAppActivity.getFragmentRegister());
                 break;
         }
     }

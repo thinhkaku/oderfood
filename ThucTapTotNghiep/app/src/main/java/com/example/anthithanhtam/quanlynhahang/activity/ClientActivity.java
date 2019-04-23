@@ -1,5 +1,7 @@
 package com.example.anthithanhtam.quanlynhahang.activity;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,15 +11,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.anthithanhtam.quanlynhahang.MainApp;
 import com.example.anthithanhtam.quanlynhahang.R;
 import com.example.anthithanhtam.quanlynhahang.constant.Constant;
 import com.example.anthithanhtam.quanlynhahang.constant.Utils;
 import com.example.anthithanhtam.quanlynhahang.fragment.FragmentBill;
+import com.example.anthithanhtam.quanlynhahang.fragment.FragmentHoaDonDaThanhToan;
 import com.example.anthithanhtam.quanlynhahang.fragment.FragmentMainClient;
 import com.example.anthithanhtam.quanlynhahang.fragment.FragmentMenu;
 import com.example.anthithanhtam.quanlynhahang.model.Employee;
@@ -41,9 +44,26 @@ public class ClientActivity extends BaseActivity {
     TextView txtTen;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.btnHoaDonThanhToan)
+    LinearLayout btnHoaDonThanhToan;
+    @BindView(R.id.btnBangTin)
+    LinearLayout btnBangTin;
+    @BindView(R.id.btnThongTinCaNhan)
+    LinearLayout btnThongTinCaNhan;
     private FragmentMainClient fragmentMainClient;
     private FragmentBill fragmentBill;
     private FragmentMenu fragmentMenu;
+    private FragmentHoaDonDaThanhToan fragmentHoaDonDaThanhToan;
+
+    public FragmentHoaDonDaThanhToan getFragmentHoaDonDaThanhToan() {
+        fragmentHoaDonDaThanhToan.getData();
+        return fragmentHoaDonDaThanhToan;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
     private Employee employee;
 
     public LinearLayout getLnPRClient() {
@@ -76,9 +96,11 @@ public class ClientActivity extends BaseActivity {
         fragmentMainClient = new FragmentMainClient();
         fragmentBill = new FragmentBill();
         fragmentMenu = new FragmentMenu();
+        fragmentHoaDonDaThanhToan = new FragmentHoaDonDaThanhToan();
         transaction.add(R.id.frameClient, fragmentMainClient);
         transaction.add(R.id.frameClient, fragmentBill);
         transaction.add(R.id.frameClient, fragmentMenu);
+        transaction.add(R.id.frameClient, fragmentHoaDonDaThanhToan);
         transaction.commit();
         switchFragment(fragmentMainClient);
     }
@@ -89,6 +111,7 @@ public class ClientActivity extends BaseActivity {
         transaction.hide(fragmentMainClient);
         transaction.hide(fragmentBill);
         transaction.hide(fragmentMenu);
+        transaction.hide(fragmentHoaDonDaThanhToan);
         transaction.show(fragment);
         transaction.commit();
     }
@@ -110,6 +133,7 @@ public class ClientActivity extends BaseActivity {
         return fragmentBill;
     }
 
+    @SuppressLint("RestrictedApi")
     public FragmentMenu getFragmentMenu() {
         ShareConstand.setActionMenu(this, "2");
         fragmentMenu.getBtnGoToBill().setVisibility(View.VISIBLE);
@@ -124,15 +148,13 @@ public class ClientActivity extends BaseActivity {
             Utils.dilogQuitApp(this);
         } else {
             toolbarA.setTitle(getString(R.string.select_table));
-            fragmentMainClient.getData();
-            switchFragment(fragmentMainClient);
+
+            switchFragment(getFragmentMainClient());
         }
     }
 
 
-
-
-
+    @SuppressLint("RestrictedApi")
     @OnClick({R.id.btnThucDon, R.id.btnHoaDonThanhToan, R.id.btnBangTin, R.id.btnThongTinCaNhan, R.id.btnDangXuat})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -145,7 +167,7 @@ public class ClientActivity extends BaseActivity {
                     fragmentMenu.getBtnGoToBill().setVisibility(View.INVISIBLE);
                     ShareConstand.getInstance(this).setNumpeo("0-0");
                     fragmentMenu.reloadData();
-                    switchFragment(fragmentMenu);
+                    switchFragment(getFragmentMenu());
                 }
                 drawerLayout.closeDrawers();
                 break;
@@ -153,12 +175,40 @@ public class ClientActivity extends BaseActivity {
                 drawerLayout.closeDrawers();
                 break;
             case R.id.btnHoaDonThanhToan:
+                if (employee.getMaNhanVien()!=null) {
+                    switchFragment(getFragmentHoaDonDaThanhToan());
+                }
                 drawerLayout.closeDrawers();
                 break;
             case R.id.btnThongTinCaNhan:
-                Utils.intiDilogDetailEmploy(employee, this);
+                if (employee.getMaNhanVien()!=null) {
+                    Utils.intiDilogDetailEmploy(employee, this);
+                }
                 drawerLayout.closeDrawers();
                 break;
         }
+    }
+
+
+
+    @Override
+    protected void onStop() {
+        MainApp.activityStop();
+        SharedPreferences sharedPreferences1 = this.getSharedPreferences("oderfood", this.MODE_PRIVATE);
+        boolean checkRadio = sharedPreferences1.getBoolean("checked", false);
+        if (!checkRadio)
+        {
+            ShareConstand.setEmployee(this,null);
+        }
+        super.onStop();
+
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApp.activityResumed();
     }
 }

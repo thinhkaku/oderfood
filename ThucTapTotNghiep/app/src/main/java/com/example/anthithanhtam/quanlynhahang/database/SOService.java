@@ -12,6 +12,7 @@ import com.example.anthithanhtam.quanlynhahang.model.MyTable;
 import com.example.anthithanhtam.quanlynhahang.model.MyUser;
 import com.example.anthithanhtam.quanlynhahang.model.OrderDetail;
 import com.example.anthithanhtam.quanlynhahang.model.Position;
+import com.example.anthithanhtam.quanlynhahang.model.Status;
 import com.example.anthithanhtam.quanlynhahang.model.Type;
 
 import java.util.List;
@@ -75,9 +76,18 @@ public interface SOService {
     @GET("gettable.php")
     Call<List<MyTable>> getMyTable();
 
+    @GET("getstatusmytable.php")
+    Call<List<Status>> getStatusTable();
+
     @FormUrlEncoded
     @POST("edittable.php")
     Call<String> editTable(@Field("number")String number, @Field("numpeople")String numpeople, @Field("check_tb")String check_tb, @Field("note")String note, @Field("time_check")String timeCheck);
+
+
+
+    @FormUrlEncoded
+    @POST("updatestatustable.php")
+    Call<String> updateStatusTable(@Field("number")String number,@Field("status")String status);
     ///
 
     /// get data My Item
@@ -118,6 +128,10 @@ public interface SOService {
     //bill
     @GET("getdatabill.php")
     Call<List<Bill>>getDataBill();
+
+    @FormUrlEncoded
+    @POST("getdatabillemployee.php")
+    Call<List<Bill>>getDataBillEmployee(@Field("employee_id")String employeeId);
 
     @FormUrlEncoded
     @POST("insertbill.php")

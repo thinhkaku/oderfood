@@ -1,7 +1,8 @@
 <?php
 	include('connection.php');
 	mysqli_query($connect, "SET NAMES 'utf8'");
-	$query="SELECT `bill_detail`.`bill_detail_id`, `menu`.`menu_name`, `menu`.`menu_image`, `menu`.`menu_price`, `bill_detail`.`count`, `bill_detail`.`bill_detail_create_date` FROM `bill_detail`, `menu` WHERE `bill_detail`.`menu_id`=`menu`.`menu_id`";
+	$bill_id=$_POST['bill_id'];
+	$query="SELECT `bill_detail`.`bill_detail_id`, `menu`.`menu_name`, `menu`.`menu_image`, `menu`.`menu_price`, `bill_detail`.`count`, `bill_detail`.`bill_detail_create_date` FROM `bill_detail`, `menu` WHERE `bill_detail`.`menu_id`=`menu`.`menu_id` and `bill_detail`.`bill_id` = $bill_id";
 	$data=mysqli_query($connect,$query);
 	
 
