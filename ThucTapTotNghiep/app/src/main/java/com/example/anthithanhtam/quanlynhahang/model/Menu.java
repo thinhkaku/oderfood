@@ -23,8 +23,7 @@ public class Menu {
     @SerializedName("price")
     @Expose
     private String price;
-    @SerializedName("count")
-    @Expose
+
     private String count;
 
     /**
@@ -38,7 +37,6 @@ public class Menu {
      *
      * @param id
      * @param price
-     * @param count
      * @param describle
      * @param name
      * @param image

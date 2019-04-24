@@ -67,8 +67,13 @@ public class FragmentQuanLyHoaDon extends BaseFragment implements ViewFragmentQu
         mListBill.clear();
         mListBill.addAll(listBill);
         billManagerAdapter.notifyDataSetChanged();
-        swiperefreshBill.setRefreshing(false);
-        mManagerActivity.getLnProgressBar().setVisibility(View.INVISIBLE);
+        if (swiperefreshBill!=null)
+        {
+            swiperefreshBill.setRefreshing(false);
+            mManagerActivity.getLnProgressBar().setVisibility(View.INVISIBLE);
+        }
+
+
     }
 
     @Override

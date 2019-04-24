@@ -88,5 +88,7 @@
     <string name="date_create">Ngày lập: </string>
     <string name="employee_create">Tên nhân viên: </string>
     <string name="menu_call">Danh sách món ăn</string>
+    <string name="number_people_chart">Số khách</string>
+    <string name="money">Thu nhập</string>
 
 </resources>

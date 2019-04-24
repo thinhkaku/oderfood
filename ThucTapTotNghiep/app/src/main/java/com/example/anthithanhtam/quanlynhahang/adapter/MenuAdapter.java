@@ -1,5 +1,6 @@
 package com.example.anthithanhtam.quanlynhahang.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.anthithanhtam.quanlynhahang.R;
+import com.example.anthithanhtam.quanlynhahang.activity.ClientActivity;
 import com.example.anthithanhtam.quanlynhahang.constant.Constant;
 import com.example.anthithanhtam.quanlynhahang.constant.Utils;
+import com.example.anthithanhtam.quanlynhahang.dialog.MenuDetailDialog;
 import com.example.anthithanhtam.quanlynhahang.model.Menu;
 import com.example.anthithanhtam.quanlynhahang.sharepreferences.ShareConstand;
 
@@ -25,10 +29,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHodler> {
     private Context context;
     private List<Menu> arrItem;
     private LayoutInflater inflater;
+    ClientActivity clientActivity;
 
 
     public MenuAdapter(Context context, List<Menu> arrItem) {
         this.context = context;
+        clientActivity= (ClientActivity) context;
         this.arrItem = arrItem;
         inflater = LayoutInflater.from(context);
     }
@@ -67,6 +73,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHodler> {
             }
             ShareConstand.setActionMenu(context, "1");
         });
+
+        viewHolder.rlMenuClient.setOnClickListener(v -> {
+            MenuDetailDialog menuDetailDialog=MenuDetailDialog.newInstace(menu, context);
+            menuDetailDialog.show(clientActivity.getSupportFragmentManager(),"");
+        });
     }
 
     @Override
@@ -89,6 +100,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHodler> {
         TextView tvCount;
         @BindView(R.id.btnDown)
         ImageView btnDown;
+        @BindView(R.id.rlMenuClient)
+        RelativeLayout rlMenuClient;
 
         public ViewHodler(@NonNull View itemView) {
             super(itemView);

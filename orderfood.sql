@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th4 23, 2019 lúc 08:23 PM
+-- Thời gian đã tạo: Th4 24, 2019 lúc 09:51 PM
 -- Phiên bản máy phục vụ: 10.1.38-MariaDB
 -- Phiên bản PHP: 7.1.27
 
@@ -269,19 +269,18 @@ CREATE TABLE `menu` (
   `menu_image` text COLLATE utf8_unicode_ci NOT NULL,
   `menu_describle` text COLLATE utf8_unicode_ci NOT NULL,
   `menu_type_id` int(11) NOT NULL,
-  `menu_price` int(11) NOT NULL,
-  `menu_count` int(11) NOT NULL
+  `menu_price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `menu`
 --
 
-INSERT INTO `menu` (`menu_id`, `menu_name`, `menu_image`, `menu_describle`, `menu_type_id`, `menu_price`, `menu_count`) VALUES
-(1, 'Ghẹ Rang Muối', 'ghe-rang-muoi1493864860.jpg', 'mang den mon an ngon', 1, 90000, 0),
-(2, 'Mực xào tỏi', 'images.jpg', '1', 1, 100000, 0),
-(3, 'Hải sản', '7d9b9d06b256fd34019750ad5a6180c7.jpg', '1', 1, 150000, 0),
-(4, 'Lẩu nướng', '10-mon-an-nhau1.jpg', '1', 2, 50000, 0);
+INSERT INTO `menu` (`menu_id`, `menu_name`, `menu_image`, `menu_describle`, `menu_type_id`, `menu_price`) VALUES
+(1, 'Ghẹ Rang Muối', 'ghe-rang-muoi1493864860.jpg', 'mang den mon an ngon', 1, 90000),
+(2, 'Mực xào tỏi', 'images.jpg', '1', 1, 100000),
+(3, 'Hải sản', '7d9b9d06b256fd34019750ad5a6180c7.jpg', '1', 1, 150000),
+(4, 'Lẩu nướng', '10-mon-an-nhau1.jpg', '1', 2, 50000);
 
 -- --------------------------------------------------------
 
@@ -326,7 +325,7 @@ CREATE TABLE `mytable` (
 --
 
 INSERT INTO `mytable` (`number`, `numpeople`, `check_tb`, `note`, `time_check`, `status`) VALUES
-(1, 0, 0, '', '2019-04-16 11:46:38', 0),
+(1, 0, 0, '', '2019-04-16 11:46:38', 1),
 (2, 0, 0, '', '2019-04-16 11:58:06', 0),
 (3, 0, 0, '', '2019-04-16 11:57:29', 0),
 (4, 12, 0, '', '0000-00-00 00:00:00', 0),
@@ -337,7 +336,7 @@ INSERT INTO `mytable` (`number`, `numpeople`, `check_tb`, `note`, `time_check`, 
 (9, 2, 0, '', '0000-00-00 00:00:00', 0),
 (10, 0, 0, '', '0000-00-00 00:00:00', 0),
 (11, 0, 0, '', '2019-04-17 10:47:08', 0),
-(12, 0, 0, '', '0000-00-00 00:00:00', 0),
+(12, 0, 0, '', '0000-00-00 00:00:00', 1),
 (13, 0, 0, '', '0000-00-00 00:00:00', 0),
 (14, 0, 0, '', '0000-00-00 00:00:00', 0),
 (15, 0, 0, '', '0000-00-00 00:00:00', 0),
@@ -346,7 +345,7 @@ INSERT INTO `mytable` (`number`, `numpeople`, `check_tb`, `note`, `time_check`, 
 (18, 0, 0, '', '0000-00-00 00:00:00', 0),
 (19, 0, 0, '', '0000-00-00 00:00:00', 0),
 (20, 0, 0, '', '2019-04-16 11:54:03', 0),
-(21, 0, 0, '', '0000-00-00 00:00:00', 0),
+(21, 0, 0, '', '0000-00-00 00:00:00', 1),
 (22, 0, 0, '', '0000-00-00 00:00:00', 0),
 (23, 0, 0, '', '0000-00-00 00:00:00', 0),
 (24, 0, 0, '', '0000-00-00 00:00:00', 0);
