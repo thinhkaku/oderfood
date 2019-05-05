@@ -11,9 +11,6 @@ public class Type {
     @SerializedName("type_name")
     @Expose
     private String typeName;
-    @SerializedName("group_id")
-    @Expose
-    private String groupId;
 
     /**
      * No args constructor for use in serialization
@@ -25,14 +22,12 @@ public class Type {
     /**
      *
      * @param typeName
-     * @param groupId
      * @param typeId
      */
-    public Type(String typeId, String typeName, String groupId) {
+    public Type(String typeId, String typeName) {
         super();
         this.typeId = typeId;
         this.typeName = typeName;
-        this.groupId = groupId;
     }
 
     public String getTypeId() {
@@ -51,12 +46,5 @@ public class Type {
         this.typeName = typeName;
     }
 
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
 
 }

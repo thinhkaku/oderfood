@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@drawable/border_bill_detail"
+    android:layout_margin="3dp">
+    <TextView
+        android:id="@+id/txtTypeID"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center|left"
+        android:padding="20dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_alignParentTop="true"
+        style="@style/SanFranciscoDisplay_Semibold"/>
+<TextView
+    android:id="@+id/txtNameType"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:gravity="center|left"
+    android:padding="20dp"
+    android:layout_below="@+id/txtTypeID"
+    android:textColor="@android:color/black"
+    style="@style/SanFranciscoDisplay_Regular"/>
+
+    <ImageView
+        android:id="@+id/btnEditType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignRight="@+id/txtTypeID"
+        android:src="@drawable/ic_edit_blue_24dp" />
+    <ImageView
+        android:id="@+id/btnDeleteType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_alignRight="@+id/txtNameType"
+        android:layout_alignBottom="@+id/txtNameType"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_delete_forever_red_24dp" />
+</RelativeLayout>

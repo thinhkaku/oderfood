@@ -34,6 +34,14 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:src="@drawable/ic_add_box_blue_24dp" />
+            <ImageView
+                android:id="@+id/btnManagerType"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@+id/textView6"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@drawable/ic_assignment_black_24dp" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -66,6 +67,18 @@ public class Utils {
         txtTen.setText(employee.getTenNhanVien());
         btnXacNhan.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    public  static String getNameImage()
+    {
+        Date date = new Date();
+        String[] chuoi = {"t", "e", "a", "g", "k", "l", "c", "m"};
+        StringBuilder builder = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 7; i++) {
+            builder.append(chuoi[random.nextInt(7)]);
+        }
+        return String.valueOf(date.getTime()) + builder + "imagesges.jpg";
     }
 
     public static void toastMessage(Activity activity, String message)

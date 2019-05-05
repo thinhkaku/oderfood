@@ -4,18 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.anthithanhtam.quanlynhahang.activity.ClientActivity;
 import com.example.anthithanhtam.quanlynhahang.database.ApiUtils;
@@ -47,8 +42,6 @@ public class ServiceMyTable extends Service {
             listStatus = new ArrayList<>();
             listStatusOld = new ArrayList<>();
             soService = ApiUtils.getSOService();
-            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            registerReceiver(ktKetnoi, intentFilter);
         }
     }
 
@@ -69,7 +62,7 @@ public class ServiceMyTable extends Service {
 
                 Log.d(TAG, "Run");
                 employee = ShareConstand.getEmployee(ServiceMyTable.this);
-                if (employee!=null &&checkInternet) {
+                if (employee!=null) {
                     Log.d(TAG, "RunMain");
                     soService.getStatusTable().enqueue(new Callback<List<Status>>() {
                         @Override
@@ -116,19 +109,7 @@ public class ServiceMyTable extends Service {
         return Service.START_REDELIVER_INTENT;
     }
 
-    private boolean checkInternet;
 
-    BroadcastReceiver ktKetnoi = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            if (connectivityManager.getActiveNetworkInfo() != null) {
-                checkInternet=true;
-            } else {
-                checkInternet=false;
-            }
-        }
-    };
 
     private void showNotification(List<Status> listStatus) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -166,9 +147,6 @@ public class ServiceMyTable extends Service {
     @Override
     public void onDestroy() {
         handler.removeCallbacks(runnable);
-        if (ktKetnoi != null) {
-            unregisterReceiver(ktKetnoi);
-        }
         Log.d(TAG, "destroy");
         super.onDestroy();
     }

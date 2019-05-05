@@ -2,7 +2,7 @@ package com.example.anthithanhtam.quanlynhahang.constant;
 
 public interface Constant {
     //public static final String PORT="http://192.168.42.91:8080/oderfood/";
-    public static final String PORT = "http://192.168.0.101:8080/oderfood/";
+    public static final String PORT = "http://192.168.0.107:8080/oderfood/";
     //public static final String PORT="http://495422d6.ngrok.io/oderfood/";
     String PORT_IMAGE = PORT + "forderimage/";
     String FORMAT_DATE_YYYY_MM_DD = "yyyy-MM-dd";

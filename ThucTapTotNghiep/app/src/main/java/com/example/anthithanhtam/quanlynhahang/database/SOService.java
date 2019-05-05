@@ -117,10 +117,42 @@ public interface SOService {
     @GET("getdatatype.php")
     Call<List<Type>> getDataType();
 
+    @GET("getdatamenumanager.php")
+    Call<List<Menu>> getDataMenuManager();
+
     @FormUrlEncoded
     @POST("getdatamenu.php")
     Call<List<Menu>> getMenu(@Field("id_type_menu")String type);
+
+    @FormUrlEncoded
+    @POST("deletemenu.php")
+    Call<String> deleteMenu(@Field("menu_id")String menu_id);
+
+    @FormUrlEncoded
+    @POST("insertmenu.php")
+    Call<String> insertMenu(@Field("menu_name")String menu_name, @Field("menu_image")String menu_image, @Field("menu_describle")String menu_describle
+    , @Field("menu_type_id")String menu_type_id, @Field("menu_price")String menu_price);
+
+    @FormUrlEncoded
+    @POST("editmenu.php")
+    Call<String> editMenu(@Field("menu_id")String menu_id,@Field("menu_name")String menu_name, @Field("menu_image")String menu_image, @Field("menu_describle")String menu_describle
+            , @Field("menu_type_id")String menu_type_id, @Field("menu_price")String menu_price);
     ///
+
+
+    // Category
+    @FormUrlEncoded
+    @POST("deletecategory.php")
+    Call<String> deleteType(@Field("type_id")String type_id);
+
+    @FormUrlEncoded
+    @POST("editcategory.php")
+    Call<String> editType(@Field("type_id")String type_id, @Field("type_name")String type_name);
+
+    @FormUrlEncoded
+    @POST("insertcategory.php")
+    Call<String> insertType(@Field("type_name")String type_name);
+    ////
 
 
 

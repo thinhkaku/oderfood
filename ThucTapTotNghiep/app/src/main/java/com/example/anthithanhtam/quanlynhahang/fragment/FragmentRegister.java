@@ -122,15 +122,7 @@ public class FragmentRegister extends BaseDialog {
             edtTitle.setError(getString(R.string.no_enter_infomation));
         } else {
             if (!imageCode.isEmpty()) {
-                Date date = new Date();
-                String[] chuoi = {"t", "e", "a", "g", "k", "l", "c", "m"};
-                StringBuilder builder = new StringBuilder();
-                Random random = new Random();
-                for (int i = 0; i < 7; i++) {
-                    builder.append(chuoi[random.nextInt(7)]);
-                }
-
-                final String name = String.valueOf(date.getTime()) + builder + "imagesges.jpg";
+                final String name = Utils.getNameImage();
                 if (nameCheck.isEmpty()) {
                     managerActivity.getLnProgressBar().setVisibility(View.VISIBLE);
                     soService.uploadImage(imageCode, name).enqueue(new Callback<Message>() {

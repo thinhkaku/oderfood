@@ -9,4 +9,5 @@ public interface ViewQuanLyThucDon {
     void getListMenu(List<Menu> listMenu);
     void getDataType(List<Type>listType);
     void error();
+    void onSuccess();
 }

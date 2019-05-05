@@ -2,31 +2,31 @@ package com.example.anthithanhtam.quanlynhahang;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
+
 
 public class BoardCastReciver extends BroadcastReceiver {
-    private static boolean checkInternet;
     private static final String TAG = "BoardCastReciver";
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG,"true");
-//        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//        if (connectivityManager.getActiveNetworkInfo() != null) {
-//            checkInternet=true;
-//
-//        } else {
-//            checkInternet=false;
-//            Log.d(TAG,"false");
-//        }
+        Log.d(TAG, "true");
+        Toast.makeText(context, "Bật thiết bị", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(context, ServiceMyTable.class);
+        if (checkInternet(context)) {
+            context.startService(i);
+        }
     }
 
-    public static boolean isInternet(){
-        return checkInternet;
+    boolean checkInternet(Context context) {
+        ServiceManager serviceManager = new ServiceManager(context);
+        if (serviceManager.isNetworkAvailable()) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
 
 }
