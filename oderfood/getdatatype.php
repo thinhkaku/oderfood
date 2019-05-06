@@ -7,18 +7,18 @@
 
 
 	class Employee{
-	function Employee($type_id,$type_name, $group_id){
+	function Employee($type_id,$type_name){
 		$this->type_id=$type_id;
 		$this->type_name=$type_name;
-		$this->group_id=$group_id;
 	}
+		
 }
 $mangEmployee=array();
 
 //thêm phần tử và mảng
 while ($row=mysqli_fetch_assoc($data)) {
 
-		array_push($mangEmployee, new Employee($row['type_id'],$row['type_name'], $row['group_id']));
+		array_push($mangEmployee, new Employee($row['type_id'],$row['type_name']));
 	}
 
 //chuyển định dạng về json
