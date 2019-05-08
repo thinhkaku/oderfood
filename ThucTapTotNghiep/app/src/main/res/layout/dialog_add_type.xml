@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:text="Thêm danh mục"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:id="@+id/t1"/>
+<EditText
+    android:id="@+id/edtNameType"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Tên danh mục"
+    android:layout_below="@id/t1"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"/>
+    <View
+        android:id="@+id/v1"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/edtNameType"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+    <Button
+        android:id="@+id/btnCancle"
+        android:layout_width="@dimen/dp_150"
+        android:layout_height="@dimen/dp_70"
+        android:text="@string/cancle"
+        android:background="@drawable/ani_button_normal"
+        android:layout_toLeftOf="@id/v1"
+        android:layout_below="@id/edtNameType"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btnAccess"
+        android:layout_width="@dimen/dp_150"
+        android:layout_height="@dimen/dp_70"
+        android:text="@string/access"
+        android:background="@drawable/ani_button_normal"
+        android:layout_toRightOf="@id/v1"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_below="@id/edtNameType"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

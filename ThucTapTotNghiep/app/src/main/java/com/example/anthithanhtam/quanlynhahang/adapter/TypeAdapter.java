@@ -1,5 +1,7 @@
 package com.example.anthithanhtam.quanlynhahang.adapter;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -8,12 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.anthithanhtam.quanlynhahang.R;
 import com.example.anthithanhtam.quanlynhahang.activity.ManagerTypeActivity;
+import com.example.anthithanhtam.quanlynhahang.constant.Utils;
 import com.example.anthithanhtam.quanlynhahang.database.SOService;
 import com.example.anthithanhtam.quanlynhahang.model.Type;
 
@@ -57,9 +62,12 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHodler> {
         });
 
         viewHodler.btnEditType.setOnClickListener(v -> {
+            initDialogEditType(type);
 
         });
     }
+
+
 
     private void questionDeleteType(String typeId)
     {
@@ -75,7 +83,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHodler> {
                         if (response.body()!=null &&response.body().equals("1"))
                         {
                             managerTypeActivity.getData();
-                            Toast.makeText(context, "Xóa loại món ăn thành công", Toast.LENGTH_SHORT).show();
+                            Utils.toastMessage((Activity) context,"");
                         }else {
                             Toast.makeText(context, "Xóa loại món ăn thất bại", Toast.LENGTH_SHORT).show();
                         }
@@ -92,6 +100,43 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHodler> {
         builder.setNegativeButton("Không", (dialog, which) -> dialog.dismiss());
         AlertDialog alertDialog=builder.create();
         alertDialog.show();
+    }
+
+    private Dialog dialogEditType;
+    private void initDialogEditType(Type type)
+    {
+        dialogEditType=new Dialog(context);
+        dialogEditType.setContentView(R.layout.dialog_edit_type);
+        EditText edtNameType=dialogEditType.findViewById(R.id.edtNameType);
+        Button btnCancle=dialogEditType.findViewById(R.id.btnCancle);
+        Button btnAccess=dialogEditType.findViewById(R.id.btnAccess);
+        edtNameType.setText(type.getTypeName());
+        btnAccess.setOnClickListener(v->{
+            String nameType=edtNameType.getText().toString().trim();
+            if (!nameType.isEmpty())
+            {
+                soService.editType(type.getTypeId(),nameType).enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (response.body()!=null)
+                        {
+                            managerTypeActivity.getData();
+                            Utils.toastMessage((Activity) context,"");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        call.clone().enqueue(this);
+                    }
+                });
+            }
+            dialogEditType.dismiss();
+        });
+        btnCancle.setOnClickListener(v->{
+            dialogEditType.dismiss();
+        });
+        dialogEditType.show();
     }
 
     @Override

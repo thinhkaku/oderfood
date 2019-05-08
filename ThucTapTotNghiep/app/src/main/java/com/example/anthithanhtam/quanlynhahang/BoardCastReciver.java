@@ -17,6 +17,8 @@ public class BoardCastReciver extends BroadcastReceiver {
         Intent i = new Intent(context, ServiceMyTable.class);
         if (checkInternet(context)) {
             context.startService(i);
+        }else {
+            context.stopService(i);
         }
     }
 
