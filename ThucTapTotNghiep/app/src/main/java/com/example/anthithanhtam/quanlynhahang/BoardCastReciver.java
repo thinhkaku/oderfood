@@ -13,7 +13,7 @@ public class BoardCastReciver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "true");
-        Toast.makeText(context, "Bật thiết bị", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Change", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(context, ServiceMyTable.class);
         if (checkInternet(context)) {
             context.startService(i);

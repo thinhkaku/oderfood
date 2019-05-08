@@ -24,6 +24,18 @@ public class MyTable implements Serializable {
     @Expose
     private String timeCheck;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @SerializedName("status")
+    @Expose
+    private String status;
+
     /**
      * No args constructor for use in serialization
      *
@@ -39,13 +51,14 @@ public class MyTable implements Serializable {
      * @param note
      * @param timeCheck
      */
-    public MyTable(String number, String numPeople, String check, String note, String timeCheck) {
+    public MyTable(String number, String numPeople, String check, String note, String timeCheck,  String status) {
         super();
         this.number = number;
         this.numPeople = numPeople;
         this.check = check;
         this.note = note;
         this.timeCheck = timeCheck;
+        this.status = status;
     }
 
     public String getNumber() {

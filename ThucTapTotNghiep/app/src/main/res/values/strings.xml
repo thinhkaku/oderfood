@@ -90,5 +90,6 @@
     <string name="menu_call">Danh sách món ăn</string>
     <string name="number_people_chart">Số khách</string>
     <string name="money">Thu nhập</string>
+    <string name="table_report">Hóa đơn chờ thanh toán</string>
 
 </resources>

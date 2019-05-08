@@ -1,11 +1,17 @@
 package com.example.anthithanhtam.quanlynhahang.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AlertDialog;
 ;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +51,8 @@ public class FragmentBill extends BaseFragment implements ViewFragmentBill {
     ImageView btnAddItem;
     @BindView(R.id.btnPrintBill)
     ImageView btnPrintBill;
+    @BindView(R.id.framHoaDon)
+    FrameLayout framHoaDon;
     private BillAdapter listviewBillAdapter;
     private List<MyItem> arrItem;
     private String people = "0";
@@ -53,11 +61,24 @@ public class FragmentBill extends BaseFragment implements ViewFragmentBill {
     private ClientActivity clientActivity;
     private PresenterFragmentBill fragmentBillPresenter;
     private int count = 0;
+    private int withP, heightP;
+
 
     @Override
     protected void initView() {
         this.clientActivity = (ClientActivity) mActivity;
         fragmentBillPresenter = new PresenterFragmentBill(this, soService);
+        if (withP == 0) {
+            framHoaDon.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    framHoaDon.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    withP=framHoaDon.getWidth();
+                    heightP=framHoaDon.getHeight();
+                    Toast.makeText(clientActivity, withP+""+heightP, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 
@@ -121,10 +142,26 @@ public class FragmentBill extends BaseFragment implements ViewFragmentBill {
                     pushClient();
 
                 } else {
+                    //doPhotoPrint();
                     pushCustomer();
                 }
                 break;
         }
+    }
+
+    private void doPhotoPrint() {
+        PrintHelper photoPrinter = new PrintHelper(getActivity());
+        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        Bitmap bitmap = loadBitmapFromView(framHoaDon);
+        photoPrinter.printBitmap("droids.jpg - test print", bitmap);
+    }
+
+    public  Bitmap loadBitmapFromView(View v) {
+        Bitmap b = Bitmap.createBitmap( 200, 400, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+        v.draw(c);
+        return b;
     }
 
     private void pushClient() {

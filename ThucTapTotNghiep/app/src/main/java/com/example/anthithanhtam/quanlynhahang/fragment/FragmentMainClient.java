@@ -117,6 +117,21 @@ public class FragmentMainClient extends BaseFragment implements AdapterView.OnIt
         gVTable.setOnItemClickListener(this);
     }
 
+    public void getDataBanChoThanhToan()
+    {
+        List<MyTable>list=new ArrayList<>();
+        for (int i=0;i<arrTable.size();i++)
+        {
+            if (arrTable.get(i).getStatus().equals("1"))
+            {
+                list.add(arrTable.get(i));
+            }
+        }
+        arrTable.clear();
+        arrTable.addAll(list);
+        tableAdapter.notifyDataSetChanged();
+    }
+
     @Override
     protected int layoutID() {
         return R.layout.layout_main_client_fragment;

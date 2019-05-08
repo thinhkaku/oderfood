@@ -172,6 +172,9 @@ public class ClientActivity extends BaseActivity {
                 drawerLayout.closeDrawers();
                 break;
             case R.id.btnBangTin:
+                if (employee.getMaNhanVien()!=null) {
+                    fragmentMainClient.getDataBanChoThanhToan();
+                }
                 drawerLayout.closeDrawers();
                 break;
             case R.id.btnHoaDonThanhToan:
