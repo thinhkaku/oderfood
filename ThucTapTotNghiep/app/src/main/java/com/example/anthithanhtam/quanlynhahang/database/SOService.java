@@ -13,6 +13,8 @@ import com.example.anthithanhtam.quanlynhahang.model.MyUser;
 import com.example.anthithanhtam.quanlynhahang.model.OrderDetail;
 import com.example.anthithanhtam.quanlynhahang.model.Position;
 import com.example.anthithanhtam.quanlynhahang.model.Status;
+import com.example.anthithanhtam.quanlynhahang.model.TotalMoney;
+import com.example.anthithanhtam.quanlynhahang.model.TotalPeople;
 import com.example.anthithanhtam.quanlynhahang.model.Type;
 
 import java.util.List;
@@ -153,6 +155,17 @@ public interface SOService {
     @POST("insertcategory.php")
     Call<String> insertType(@Field("type_name")String type_name);
     ////
+
+
+    ///THống kê
+    @FormUrlEncoded
+    @POST("thongkesonguoi.php")
+    Call<List<TotalPeople>> thongKeSoNguoi(@Field("month")String month, @Field("year")String year);
+
+    @FormUrlEncoded
+    @POST("thongketien.php")
+    Call<List<TotalMoney>> thongKeSoTien(@Field("month")String month, @Field("year")String year);
+    //
 
 
 

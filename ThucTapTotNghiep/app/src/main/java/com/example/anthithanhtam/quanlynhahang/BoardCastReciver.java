@@ -20,6 +20,7 @@ public class BoardCastReciver extends BroadcastReceiver {
         }else {
             context.stopService(i);
         }
+
     }
 
     boolean checkInternet(Context context) {

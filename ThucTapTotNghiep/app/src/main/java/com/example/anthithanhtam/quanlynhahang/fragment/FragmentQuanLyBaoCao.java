@@ -1,61 +1,156 @@
 package com.example.anthithanhtam.quanlynhahang.fragment;
 
-import android.content.pm.ActivityInfo;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.example.anthithanhtam.quanlynhahang.R;
+import com.example.anthithanhtam.quanlynhahang.constant.Utils;
 import com.example.anthithanhtam.quanlynhahang.model.ThongKe;
+import com.example.anthithanhtam.quanlynhahang.model.TotalMoney;
+import com.example.anthithanhtam.quanlynhahang.model.TotalPeople;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.StackedValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FragmentQuanLyBaoCao extends BaseFragment implements OnChartValueSelectedListener {
     @BindView(R.id.chart_real)
-    LineChart mLineChart;
+    CombinedChart mLineChart;
     @BindView(R.id.prBLoadHistory)
     ProgressBar prBLoadHistory;
     @BindView(R.id.crdLoadHistory)
     CardView crdLoadHistory;
+    @BindView(R.id.fabReport)
+    FloatingActionButton fabReport;
+    Unbinder unbinder;
 
-
+    private List<ThongKe> list = new ArrayList<>();
+    String year;
 
     @Override
     protected void initView() {
-//        getActivity().setRequestedOrientation(
-//                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        initLineChar();
-        List<ThongKe>list=new ArrayList<>();
-        for (int i=0;i<25;i++)
-        {
-            list.add(new ThongKe(i, i*20));
-        }
-        setDataLineChartAVG(list);
+         year = Utils.formatYear(Utils.getCurentDateTime());
+        showChartTotalPeople();
     }
+
+    private void showChartTotalPeople()
+    {
+        list.clear();
+        for (int i = 1; i <= 12; i++) {
+            soService.thongKeSoNguoi(String.valueOf(i), year).enqueue(new Callback<List<TotalPeople>>() {
+                @Override
+                public void onResponse(Call<List<TotalPeople>> call, Response<List<TotalPeople>> response) {
+                    if (response.body().get(0).getTotalPeople() != null) {
+                        list.add(new ThongKe(Integer.parseInt(response.body().get(0).getTotalPeople()), 0));
+                    } else {
+                        list.add(new ThongKe(0, 0));
+                    }
+                    if (list.size()==12)
+                    {
+                        fixXchart();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<TotalPeople>> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
+    private void showChartTotalMonney()
+    {
+        list.clear();
+        for (int i = 1; i <= 12; i++) {
+            soService.thongKeSoTien(String.valueOf(i), year).enqueue(new Callback<List<TotalMoney>>() {
+                @Override
+                public void onResponse(Call<List<TotalMoney>> call, Response<List<TotalMoney>> response) {
+                    if (response.body().get(0).getTotalMoney() != null) {
+                        list.add(new ThongKe(0, Float.valueOf(response.body().get(0).getTotalMoney())));
+                    }else {
+                        list.add(new ThongKe(0, 0));
+                    }
+                    if (list.size()==12)
+                    {
+                        fixXchart();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<TotalMoney>> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+
+    private Dialog dialogSelectReport;
+    private boolean check;
+
+    private void initDialogAddType() {
+        dialogSelectReport = new Dialog(mActivity);
+        dialogSelectReport.setContentView(R.layout.dialog_select_report);
+        RadioButton rdSoNguoi = dialogSelectReport.findViewById(R.id.rdSoNguoi);
+        RadioButton rdThuNhap = dialogSelectReport.findViewById(R.id.rdThuNhap);
+        Button btnAccess = dialogSelectReport.findViewById(R.id.btnAccess);
+        if (check)
+        {
+            rdThuNhap.setChecked(true);
+        }
+        rdSoNguoi.setOnClickListener(v -> {
+            check=false;
+        });
+        rdThuNhap.setOnClickListener(v -> {
+            check=true;
+        });
+        btnAccess.setOnClickListener(v -> {
+            if (check) {
+                showChartTotalMonney();
+            } else {
+                showChartTotalPeople();
+            }
+            dialogSelectReport.dismiss();
+        });
+        dialogSelectReport.show();
+    }
+
 
     @Override
     protected int layoutID() {
@@ -69,108 +164,103 @@ public class FragmentQuanLyBaoCao extends BaseFragment implements OnChartValueSe
 
 
 
-    private void initLineChar() {
-        mLineChart.setOnChartValueSelectedListener(this);
-        // no description text
-        mLineChart.getDescription().setEnabled(false);
-        // enable touch gestures
-        mLineChart.setTouchEnabled(true);
-//        mLineChart.setDragDecelerationFrictionCoef(0.9f);
-        // enable scaling and dragging
-        mLineChart.setDragEnabled(true);
-        mLineChart.setScaleEnabled(true);
-        // if disabled, scaling can be done on x- and y-axis separately
-        mLineChart.setPinchZoom(false);
-        // set an alternative background color
-        mLineChart.setDrawGridBackground(false);
-        mLineChart.setBackgroundColor(Color.WHITE);
-    }
-
-    private void setDataLineChartAVG(List<ThongKe> arrThongKe) {
-        ArrayList<Entry> avgEntries = new ArrayList<Entry>();
-        ArrayList<Entry> minEntries = new ArrayList<Entry>();
-        ArrayList<Entry> maxEntries = new ArrayList<Entry>();
-        int j = 0;
-        while (j < 86400) {
-            if (j < arrThongKe.size() * 600) {
-                int soKhach = arrThongKe.get(j / 600).getSoKhach();
-                float thuNhap = arrThongKe.get(j / 600).getThuNhap();
-                minEntries.add(new Entry(j, soKhach));
-                avgEntries.add(new Entry(j, thuNhap));
-            }
-            j = j + 600;
-        }
 
 
-//        SimpleDateFormat sdHH=new SimpleDateFormat(Constants.SERVER_DATE_FORMAT, Locale.getDefault());
-//        SimpleDateFormat sdMM=new SimpleDateFormat(Constants.SERVER_DATE_FORMAT,Locale.getDefault());
-//        Date newDateHH = null;
-//        Date newDateMM = null;
-//        try {
-//            newDateHH = sdHH.parse(arrHistory.get(0).getTime());
-//            newDateMM = sdMM.parse(arrHistory.get(0).getTime());
-//            sdHH = new SimpleDateFormat("hh");
-//            sdMM = new SimpleDateFormat("mm");
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
-//        String hh=sdHH.format(newDateHH);
-//        String mm=sdMM.format(newDateMM);
-//        Log.e("hh: ",hh);
-//        Log.e("mm: ",mm);
-//        int ll=Integer.parseInt(hh)*60*60+Integer.parseInt(mm)*60;
-
-        LineDataSet avgDataSet = createLineDataSet(avgEntries, R.string.number_people_chart, R.color.colorAccent);
-        LineDataSet minDataSet = createLineDataSet(minEntries, R.string.money, R.color.colorPrimary);
-
-        LineData lineData = new LineData();
-        lineData.addDataSet(avgDataSet);
-        lineData.addDataSet(minDataSet);
-        // set data
-        mLineChart.setData(lineData);
-        mLineChart.notifyDataSetChanged();
-        mLineChart.invalidate();
-        mLineChart.animateXY(2500, 2500);
-
-        // get the legend (only possible after setting data)
-        Legend legend = mLineChart.getLegend();
-
-        // modify the legend ...
-        legend.setForm(Legend.LegendForm.LINE);
-        legend.setTextSize(11f);
-        legend.setTextColor(Color.BLACK);
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        legend.setDrawInside(false);
-
-        YAxis leftAxis = mLineChart.getAxisLeft();
-        leftAxis.setTextColor(Color.BLACK);
-        leftAxis.setAxisMinimum(0f);
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGranularityEnabled(true);
-
-        YAxis rightAxis = mLineChart.getAxisRight();
-        rightAxis.setTextColor(Color.BLACK);
-        rightAxis.setAxisMinimum(0);
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setDrawZeroLine(false);
-        rightAxis.setGranularityEnabled(false);
-        //fixXchart(ll);
-
-    }
 
     //1451581200-
 
-    private void fixXchart(int ll) {
-//        IAxisValueFormatter xAxisFormatter = new HourAxisValueFormatter(ll-3600);
-//        XAxis xAxis = mLineChart.getXAxis();
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setValueFormatter(xAxisFormatter);
-//        MyMarkerView myMarkerView = new MyMarkerView(mActivity.getApplicationContext(), R.layout.my_marker_view_layout);
-        //mLineChart.setMarkerView(myMarkerView);
+    private void fixXchart() {
+        mLineChart.getDescription().setEnabled(false);
+        mLineChart.setBackgroundColor(Color.WHITE);
+        mLineChart.setDrawGridBackground(false);
+        mLineChart.setDrawBarShadow(false);
+        mLineChart.setHighlightFullBarEnabled(false);
+        mLineChart.setOnChartValueSelectedListener(this);
 
+        YAxis rightAxis = mLineChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setAxisMinimum(0f);
+
+        YAxis leftAxis = mLineChart.getAxisLeft();
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setAxisMinimum(0f);
+
+        final List<String> xLabel = new ArrayList<>();
+        xLabel.add("");
+        xLabel.add("Jan");
+        xLabel.add("Feb");
+        xLabel.add("Mar");
+        xLabel.add("Apr");
+        xLabel.add("May");
+        xLabel.add("Jun");
+        xLabel.add("Jul");
+        xLabel.add("Aug");
+        xLabel.add("Sep");
+        xLabel.add("Oct");
+        xLabel.add("Nov");
+        xLabel.add("Dec");
+
+        XAxis xAxis = mLineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setAxisMinimum(0f);
+        xAxis.setGranularity(1f);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                return xLabel.get((int) value % xLabel.size());
+            }
+        });
+
+
+        CombinedData data = new CombinedData();
+        LineData lineDatas = new LineData();
+        lineDatas.addDataSet((ILineDataSet) dataChart(list));
+
+        data.setData(lineDatas);
+
+        xAxis.setAxisMaximum(data.getXMax() + 0.2f);
+
+        mLineChart.setData(data);
+        mLineChart.invalidate();
+
+    }
+
+
+
+    private  DataSet dataChart(List<ThongKe>list) {
+
+        LineData d = new LineData();
+
+        ArrayList<Entry> entries = new ArrayList<Entry>();
+
+        if (check)
+        {
+            for (int index = 0; index < 12; index++) {
+                entries.add(new Entry(index+1, list.get(index).getThuNhap()));
+            }
+        }else {
+            for (int index = 0; index < 12; index++) {
+                entries.add(new Entry(index+1, list.get(index).getSoKhach()));
+            }
+        }
+
+
+        LineDataSet set = new LineDataSet(entries, "Request Ots approved");
+        //LineDataSet set = createLineDataSet(entries,R.string.money,R.color.colorAccent);
+        set.setColor(Color.GREEN);
+        set.setLineWidth(2.5f);
+        set.setCircleColor(Color.GREEN);
+        set.setCircleRadius(5f);
+        set.setFillColor(Color.GREEN);
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set.setDrawValues(true);
+        set.setValueTextSize(10f);
+        set.setValueTextColor(Color.GREEN);
+
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        d.addDataSet(set);
+
+        return set;
     }
 
     @NonNull
@@ -192,5 +282,11 @@ public class FragmentQuanLyBaoCao extends BaseFragment implements OnChartValueSe
     @Override
     public void onNothingSelected() {
 
+    }
+
+
+    @OnClick(R.id.fabReport)
+    public void onViewClicked() {
+        initDialogAddType();
     }
 }
