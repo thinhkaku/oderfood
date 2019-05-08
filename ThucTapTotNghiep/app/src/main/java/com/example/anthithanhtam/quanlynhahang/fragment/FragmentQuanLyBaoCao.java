@@ -235,32 +235,47 @@ public class FragmentQuanLyBaoCao extends BaseFragment implements OnChartValueSe
 
         if (check)
         {
+
             for (int index = 0; index < 12; index++) {
                 entries.add(new Entry(index+1, list.get(index).getThuNhap()));
             }
+            LineDataSet set = new LineDataSet(entries, "THu nhập");
+            //LineDataSet set = createLineDataSet(entries,R.string.money,R.color.colorAccent);
+            set.setColor(Color.GREEN);
+            set.setLineWidth(2.5f);
+            set.setCircleColor(Color.GREEN);
+            set.setCircleRadius(5f);
+            set.setFillColor(Color.GREEN);
+            set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            set.setDrawValues(true);
+            set.setValueTextSize(10f);
+            set.setValueTextColor(Color.GREEN);
+
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+            d.addDataSet(set);
+
+            return set;
         }else {
             for (int index = 0; index < 12; index++) {
                 entries.add(new Entry(index+1, list.get(index).getSoKhach()));
             }
+            LineDataSet set = new LineDataSet(entries, "Số khách");
+            //LineDataSet set = createLineDataSet(entries,R.string.money,R.color.colorAccent);
+            set.setColor(Color.GREEN);
+            set.setLineWidth(2.5f);
+            set.setCircleColor(Color.GREEN);
+            set.setCircleRadius(5f);
+            set.setFillColor(Color.GREEN);
+            set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            set.setDrawValues(true);
+            set.setValueTextSize(10f);
+            set.setValueTextColor(Color.GREEN);
+
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+            d.addDataSet(set);
+
+            return set;
         }
-
-
-        LineDataSet set = new LineDataSet(entries, "Request Ots approved");
-        //LineDataSet set = createLineDataSet(entries,R.string.money,R.color.colorAccent);
-        set.setColor(Color.GREEN);
-        set.setLineWidth(2.5f);
-        set.setCircleColor(Color.GREEN);
-        set.setCircleRadius(5f);
-        set.setFillColor(Color.GREEN);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setDrawValues(true);
-        set.setValueTextSize(10f);
-        set.setValueTextColor(Color.GREEN);
-
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        d.addDataSet(set);
-
-        return set;
     }
 
     @NonNull
