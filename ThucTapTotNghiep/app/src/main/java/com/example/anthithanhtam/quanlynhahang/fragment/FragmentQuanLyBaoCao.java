@@ -241,7 +241,7 @@ public class FragmentQuanLyBaoCao extends BaseFragment implements OnChartValueSe
             }
             LineDataSet set = new LineDataSet(entries, "THu nhập");
             //LineDataSet set = createLineDataSet(entries,R.string.money,R.color.colorAccent);
-            set.setColor(Color.GREEN);
+            set.setColor(Color.RED);
             set.setLineWidth(2.5f);
             set.setCircleColor(Color.GREEN);
             set.setCircleRadius(5f);
@@ -263,7 +263,7 @@ public class FragmentQuanLyBaoCao extends BaseFragment implements OnChartValueSe
             //LineDataSet set = createLineDataSet(entries,R.string.money,R.color.colorAccent);
             set.setColor(Color.GREEN);
             set.setLineWidth(2.5f);
-            set.setCircleColor(Color.GREEN);
+            set.setCircleColor(Color.RED);
             set.setCircleRadius(5f);
             set.setFillColor(Color.GREEN);
             set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
