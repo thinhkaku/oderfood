@@ -145,11 +145,15 @@ public class FragmentLoginClient extends BaseFragment {
                             if (response.body().size() == 0) {
                                 Toast.makeText(mActivity, getString(R.string.pass_false), Toast.LENGTH_SHORT).show();
                             } else {
-                                ShareConstand.setEmployee(mActivity, response.body().get(0));
-                                //Toast.makeText(context, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
-                                Utils.toastMessage(swichBeginAppActivity, getString(R.string.success));
-                                Intent i = new Intent(mActivity, ClientActivity.class);
-                                startActivity(i);
+                                if (response.body().get(0).getChucVu().equals("1")){
+                                    ShareConstand.setEmployee(mActivity, response.body().get(0));
+                                    Utils.toastMessage(swichBeginAppActivity, getString(R.string.success));
+                                    Intent i = new Intent(mActivity, ClientActivity.class);
+                                    startActivity(i);
+                                }else {
+                                    Toast.makeText(mActivity, getString(R.string.pass_false), Toast.LENGTH_SHORT).show();
+                                }
+
                             }
                             swichBeginAppActivity.getProgressBarSwitchBegin().setVisibility(View.GONE);
                         }
