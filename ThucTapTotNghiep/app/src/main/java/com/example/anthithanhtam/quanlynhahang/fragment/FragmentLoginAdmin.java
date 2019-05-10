@@ -70,8 +70,6 @@ public class FragmentLoginAdmin extends BaseFragment {
                                 Toast.makeText(mActivity, getString(R.string.pass_false), Toast.LENGTH_SHORT).show();
                             } else {
                                 if (response.body().get(0).getChucVu().equals("0")){
-                                    ShareConstand.setEmployee(mActivity, response.body().get(0));
-                                    //Toast.makeText(context, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                                     Utils.toastMessage(swichBeginAppActivity, getString(R.string.success));
                                     Intent i = new Intent(mActivity, ManagerActivity.class);
                                     startActivity(i);

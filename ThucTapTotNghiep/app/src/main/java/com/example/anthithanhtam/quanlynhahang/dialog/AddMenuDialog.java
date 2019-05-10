@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,7 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @SuppressLint("ValidFragment")
-public class AddMenuDialog extends BaseDialog {
+public class AddMenuDialog extends BaseDialog implements AdapterView.OnItemSelectedListener {
     @BindView(R.id.edtNameMenu)
     TextInputEditText edtNameMenu;
     @BindView(R.id.spDanhMuc)
@@ -107,6 +108,20 @@ public class AddMenuDialog extends BaseDialog {
                 call.clone().enqueue(this);
             }
         });
+        spDanhMuc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                danhMuc=mListType.get(position).getTypeId();
+                Log.d("danhmucchon: ", danhMuc);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
     }
 
 
@@ -130,17 +145,20 @@ public class AddMenuDialog extends BaseDialog {
     private void xacNhanThemMenu()
     {
         String nameMenu=edtNameMenu.getText().toString().trim();
-        spDanhMuc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                danhMuc=mListType.get(position).getTypeId();
-            }
+        //spDanhMuc.setOnItemSelectedListener(this);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        spDanhMuc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                danhMuc=mListType.get(position).getTypeId();
+//                Log.d("danhmucchon: ", danhMuc);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
         String price=edtGia.getText().toString().trim();
         String describe=edtDescrible.getText().toString().trim();
         if (nameMenu.isEmpty()||danhMuc==null||price.isEmpty()||describe.isEmpty()||imageCode==null)
@@ -153,6 +171,7 @@ public class AddMenuDialog extends BaseDialog {
                 public void onResponse(Call<Message> call, Response<Message> response) {
                     if (response.body()!=null)
                     {
+                        Log.d("danhmuc: ", danhMuc);
                         soService.insertMenu(nameMenu,nameImage,describe,danhMuc,price).enqueue(new Callback<String>() {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
@@ -234,5 +253,15 @@ public class AddMenuDialog extends BaseDialog {
         int k = Integer.highestOneBit((int) Math.floor(ratio));
         if (k == 0) return 1;
         else return k;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("danhmuc: ",position+"");
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

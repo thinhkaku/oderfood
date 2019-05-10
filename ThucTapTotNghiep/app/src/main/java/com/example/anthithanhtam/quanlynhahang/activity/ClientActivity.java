@@ -81,6 +81,11 @@ public class ClientActivity extends BaseActivity {
         if (employee != null) {
             txtTen.setText(employee.getTenNhanVien());
             Glide.with(this).load(Constant.PORT_IMAGE + employee.getAnh()).into(imgHinhDaiDien);
+
+        }else {
+            btnThongTinCaNhan.setVisibility(View.GONE);
+            btnBangTin.setVisibility(View.GONE);
+            btnHoaDonThanhToan.setVisibility(View.GONE);
         }
         initFragment();
         toolbarA = findViewById(R.id.toolbarA);

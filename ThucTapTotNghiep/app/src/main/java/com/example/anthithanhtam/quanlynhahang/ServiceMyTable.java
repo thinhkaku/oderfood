@@ -106,7 +106,7 @@ public class ServiceMyTable extends Service {
             }
         };
         handler.post(runnable);
-        return Service.START_REDELIVER_INTENT;
+        return Service.START_STICKY;
     }
 
 

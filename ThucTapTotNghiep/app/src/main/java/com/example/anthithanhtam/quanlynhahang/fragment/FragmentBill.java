@@ -61,24 +61,12 @@ public class FragmentBill extends BaseFragment implements ViewFragmentBill {
     private ClientActivity clientActivity;
     private PresenterFragmentBill fragmentBillPresenter;
     private int count = 0;
-    private int withP, heightP;
 
 
     @Override
     protected void initView() {
         this.clientActivity = (ClientActivity) mActivity;
         fragmentBillPresenter = new PresenterFragmentBill(this, soService);
-        if (withP == 0) {
-            framHoaDon.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    framHoaDon.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    withP=framHoaDon.getWidth();
-                    heightP=framHoaDon.getHeight();
-                    Toast.makeText(clientActivity, withP+""+heightP, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 
 
